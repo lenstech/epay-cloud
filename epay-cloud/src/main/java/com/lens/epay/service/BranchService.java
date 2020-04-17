@@ -26,8 +26,6 @@ import java.util.UUID;
 @Service
 public class BranchService extends AbstractService<Branch, UUID, BranchDto, BranchResource> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BranchService.class);
-
     @Autowired
     private BranchRepository repository;
 
@@ -39,9 +37,6 @@ public class BranchService extends AbstractService<Branch, UUID, BranchDto, Bran
 
     @Autowired
     private DepartmentMapper departmentMapper;
-
-    @Autowired
-    private FirmRepository firmRepository;
 
     @Override
     public BranchRepository getRepository() {

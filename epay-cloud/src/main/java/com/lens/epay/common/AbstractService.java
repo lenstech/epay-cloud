@@ -20,11 +20,7 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
     public abstract Converter<DTO, T, RES> getConverter();
 
     public RES save(DTO dto) {
-        try {
-            return getConverter().toResource(getRepository().save(getConverter().toEntity(dto)));
-        }catch (Exception e){
-            throw new BadRequestException(ID_IS_NOT_EXIST);
-        }
+        return getConverter().toResource(getRepository().save(getConverter().toEntity(dto)));
     }
 
     public RES get(ID id) {
@@ -49,7 +45,7 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
             updated.setId(theReal.getId());
             updated.setCreatedDate(theReal.getCreatedDate());
             return getConverter().toResource(getRepository().save(updated));
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new BadRequestException(ID_CANNOT_BE_EMPTY);
         }
     }

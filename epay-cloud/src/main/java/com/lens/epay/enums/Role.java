@@ -1,6 +1,7 @@
 package com.lens.epay.enums;
 
 public enum Role {
+    CUSTOMER(0),
     BASIC_USER(1),
     DEPARTMENT_ADMIN(2),
     BRANCH_ADMIN(3),

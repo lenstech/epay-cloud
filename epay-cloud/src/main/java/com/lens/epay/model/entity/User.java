@@ -42,10 +42,6 @@ public class User extends AbstractEntity<UUID> {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY)
-    private ProfilePhoto profilePhoto;
-
     @ManyToOne
     @JoinColumn(name = "department")
     private Department department;
