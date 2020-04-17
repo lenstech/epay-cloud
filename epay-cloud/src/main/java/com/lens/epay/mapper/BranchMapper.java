@@ -18,6 +18,6 @@ import org.mapstruct.ReportingPolicy;
 public interface BranchMapper extends Converter<BranchDto, Branch, BranchResource> {
 
     @Override
-    @Mapping(source = "firmId", target = "firm", qualifiedByName = "firmById")
+    @Mapping(source = "firmId", target = "firm", qualifiedByName = "findOneById")
     Branch toEntity(BranchDto branchDto);
 }

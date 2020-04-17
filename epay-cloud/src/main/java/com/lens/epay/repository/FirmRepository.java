@@ -9,6 +9,4 @@ import java.util.UUID;
 @Repository
 public interface FirmRepository extends EpayRepository<Firm, UUID> {
 
-    @Named("firmById")
-    Firm findFirmById(UUID id);
 }

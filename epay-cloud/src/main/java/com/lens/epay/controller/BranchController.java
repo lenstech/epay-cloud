@@ -50,23 +50,4 @@ public class BranchController extends AbstractController<Branch, UUID, BranchDto
         authorizationConfig.permissionCheck(token, Role.BASIC_USER);
         return ResponseEntity.ok(branchService.getDepartments(branchId));
     }
-
-    @ApiOperation(value = "Add Department to a Branch , it can be done by only Admin", response = DepartmentResource.class)
-    @PutMapping("/add-department")
-    public ResponseEntity addDepartmentToBranch(@RequestHeader("Authorization") String token,
-                                                @RequestParam UUID departmentId,
-                                                @RequestParam UUID branchId) {
-        authorizationConfig.permissionCheck(token, Role.BRANCH_ADMIN);
-        return ResponseEntity.ok(branchService.addDepartment(branchId, departmentId));
-    }
-
-    @ApiOperation(value = "Remove Department from Branch, it can be done by only Admin", response = DepartmentResource.class)
-    @PutMapping("/remove-department")
-    public ResponseEntity removeDepartmentFromBranch(@RequestHeader("Authorization") String token,
-                                                     @RequestParam UUID departmentId,
-                                                     @RequestParam UUID branchId) {
-
-        authorizationConfig.permissionCheck(token, Role.BRANCH_ADMIN);
-        return ResponseEntity.ok(branchService.removeDepartment(branchId, departmentId));
-    }
 }

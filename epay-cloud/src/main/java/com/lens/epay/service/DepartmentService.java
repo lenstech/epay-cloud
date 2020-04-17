@@ -58,35 +58,6 @@ public class DepartmentService extends AbstractService<Department, UUID, Departm
         return mapper;
     }
 
-
-    @Override
-    public DepartmentResource save(DepartmentDto dto) {
-        LOGGER.debug(String.format("Saving the dto [%s].", dto));
-        Department department = getConverter().toEntity(dto);
-        department.setBranch(branchRepository.findBranchById(dto.getBranchId()));
-        return getConverter().toResource(getRepository().save(department));
-    }
-
-    @Transactional
-    @Override
-    public DepartmentResource put(UUID departmentId, DepartmentDto dto) {
-        LOGGER.debug(String.format("Request to update the record [%s].", departmentId));
-        Department old = getRepository().findById(departmentId).orElseThrow(() -> new BadRequestException(ID_IS_NOT_EXIST));
-        if (dto == null) {
-            LOGGER.error(DTO_CANNOT_BE_EMPTY);
-            throw new BadRequestException(DTO_CANNOT_BE_EMPTY);
-        }
-        if (departmentId == null) {
-            LOGGER.error(ID_CANNOT_BE_EMPTY);
-            throw new BadRequestException(ID_CANNOT_BE_EMPTY);
-        }
-        Department department = getConverter().toEntity(dto);
-        department.setId(old.getId());
-        department.setCreatedDate(old.getCreatedDate());
-        department.setBranch(branchRepository.findBranchById(dto.getBranchId()));
-        return mapper.toResource(getRepository().save(department));
-    }
-
     @Transactional
     public DepartmentResource addPersonal(UUID departmentId, UUID userId) {
         Department department = repository.findDepartmentById(departmentId);
