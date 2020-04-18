@@ -1,7 +1,7 @@
 package com.lens.epay.mapper;
 
 import com.lens.epay.common.Converter;
-import com.lens.epay.model.dto.product.CategoryDto;
+import com.lens.epay.model.dto.sale.CategoryDto;
 import com.lens.epay.model.entity.Category;
 import com.lens.epay.model.resource.product.CategoryResource;
 import org.mapstruct.Mapper;

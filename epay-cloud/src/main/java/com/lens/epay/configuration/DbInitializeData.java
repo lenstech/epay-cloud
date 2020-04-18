@@ -25,6 +25,7 @@ public class DbInitializeData {
             admin.setPassword("$2a$10$mLpoOQQ1mf9217XGIBoW4.QOoMPSenH0hm8MU8Hwx2V6ycCA6DJIa");
             admin.setName("admin");
             admin.setSurname("admin");
+            admin.setPhoneNumber("05064066030");
             admin.setRole(Role.ADMIN);
             admin.setConfirmed(true);
             userRepository.save(admin);

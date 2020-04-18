@@ -3,7 +3,7 @@ package com.lens.epay.controller;
 import com.lens.epay.common.AbstractController;
 import com.lens.epay.common.AbstractService;
 import com.lens.epay.enums.Role;
-import com.lens.epay.model.dto.product.ProductDto;
+import com.lens.epay.model.dto.sale.ProductDto;
 import com.lens.epay.model.entity.Product;
 import com.lens.epay.model.resource.product.ProductResource;
 import com.lens.epay.service.ProductService;

@@ -1,4 +1,4 @@
-package com.lens.epay.model.dto.product;
+package com.lens.epay.model.dto.sale;
 
 import com.lens.epay.enums.Unit;
 import lombok.AllArgsConstructor;

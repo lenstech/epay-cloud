@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 import static com.lens.epay.constant.ErrorConstants.*;
 
@@ -19,7 +20,7 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
 
     public abstract Converter<DTO, T, RES> getConverter();
 
-    public RES save(DTO dto) {
+    public RES save(DTO dto, UUID userId) {
         return getConverter().toResource(getRepository().save(getConverter().toEntity(dto)));
     }
 
@@ -32,7 +33,7 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
     }
 
     @Transactional
-    public RES put(ID id, DTO updatedDto) {
+    public RES put(ID id, DTO updatedDto, UUID userId) {
         if (id == null) {
             throw new BadRequestException(ID_CANNOT_BE_EMPTY);
         }

@@ -2,9 +2,7 @@ package com.lens.epay.model.entity;
 
 import com.lens.epay.common.AbstractEntity;
 import com.lens.epay.enums.Unit;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Data;
-import org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy;
 import org.springframework.format.annotation.NumberFormat;
 
 import javax.persistence.*;

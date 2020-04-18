@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 import static com.lens.epay.constant.HttpSuccessMessagesConstants.SUCCESSFULLY_DELETED;
 
@@ -29,20 +30,20 @@ public abstract class AbstractController<T extends AbstractEntity, ID extends Se
     private AuthorizationConfig authorizationConfig;
 
     public Role getMinRole() {
-        return minRole;
+        return this.minRole;
     }
 
     public abstract void setMinRole();
 
-    public Role minRole;
+    protected Role minRole;
 
     @ApiOperation(value = "Create Object, it can be done by authorization")
     @PostMapping
     public RES save(@RequestHeader("Authorization") String token, @RequestBody DTO dto) {
         LOGGER.debug(String.format("Saving the dto [%s].", dto));
         setMinRole();
-        authorizationConfig.permissionCheck(token, minRole);
-        return getService().save(dto);
+        UUID userId = authorizationConfig.permissionCheck(token, minRole);
+        return getService().save(dto,userId);
     }
 
     @ApiOperation(value = "Get Object")
@@ -68,8 +69,8 @@ public abstract class AbstractController<T extends AbstractEntity, ID extends Se
                                  @RequestParam ID objectId) {
         LOGGER.debug(String.format("Request to update the record [%s].", objectId));
         setMinRole();
-        authorizationConfig.permissionCheck(token, minRole);
-        return getService().put(objectId, dto);
+        UUID userId = authorizationConfig.permissionCheck(token, minRole);
+        return getService().put(objectId, dto, userId);
     }
 
     @ApiOperation(value = "Delete Object,  it can be done by authorization", response = void.class)

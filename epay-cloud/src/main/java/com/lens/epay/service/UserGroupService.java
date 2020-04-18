@@ -47,7 +47,7 @@ public class UserGroupService extends AbstractService<UserGroup, UUID, UserGroup
     }
 
     @Override
-    public UserGroupResource put(UUID id, UserGroupDto updatedDto) {
+    public UserGroupResource put(UUID id, UserGroupDto updatedDto, UUID userId) {
         UserGroup theReal = repository.findById(id).orElseThrow(() -> new BadRequestException(ID_IS_NOT_EXIST));
         if (updatedDto == null) {
             throw new BadRequestException(DTO_CANNOT_BE_EMPTY);

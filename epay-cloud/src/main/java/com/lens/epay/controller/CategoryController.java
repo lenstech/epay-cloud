@@ -2,9 +2,8 @@ package com.lens.epay.controller;
 
 import com.lens.epay.common.AbstractController;
 import com.lens.epay.common.AbstractService;
-import com.lens.epay.configuration.AuthorizationConfig;
 import com.lens.epay.enums.Role;
-import com.lens.epay.model.dto.product.CategoryDto;
+import com.lens.epay.model.dto.sale.CategoryDto;
 import com.lens.epay.model.entity.Category;
 import com.lens.epay.model.resource.product.CategoryResource;
 import com.lens.epay.service.CategoryService;

@@ -1,6 +1,5 @@
 package com.lens.epay.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lens.epay.common.AbstractEntity;
 import com.lens.epay.enums.Role;
 import lombok.Data;
@@ -10,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.UUID;
 
 /**
@@ -41,6 +41,10 @@ public class User extends AbstractEntity<UUID> {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @NotNull
+    @Size(min = 10, max = 13)
+    private String phoneNumber;
 
     @ManyToOne
     @JoinColumn(name = "department")

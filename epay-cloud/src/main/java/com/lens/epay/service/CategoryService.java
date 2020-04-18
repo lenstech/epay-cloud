@@ -3,7 +3,7 @@ package com.lens.epay.service;
 import com.lens.epay.common.AbstractService;
 import com.lens.epay.common.Converter;
 import com.lens.epay.mapper.CategoryMapper;
-import com.lens.epay.model.dto.product.CategoryDto;
+import com.lens.epay.model.dto.sale.CategoryDto;
 import com.lens.epay.model.entity.Category;
 import com.lens.epay.model.resource.product.CategoryResource;
 import com.lens.epay.repository.CategoryRepository;
