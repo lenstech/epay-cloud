@@ -50,7 +50,7 @@ public abstract class AbstractController<T extends AbstractEntity, ID extends Se
     @GetMapping
     public RES get(@RequestHeader("Authorization") String token, @RequestParam ID objectId) {
         LOGGER.debug("Requesting {id} records.");
-        authorizationConfig.permissionCheck(token, Role.BASIC_USER);
+        authorizationConfig.permissionCheck(token, minRole);
         return getService().get(objectId);
     }
 
@@ -58,7 +58,7 @@ public abstract class AbstractController<T extends AbstractEntity, ID extends Se
     @GetMapping("/all")
     public List<RES> getAll(@RequestHeader("Authorization") String token) {
         LOGGER.debug("Requesting all records.");
-        authorizationConfig.permissionCheck(token, Role.BASIC_USER);
+        authorizationConfig.permissionCheck(token, minRole);
         return getService().getAll();
     }
 

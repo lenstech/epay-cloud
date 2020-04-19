@@ -25,6 +25,7 @@ public class ErrorConstants {
     //Unauthorization Exception
     public static final String NOT_AUTHORIZED_FOR_OPERATION = "You are not authorized for this operation!";
     public static final String USER_NOT_EXIST = "User could not be found!";
+    public static final String THIS_OPERATION_IS_NOT_BELONG_TO_THIS_USER = "This Operation is not belong to this user!";
 
     public static final String ID_IS_NOT_EXIST = "Id is not exist";
 
@@ -43,5 +44,8 @@ public class ErrorConstants {
     //Photo
     public static final String THERE_IS_NO_PROFILE_PHOTO_OF_THIS_USER = "There is no photo of this user!";
 
+    //Order
+    public static final String NOT_APPROPRIATE_CANCEL_AT_THIS_POINT = "It is not appropriate for cancel at this point";
+    public static final String NOT_APPROPRIATE_FOR_THIS_PAYMENT_TYPE = "It is not appropriate for this payment type!";
 
 }

@@ -1,11 +1,15 @@
 package com.lens.epay.util;
 
+import com.lens.epay.model.entity.Address;
 import com.lens.epay.model.entity.User;
+import com.lens.epay.repository.AddressRepository;
 import com.lens.epay.repository.UserRepository;
 import com.lens.epay.security.JwtResolver;
 import lombok.experimental.UtilityClass;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.UUID;
 
 /**
  * Created by Emir Gökdemir
@@ -24,4 +28,5 @@ public class MapperUtil {
     private User tokenToUser(String token){
         return userRepository.findUserById(resolver.getIdFromToken(token));
     }
+
 }
