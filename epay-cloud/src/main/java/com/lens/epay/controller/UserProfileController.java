@@ -39,7 +39,6 @@ public class UserProfileController {
             response = MinimalUserResource.class)
     @GetMapping("/get-other-profile")
     public ResponseEntity getOtherProfile(@RequestHeader("Authorization") String token, @RequestParam("email") String email) {
-        UUID userId = jwtResolver.getIdFromToken(token);
         MinimalUserResource user = userProfileService.getOtherProfile(email);
         return ResponseEntity.ok(user);
     }

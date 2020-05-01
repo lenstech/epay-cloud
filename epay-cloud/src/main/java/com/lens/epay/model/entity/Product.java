@@ -37,6 +37,9 @@ public class Product extends AbstractEntity<UUID> {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Column(name = "photo_id")
+    private UUID photoId;
+
     @Column(name = "stocked")
     private Boolean stocked = true;
 }
