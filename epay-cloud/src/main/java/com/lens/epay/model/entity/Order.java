@@ -9,6 +9,7 @@ import org.springframework.format.annotation.NumberFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,12 +23,14 @@ import java.util.UUID;
 @Table(name = "orders")
 public class Order extends AbstractEntity<UUID> {
 
+    @org.eclipse.persistence.annotations.Index
     @NotNull(message = "User cannot be blanked!")
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @NotNull
+    @org.eclipse.persistence.annotations.Index
+    @NotNull(message = "Order Status cannot be blanked!")
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus = OrderStatus.TAKEN;
 
@@ -53,15 +56,19 @@ public class Order extends AbstractEntity<UUID> {
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
 
-    @ElementCollection
-    private Map<Product, Short> productQuantity;
+    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
+    private List<BasketObject> basketObjects;
 
     private Boolean paid;
 
+    private Boolean repaid =  false;
+
     private String remittanceNo;
+
+    private String remittanceBank;
 
     private String returnRemittanceNo;
 
-
+    private String returnRemittanceBank;
 
 }

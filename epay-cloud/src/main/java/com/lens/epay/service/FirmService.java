@@ -9,6 +9,7 @@ import com.lens.epay.model.entity.Firm;
 import com.lens.epay.model.resource.organization.BranchResource;
 import com.lens.epay.model.resource.organization.FirmResource;
 import com.lens.epay.repository.BranchRepository;
+import com.lens.epay.repository.EpayRepository;
 import com.lens.epay.repository.FirmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -37,7 +38,7 @@ public class FirmService extends AbstractService<Firm, UUID, FirmDto, FirmResour
     private BranchMapper branchMapper;
 
     @Override
-    public JpaRepository<Firm, UUID> getRepository() {
+    public EpayRepository<Firm, UUID> getRepository() {
         return repository;
     }
 

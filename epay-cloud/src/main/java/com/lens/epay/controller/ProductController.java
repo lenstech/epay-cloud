@@ -31,7 +31,7 @@ public class ProductController extends AbstractController<Product, UUID, Product
 
     @Override
     public void setMinRole() {
-        super.minRole = Role.FIRM_ADMIN;
+        super.minRole = Role.CUSTOMER;
     }
 
     @Autowired

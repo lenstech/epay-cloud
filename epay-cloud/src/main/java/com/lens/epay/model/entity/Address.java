@@ -4,6 +4,7 @@ import com.lens.epay.common.AbstractEntity;
 import com.lens.epay.enums.AddressType;
 import com.lens.epay.enums.InvoiceType;
 import lombok.Data;
+import org.eclipse.persistence.annotations.Index;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -24,6 +25,7 @@ public class Address extends AbstractEntity<UUID> {
 
     private String name;
 
+    @Index
     @ManyToOne(optional = false)
     private User user;
 

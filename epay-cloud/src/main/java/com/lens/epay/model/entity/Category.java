@@ -1,5 +1,6 @@
 package com.lens.epay.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lens.epay.common.AbstractEntity;
 import lombok.Data;
@@ -28,6 +29,7 @@ public class Category extends AbstractEntity<UUID> {
     private String description;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
+    @JsonBackReference
     @JsonIgnore
     private List<Product> products;
 }

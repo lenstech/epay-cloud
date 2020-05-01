@@ -1,6 +1,8 @@
 package com.lens.epay.common;
 
 import com.lens.epay.exception.BadRequestException;
+import com.lens.epay.repository.EpayRepository;
+import org.mapstruct.Named;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +18,7 @@ import static com.lens.epay.constant.ErrorConstants.*;
  */
 public abstract class AbstractService<T extends AbstractEntity, ID extends Serializable, DTO, RES> {
 
-    public abstract JpaRepository<T, ID> getRepository();
+    public abstract EpayRepository<T, ID> getRepository();
 
     public abstract Converter<DTO, T, RES> getConverter();
 
@@ -25,7 +27,13 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
     }
 
     public RES get(ID id) {
-        return getConverter().toResource(getRepository().findById(id).orElseThrow(() -> new BadRequestException(ID_IS_NOT_EXIST)));
+        T entity;
+        try {
+            entity = getRepository().findOneById(id);
+        } catch (NullPointerException e) {
+            throw new BadRequestException(ID_IS_NOT_EXIST);
+        }
+        return getConverter().toResource(entity);
     }
 
     public List<RES> getAll() {
@@ -59,5 +67,14 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
         }
         T entity = getRepository().findById(id).orElseThrow(() -> new BadRequestException(ID_IS_NOT_EXIST));
         getRepository().delete(entity);
+    }
+
+    @Named("fromIdToEntity")
+    public T fromIdToEntity(ID id){
+        try {
+            return getRepository().findOneById(id);
+        } catch (NullPointerException e) {
+            throw new BadRequestException(ID_IS_NOT_EXIST);
+        }
     }
 }

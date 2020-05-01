@@ -46,6 +46,12 @@ public class ErrorConstants {
 
     //Order
     public static final String NOT_APPROPRIATE_CANCEL_AT_THIS_POINT = "It is not appropriate for cancel at this point";
-    public static final String NOT_APPROPRIATE_FOR_THIS_PAYMENT_TYPE = "It is not appropriate for this payment type!";
+    public static final String NOT_APPROPRIATE_FOR_THIS_PAYMENT_TYPE = "Operation is not appropriate for this payment type!";
+    public static final String NOT_APPROPRIATE_ORDER_STATUS = "Order Status is not appropriate for this operation!";
+    public static final String PAYMENT_IS_UNSUCCESSFUL = "Payment is unsuccessful!";
+    public static final String PAYMENT_IS_NOT_COMPLETED_YET = "Payment type is not Pay At The Door and payment is not completed yet!";
+    public static final String REPAYMENT_ALREADY_COMPLETED = "Repayment was already completed.";
+    public static final String PAYMENT_IS_NOT_OCCURED = "Payment is not occured yet was already completed.";
+    public static final String TOTAL_PRICE_IS_NOT_CORRECT = "Total price is not correct!";
 
 }

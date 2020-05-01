@@ -15,6 +15,4 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {MinimalUserMapper.class})
 public interface AddressMapper extends Converter<AddressDto, Address, AddressResource> {
 
-    @Override
-    Address toEntity(AddressDto addressDto);
 }

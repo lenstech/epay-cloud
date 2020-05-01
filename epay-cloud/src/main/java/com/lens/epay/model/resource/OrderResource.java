@@ -3,7 +3,7 @@ package com.lens.epay.model.resource;
 import com.lens.epay.common.AbstractResource;
 import com.lens.epay.enums.OrderStatus;
 import com.lens.epay.enums.PaymentType;
-import com.lens.epay.model.entity.Product;
+import com.lens.epay.model.resource.product.BasketObjectResource;
 import com.lens.epay.model.resource.user.MinimalUserResource;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.ZonedDateTime;
-import java.util.Map;
+import java.util.List;
 
 /**
  * Created by Emir Gökdemir
@@ -46,8 +46,18 @@ public class OrderResource extends AbstractResource {
 
     private PaymentType paymentType;
 
-    private Map<Product, Short> productQuantity;
+    private List<BasketObjectResource> basketObjects;
 
     private Boolean paid;
+
+    private Boolean repaid;
+
+    private String remittanceNo;
+
+    private String remittanceBank;
+
+    private String returnRemittanceNo;
+
+    private String returnRemittanceBank;
 
 }

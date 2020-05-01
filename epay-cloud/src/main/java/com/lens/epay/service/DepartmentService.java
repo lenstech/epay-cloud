@@ -40,9 +40,6 @@ public class DepartmentService extends AbstractService<Department, UUID, Departm
     private DepartmentRepository repository;
 
     @Autowired
-    private BranchRepository branchRepository;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired

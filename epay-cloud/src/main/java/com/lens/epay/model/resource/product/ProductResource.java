@@ -29,5 +29,5 @@ public class ProductResource extends AbstractResource {
 
     private CategoryResource category;
 
-    private Boolean stocked;
+    private Boolean stocked = true;
 }

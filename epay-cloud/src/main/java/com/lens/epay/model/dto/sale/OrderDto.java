@@ -1,7 +1,6 @@
 package com.lens.epay.model.dto.sale;
 
 import com.lens.epay.enums.PaymentType;
-import com.lens.epay.model.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,10 +8,10 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.CreditCardNumber;
 import org.springframework.format.annotation.NumberFormat;
 
-import javax.persistence.ElementCollection;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.Size;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -38,7 +37,7 @@ public class OrderDto {
     private PaymentType paymentType;
 
     @CreditCardNumber
-    private String  creditCardNumber;
+    private String creditCardNumber;
 
     private String creditCardHolderName;
 
@@ -50,13 +49,5 @@ public class OrderDto {
     @Size(max = 3)
     private String cvc;
 
-    @ElementCollection
-    private Map<Product, Short> productQuantity;
-
-    private Boolean paid;
-
-    private String remittanceNo;
-
-    private String returnRemittanceNo;
-
+    private List<BasketObjectDto> basketObjectDtoList;
 }

@@ -8,6 +8,7 @@ import com.lens.epay.model.dto.user.UserGroupDto;
 import com.lens.epay.model.entity.User;
 import com.lens.epay.model.entity.UserGroup;
 import com.lens.epay.model.resource.user.UserGroupResource;
+import com.lens.epay.repository.EpayRepository;
 import com.lens.epay.repository.UserGroupRepository;
 import com.lens.epay.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class UserGroupService extends AbstractService<UserGroup, UUID, UserGroup
     private UserRepository userRepository;
 
     @Override
-    public JpaRepository<UserGroup, UUID> getRepository() {
+    public EpayRepository<UserGroup, UUID> getRepository() {
         return repository;
     }
 

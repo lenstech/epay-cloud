@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface EpayRepository<T, ID extends Serializable> extends JpaRepository<T, ID> {
 
     @Override
-    default Optional<T> findById(ID id){
+    default Optional<T> findById(ID id) {
         return Optional.ofNullable(findOneById(id));
     }
 
