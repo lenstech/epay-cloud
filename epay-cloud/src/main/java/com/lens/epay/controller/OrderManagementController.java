@@ -50,6 +50,14 @@ public class OrderManagementController {
         return ResponseEntity.ok(orderService.approveRemittance(orderId));
     }
 
+    @PutMapping("/decline-remittance")
+    @ApiOperation("Seller declines remittance infos of the order. Customer should provide new info")
+    public ResponseEntity<OrderResource> declineRemittance(@RequestParam UUID orderId,
+                                                           @RequestHeader("Authorization") String token) {
+        authorizationConfig.permissionCheck(token, Role.BASIC_USER);
+        return ResponseEntity.ok(orderService.declineRemittance(orderId));
+    }
+
     @PutMapping("/set-prepared-for-cargo")
     @ApiOperation("Seller changes the OrderStatus from APPROVED to PREPARED_FOR_CARGO of the order which is came from Customer")
     public ResponseEntity<OrderResource> setPreparedForCargo(@RequestParam UUID orderId,

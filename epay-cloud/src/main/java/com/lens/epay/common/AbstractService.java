@@ -3,7 +3,9 @@ package com.lens.epay.common;
 import com.lens.epay.exception.BadRequestException;
 import com.lens.epay.repository.EpayRepository;
 import org.mapstruct.Named;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.lens.epay.constant.ErrorConstants.*;
+import static com.lens.epay.constant.GeneralConstants.PAGE_SIZE;
 
 /**
  * Created by Emir Gökdemir
@@ -38,6 +41,25 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
 
     public List<RES> getAll() {
         return getConverter().toResources(getRepository().findAll());
+    }
+
+    public Page<RES> getAllWithPage(int pageNumber, String sortBy, Boolean desc) {
+        PageRequest pageable;
+        if (desc == null) {
+            desc = true;
+        }
+        try {
+            if (desc) {
+                pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.DESC, sortBy);
+                return getRepository().findAll(pageable).map(getConverter()::toResource);
+            } else {
+                pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, sortBy);
+                return getRepository().findAll(pageable).map(getConverter()::toResource);
+            }
+        } catch (Exception e) {
+            pageable = PageRequest.of(pageNumber, PAGE_SIZE);
+            return getRepository().findAll(pageable).map(getConverter()::toResource);
+        }
     }
 
     @Transactional
@@ -70,7 +92,7 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
     }
 
     @Named("fromIdToEntity")
-    public T fromIdToEntity(ID id){
+    public T fromIdToEntity(ID id) {
         try {
             return getRepository().findOneById(id);
         } catch (NullPointerException e) {

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import static com.lens.epay.constant.ErrorConstants.*;
@@ -164,6 +165,20 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
         }
         order.setOrderStatus(OrderStatus.APPROVED);
         order.setPaid(true);
+        return getConverter().toResource(getRepository().save(order));
+    }
+
+    public OrderResource declineRemittance(UUID orderId) {
+        Order order = getRepository().getOne(orderId);
+        if (!order.getOrderStatus().equals(OrderStatus.TAKEN) &&
+                !order.getOrderStatus().equals(OrderStatus.REMITTANCE_INFO_WAITED) &&
+                !order.getOrderStatus().equals(OrderStatus.WAIT_FOR_APPROVE_REMITTANCE_BY_SELLER)) {
+            throw new BadRequestException(NOT_APPROPRIATE_ORDER_STATUS);
+        }
+        if (!order.getPaymentType().equals(PaymentType.REMITTANCE)) {
+            throw new BadRequestException(NOT_APPROPRIATE_FOR_THIS_PAYMENT_TYPE);
+        }
+        order.setOrderStatus(OrderStatus.REMITTANCE_INFO_WAITED);
         return getConverter().toResource(getRepository().save(order));
     }
 
