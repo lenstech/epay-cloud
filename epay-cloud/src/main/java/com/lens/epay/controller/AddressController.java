@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -45,9 +46,9 @@ public class AddressController extends AbstractController<Address, UUID, Address
     @Autowired
     private JwtResolver resolver;
 
-    @ApiOperation(value = "", response = AddressResource.class, responseContainer = "List")
+    @ApiOperation(value = "Get addresses of an user", response = AddressResource.class, responseContainer = "List")
     @GetMapping("/user")
-    public ResponseEntity getAddressesOfUser(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<AddressResource>> getAddressesOfUser(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(service.getAddressesOfUser(resolver.getIdFromToken(token)));
     }
 }

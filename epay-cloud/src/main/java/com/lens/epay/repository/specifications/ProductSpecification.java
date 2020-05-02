@@ -1,7 +1,6 @@
 package com.lens.epay.repository.specifications;
 
-import com.lens.epay.enums.SearchOperator;
-import com.lens.epay.model.entity.Order;
+import com.lens.epay.model.entity.Product;
 import com.lens.epay.model.other.SearchCriteria;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -18,11 +17,11 @@ import java.util.List;
  * on 1 May 2020
  */
 
-public class OrderSpecification implements Specification<Order> {
+public class ProductSpecification implements Specification<Product> {
 
     private List<SearchCriteria> list;
 
-    public OrderSpecification() {
+    public ProductSpecification() {
         this.list = new ArrayList<>();
     }
 
@@ -31,7 +30,7 @@ public class OrderSpecification implements Specification<Order> {
     }
 
     @Override
-    public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+    public Predicate toPredicate(Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -39,6 +38,10 @@ public class OrderSpecification implements Specification<Order> {
             switch (criteria.getOperation()) {
                 case MATCH:
                     predicates.add(builder.like(builder.lower(root.get(criteria.getKey())), "%" + criteria.getValue().toString().toLowerCase() + "%"));
+                    break;
+                case MATCH_IN_CATEGORY:
+                    //Specific Case
+                    predicates.add(builder.like(builder.lower(root.get(criteria.getKey()).get("name")), "%" + criteria.getValue().toString().toLowerCase() + "%"));
                     break;
                 case EQUAL:
                     predicates.add(builder.equal(root.get(criteria.getKey()), criteria.getValue()));
@@ -81,6 +84,6 @@ public class OrderSpecification implements Specification<Order> {
             }
         }
 
-        return builder.and(predicates.toArray(new Predicate[0]));
+        return builder.or(predicates.toArray(new Predicate[0]));
     }
 }

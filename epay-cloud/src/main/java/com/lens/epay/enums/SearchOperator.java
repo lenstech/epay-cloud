@@ -18,5 +18,6 @@ public enum SearchOperator {
     IN,
     NOT_IN,
     FROM,
-    TO
+    TO,
+    MATCH_IN_CATEGORY
 }

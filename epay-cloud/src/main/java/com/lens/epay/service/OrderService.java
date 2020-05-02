@@ -443,10 +443,10 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
             spec.add(new SearchCriteria("paymentType", paymentType, SearchOperator.EQUAL));
         }
         if (cargoFirm != null) {
-            spec.add(new SearchCriteria("cargoFirm", cargoFirm, SearchOperator.EQUAL));
+            spec.add(new SearchCriteria("cargoFirm", cargoFirm, SearchOperator.MATCH));
         }
         if (remittanceBank != null) {
-            spec.add(new SearchCriteria("remittanceBank", remittanceBank, SearchOperator.EQUAL));
+            spec.add(new SearchCriteria("remittanceBank", remittanceBank, SearchOperator.MATCH));
         }
         if (paid != null) {
             spec.add(new SearchCriteria("paid", true, SearchOperator.EQUAL));
