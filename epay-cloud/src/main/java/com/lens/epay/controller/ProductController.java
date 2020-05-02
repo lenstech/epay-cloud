@@ -40,9 +40,15 @@ public class ProductController extends AbstractController<Product, UUID, Product
     @Autowired
     private ProductService productService;
 
-    @ApiOperation(value = "Search for Product", response = AddressResource.class, responseContainer = "List")
+    @ApiOperation(value = "Search for Product", response = ProductResource.class, responseContainer = "List")
     @GetMapping("/search/{word}/{pageNo}")
-    public ResponseEntity<Page<ProductResource>> getAddressesOfUser(@PathVariable String word, @PathVariable int pageNo) {
+    public ResponseEntity<Page<ProductResource>> searchProducts(@PathVariable String word, @PathVariable int pageNo) {
         return ResponseEntity.ok(productService.search(word,pageNo));
+    }
+
+    @ApiOperation(value = "Get Products By category Id", response = ProductResource.class, responseContainer = "List")
+    @GetMapping("/get/category/{pageNo}")
+    public ResponseEntity<Page<ProductResource>> getAddressesOfUser(@RequestParam UUID categoryId, @PathVariable int pageNo) {
+        return ResponseEntity.ok(productService.findProductByCategory(categoryId,pageNo));
     }
 }

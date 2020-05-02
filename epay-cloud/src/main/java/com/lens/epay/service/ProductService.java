@@ -13,6 +13,7 @@ import com.lens.epay.repository.specifications.ProductSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -55,5 +56,10 @@ public class ProductService extends AbstractService<Product, UUID, ProductDto, P
 
         pageable = PageRequest.of(pageNumber, PAGE_SIZE);
         return repository.findAll(spec, pageable).map(getConverter()::toResource);
+    }
+
+    public Page<ProductResource> findProductByCategory(UUID categoryId, int pageNo){
+        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE);
+        return repository.findProductsByCategoryId(pageable, categoryId).map(getConverter()::toResource);
     }
 }
