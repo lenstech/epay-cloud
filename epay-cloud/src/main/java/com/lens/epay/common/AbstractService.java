@@ -51,11 +51,10 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
         try {
             if (desc) {
                 pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.DESC, sortBy);
-                return getRepository().findAll(pageable).map(getConverter()::toResource);
             } else {
                 pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, sortBy);
-                return getRepository().findAll(pageable).map(getConverter()::toResource);
             }
+            return getRepository().findAll(pageable).map(getConverter()::toResource);
         } catch (Exception e) {
             pageable = PageRequest.of(pageNumber, PAGE_SIZE);
             return getRepository().findAll(pageable).map(getConverter()::toResource);

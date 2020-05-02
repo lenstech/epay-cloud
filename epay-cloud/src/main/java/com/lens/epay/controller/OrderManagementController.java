@@ -2,6 +2,7 @@ package com.lens.epay.controller;
 
 import com.lens.epay.configuration.AuthorizationConfig;
 import com.lens.epay.enums.OrderStatus;
+import com.lens.epay.enums.PaymentType;
 import com.lens.epay.enums.Role;
 import com.lens.epay.model.resource.OrderResource;
 import com.lens.epay.service.OrderService;
@@ -9,10 +10,16 @@ import com.lens.epay.service.PaymentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.UUID;
+
+import static com.lens.epay.constant.GeneralConstants.DTO_DATE_FORMAT;
+import static com.lens.epay.constant.GeneralConstants.DTO_DATE_TIME_FORMAT;
 
 /**
  * Created by Emir Gökdemir
@@ -71,7 +78,7 @@ public class OrderManagementController {
     public ResponseEntity<OrderResource> setCargoInfo(@RequestParam String cargoNo,
                                                       @RequestParam String cargoFirm,
                                                       @RequestParam UUID orderId,
-                                                      @RequestParam String shippedDate,
+                                                      @RequestParam @DateTimeFormat(pattern = DTO_DATE_TIME_FORMAT) Date shippedDate,
                                                       @RequestHeader("Authorization") String token) {
         authorizationConfig.permissionCheck(token, Role.BASIC_USER);
         return ResponseEntity.ok(orderService.setCargoInfo(cargoNo, cargoFirm, orderId, shippedDate));
@@ -146,5 +153,22 @@ public class OrderManagementController {
                                                         @RequestHeader("Authorization") String token) {
         authorizationConfig.permissionCheck(token, Role.ADMIN);
         return ResponseEntity.ok(orderService.setStatus(orderStatus, orderId));
+    }
+
+    @GetMapping("/report")
+    @ApiOperation("Report of orders")
+    public ResponseEntity<Page<OrderResource>> orderReport(@RequestParam int pageNumber,
+                                                           @RequestParam(required = false) Boolean desc,
+                                                           @RequestParam(required = false) String sortBy,
+                                                           @RequestParam(required = false) @DateTimeFormat(pattern = DTO_DATE_FORMAT) Date startDate,
+                                                           @RequestParam(required = false) @DateTimeFormat(pattern = DTO_DATE_FORMAT) Date endDate,
+                                                           @RequestParam(required = false) OrderStatus orderStatus,
+                                                           @RequestParam(required = false) PaymentType paymentType,
+                                                           @RequestParam(required = false) String cargoFirm,
+                                                           @RequestParam(required = false) String remittanceBank,
+                                                           @RequestParam(required = false) Boolean paid,
+                                                           @RequestHeader("Authorization") String token) {
+        authorizationConfig.permissionCheck(token, Role.FIRM_ADMIN);
+        return ResponseEntity.ok(orderService.getOrderReport(pageNumber, desc, sortBy, startDate, endDate, orderStatus, paymentType, cargoFirm, remittanceBank, paid));
     }
 }

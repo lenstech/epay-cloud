@@ -4,25 +4,33 @@ import com.lens.epay.common.AbstractService;
 import com.lens.epay.common.Converter;
 import com.lens.epay.enums.OrderStatus;
 import com.lens.epay.enums.PaymentType;
+import com.lens.epay.enums.SearchOperator;
 import com.lens.epay.exception.BadRequestException;
 import com.lens.epay.mapper.OrderMapper;
 import com.lens.epay.model.dto.sale.OrderDto;
 import com.lens.epay.model.entity.BasketObject;
 import com.lens.epay.model.entity.Order;
+import com.lens.epay.model.other.SearchCriteria;
 import com.lens.epay.model.resource.OrderResource;
 import com.lens.epay.repository.BasketRepository;
 import com.lens.epay.repository.OrderRepository;
 import com.lens.epay.repository.UserRepository;
-import com.lens.epay.util.DateUtil;
+import com.lens.epay.repository.specifications.OrderSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.List;
+import java.util.Date;
 import java.util.UUID;
 
 import static com.lens.epay.constant.ErrorConstants.*;
+import static com.lens.epay.constant.GeneralConstants.DEFAULT_SORT_BY;
+import static com.lens.epay.constant.GeneralConstants.PAGE_SIZE;
 
 /**
  * Created by Emir Gökdemir
@@ -196,7 +204,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
     }
 
     //SELLER
-    public OrderResource setCargoInfo(String cargoNo, String cargoFirm, UUID orderId, String shippedDate) {
+    public OrderResource setCargoInfo(String cargoNo, String cargoFirm, UUID orderId, Date shippedDate) {
         Order order = getRepository().getOne(orderId);
         if (!order.getOrderStatus().equals(OrderStatus.APPROVED) &&
                 !order.getOrderStatus().equals(OrderStatus.PREPARED_FOR_CARGO)) {
@@ -208,7 +216,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
 
         if (shippedDate != null) {
             try {
-                order.setShippedDate(DateUtil.stringToZonedDateTime(shippedDate));
+                order.setShippedDate(ZonedDateTime.ofInstant(shippedDate.toInstant(),ZoneId.systemDefault()));
             } catch (Exception e) {
                 order.setShippedDate(ZonedDateTime.now());
             }
@@ -404,8 +412,71 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
         return getConverter().toResource(order);
     }
 
+    public Page<OrderResource> getOrderReport(int pageNumber,
+                                              Boolean desc,
+                                              String sortBy,
+                                              Date startDate,
+                                              Date  endDate,
+                                              OrderStatus orderStatus,
+                                              PaymentType paymentType,
+                                              String cargoFirm,
+                                              String remittanceBank,
+                                              Boolean paid) {
+        PageRequest pageable;
+        if (desc == null) {
+            desc = true;
+        }
+
+        OrderSpecification spec = new OrderSpecification();
+        if (startDate != null) {
+            ZonedDateTime start = ZonedDateTime.ofInstant(startDate.toInstant(),ZoneId.systemDefault());
+            spec.add(new SearchCriteria("createdDate", start, SearchOperator.FROM));
+        }
+        if (endDate != null) {
+            ZonedDateTime end = ZonedDateTime.ofInstant(endDate.toInstant(),ZoneId.systemDefault());
+            spec.add(new SearchCriteria("createdDate", end, SearchOperator.TO));
+        }
+        if (orderStatus != null) {
+            spec.add(new SearchCriteria("orderStatus", orderStatus, SearchOperator.EQUAL));
+        }
+        if (paymentType != null) {
+            spec.add(new SearchCriteria("paymentType", paymentType, SearchOperator.EQUAL));
+        }
+        if (cargoFirm != null) {
+            spec.add(new SearchCriteria("cargoFirm", cargoFirm, SearchOperator.EQUAL));
+        }
+        if (remittanceBank != null) {
+            spec.add(new SearchCriteria("remittanceBank", remittanceBank, SearchOperator.EQUAL));
+        }
+        if (paid != null) {
+            spec.add(new SearchCriteria("paid", true, SearchOperator.EQUAL));
+        }
+
+        try {
+            if (desc) {
+                pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.by(sortBy).descending());
+            } else {
+                pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.by(sortBy).ascending());
+            }
+            return repository.findAll(spec, pageable)
+                    .map(getConverter()::toResource);
+        } catch (Exception e) {
+            pageable = PageRequest.of(pageNumber, PAGE_SIZE);
+            return repository.findAll(spec, pageable)
+                    .map(getConverter()::toResource);
+        }
+    }
+
+
+    /**
+     * From that point user monitor will be considered
+     * -------------------------------------------------------------------------------------------------------------------------------------------------------
+     */
+    public Page<OrderResource> getSelfOrders(UUID userId, int pageNo) {
+        PageRequest pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.Direction.DESC, DEFAULT_SORT_BY);
+        return getRepository().findOrdersByUserId(pageable, userId).map(getConverter()::toResource);
+    }
     // TODO: 19 Nis 2020 repaid remittanceDan sonrası
     // TODO: 19 Nis 2020 graph çiz
-    // TODO: 25 Nis 2020 order of an user
     // TODO: 25 Nis 2020 report (belli tarih arasında
 }

@@ -10,8 +10,14 @@ import java.time.format.DateTimeFormatter;
 
 public class DateUtil {
 
-    public static ZonedDateTime stringToZonedDateTime(String date) {
+    public static ZonedDateTime stringToZonedDateTime(String dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return ZonedDateTime.parse(dateTime, formatter);
+    }
+
+     public static ZonedDateTime stringToZonedDate(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return ZonedDateTime.parse(date, formatter);
     }
+
 }
