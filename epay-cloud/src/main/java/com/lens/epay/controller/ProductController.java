@@ -32,8 +32,28 @@ public class ProductController extends AbstractController<Product, UUID, Product
     }
 
     @Override
-    public void setMinRole() {
-        super.minRole = Role.CUSTOMER;
+    public void setSaveRole() {
+        super.saveRole = Role.BASIC_USER;
+    }
+
+    @Override
+    public void setGetRole() {
+        super.getRole = null;
+    }
+
+    @Override
+    public void setGetAllRole() {
+        super.getAllRole = null;
+    }
+
+    @Override
+    public void setUpdateRole() {
+        super.updateRole = Role.BASIC_USER;
+    }
+
+    @Override
+    public void setDeleteRole() {
+        super.deleteRole = Role.BASIC_USER;
     }
 
     @Autowired

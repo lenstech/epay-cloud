@@ -37,8 +37,28 @@ public class FirmController extends AbstractController<Firm, UUID, FirmDto, Firm
     private AuthorizationConfig authorizationConfig;
 
     @Override
-    public void setMinRole() {
-        super.minRole = Role.ADMIN;
+    public void setSaveRole() {
+        super.saveRole = Role.FIRM_ADMIN;
+    }
+
+    @Override
+    public void setGetRole() {
+        super.getRole = Role.BASIC_USER;
+    }
+
+    @Override
+    public void setGetAllRole() {
+        super.getAllRole = Role.ADMIN;
+    }
+
+    @Override
+    public void setUpdateRole() {
+        super.updateRole = Role.FIRM_ADMIN;
+    }
+
+    @Override
+    public void setDeleteRole() {
+        super.deleteRole = Role.FIRM_ADMIN;
     }
 
     @Override

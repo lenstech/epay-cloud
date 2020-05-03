@@ -33,9 +33,30 @@ public class BranchController extends AbstractController<Branch, UUID, BranchDto
     }
 
     @Override
-    public void setMinRole() {
-        super.minRole = Role.FIRM_ADMIN;
+    public void setSaveRole() {
+        super.saveRole = Role.FIRM_ADMIN;
     }
+
+    @Override
+    public void setGetRole() {
+        super.getRole = Role.BASIC_USER;
+    }
+
+    @Override
+    public void setGetAllRole() {
+        super.getAllRole = Role.BASIC_USER;
+    }
+
+    @Override
+    public void setUpdateRole() {
+        super.updateRole = Role.FIRM_ADMIN;
+    }
+
+    @Override
+    public void setDeleteRole() {
+        super.deleteRole = Role.FIRM_ADMIN;
+    }
+
 
     @Autowired
     private BranchService branchService;

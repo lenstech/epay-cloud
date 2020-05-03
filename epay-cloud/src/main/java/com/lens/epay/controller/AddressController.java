@@ -36,8 +36,28 @@ public class AddressController extends AbstractController<Address, UUID, Address
     }
 
     @Override
-    public void setMinRole() {
-        super.minRole = Role.CUSTOMER;
+    public void setSaveRole() {
+        super.saveRole = Role.CUSTOMER;
+    }
+
+    @Override
+    public void setGetRole() {
+        super.getRole = Role.CUSTOMER;
+    }
+
+    @Override
+    public void setGetAllRole() {
+        super.getAllRole = Role.FIRM_ADMIN;
+    }
+
+    @Override
+    public void setUpdateRole() {
+        super.updateRole = Role.CUSTOMER;
+    }
+
+    @Override
+    public void setDeleteRole() {
+        super.deleteRole = Role.CUSTOMER;
     }
 
     @Autowired

@@ -37,8 +37,28 @@ public class OrderController extends AbstractController<Order, UUID, OrderDto, O
     }
 
     @Override
-    public void setMinRole() {
-        minRole = Role.CUSTOMER;
+    public void setSaveRole() {
+        super.saveRole = Role.CUSTOMER;
+    }
+
+    @Override
+    public void setGetRole() {
+        super.getRole = Role.CUSTOMER;
+    }
+
+    @Override
+    public void setGetAllRole() {
+        super.getAllRole = Role.BASIC_USER;
+    }
+
+    @Override
+    public void setUpdateRole() {
+        super.updateRole = Role.ADMIN;
+    }
+
+    @Override
+    public void setDeleteRole() {
+        super.deleteRole = Role.ADMIN;
     }
 
     @Autowired

@@ -30,8 +30,28 @@ public class CategoryController extends AbstractController<Category, UUID, Categ
     }
 
     @Override
-    public void setMinRole() {
-        super.minRole = Role.FIRM_ADMIN;
+    public void setSaveRole() {
+        super.saveRole = Role.FIRM_ADMIN;
+    }
+
+    @Override
+    public void setGetRole() {
+        super.getRole = null;
+    }
+
+    @Override
+    public void setGetAllRole() {
+        super.getAllRole = null;
+    }
+
+    @Override
+    public void setUpdateRole() {
+        super.updateRole = Role.FIRM_ADMIN;
+    }
+
+    @Override
+    public void setDeleteRole() {
+        super.deleteRole = Role.FIRM_ADMIN;
     }
 
     @Autowired
