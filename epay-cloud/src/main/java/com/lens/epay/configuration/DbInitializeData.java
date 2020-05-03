@@ -1,7 +1,13 @@
 package com.lens.epay.configuration;
 
 import com.lens.epay.enums.Role;
+import com.lens.epay.model.entity.Branch;
+import com.lens.epay.model.entity.Department;
+import com.lens.epay.model.entity.Firm;
 import com.lens.epay.model.entity.User;
+import com.lens.epay.repository.BranchRepository;
+import com.lens.epay.repository.DepartmentRepository;
+import com.lens.epay.repository.FirmRepository;
 import com.lens.epay.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,6 +24,15 @@ import java.util.List;
 public class DbInitializeData {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private FirmRepository firmRepository;
+
+    @Autowired
+    private BranchRepository branchRepository;
+
+    @Autowired
+    private DepartmentRepository departmentRepository;
 
     @PostConstruct
     private void postConstruct() {
@@ -60,7 +75,7 @@ public class DbInitializeData {
             firmAdmin.setEmail("ajangs@hotmail.com");
             firmAdmin.setPassword("$2a$10$mLpoOQQ1mf9217XGIBoW4.QOoMPSenH0hm8MU8Hwx2V6ycCA6DJIa");
             firmAdmin.setName("default");
-            firmAdmin.setSurname("customer");
+            firmAdmin.setSurname("firmAdmin");
             firmAdmin.setPhoneNumber("05064066029");
             firmAdmin.setRole(Role.FIRM_ADMIN);
             firmAdmin.setConfirmed(true);
@@ -68,6 +83,30 @@ public class DbInitializeData {
         }
         if (!initialUsers.isEmpty()){
             userRepository.saveAll(initialUsers);
+        }
+
+        if(!firmRepository.existsByName("default firm")){
+            Firm defaultFirm  = new Firm();
+            defaultFirm.setName("default firm");
+            defaultFirm.setCity("İstanbul");
+            firmRepository.save(defaultFirm);
+        }
+
+        if(!branchRepository.existsByName("default branch")){
+            Branch defaultBranch = new Branch();
+            defaultBranch.setName("default branch");
+            defaultBranch.setCity("İstanbul");
+            defaultBranch.setAddress("Boğaziçi Teknopark");
+            defaultBranch.setFirm(firmRepository.findByName("default firm"));
+            branchRepository.save(defaultBranch);
+        }
+
+        if(!departmentRepository.existsByName("default department")){
+            Department defaultDepartment = new Department();
+            defaultDepartment.setName("default department");
+            defaultDepartment.setBranch(branchRepository.findByName("default branch"));
+            defaultDepartment.setDescription("default description");
+            departmentRepository.save(defaultDepartment);
         }
 
         // TODO: 25 Nis 2020  default firm branch department oluşturulacak.

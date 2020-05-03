@@ -13,4 +13,8 @@ public interface BranchRepository extends EpayRepository<Branch, UUID> {
     Branch findBranchById(UUID id);
 
     Set<Branch> findBranchesByFirmId(UUID firmId);
+
+    Boolean existsByName(String name);
+
+    Branch findByName(String name);
 }

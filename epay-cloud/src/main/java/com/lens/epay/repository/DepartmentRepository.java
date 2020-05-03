@@ -12,4 +12,6 @@ public interface DepartmentRepository extends EpayRepository<Department, UUID> {
     Department findDepartmentById(UUID id);
 
     Set<Department> findDepartmentsByBranchId(UUID branchId);
+
+    Boolean existsByName(String name);
 }

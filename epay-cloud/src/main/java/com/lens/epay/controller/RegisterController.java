@@ -1,6 +1,9 @@
 package com.lens.epay.controller;
 
-import com.lens.epay.model.dto.user.RegisterDto;
+import com.lens.epay.configuration.AuthorizationConfig;
+import com.lens.epay.enums.Role;
+import com.lens.epay.model.dto.user.RegisterCustomerDto;
+import com.lens.epay.model.dto.user.RegisterFirmUserDto;
 import com.lens.epay.model.resource.user.CompleteUserResource;
 import com.lens.epay.service.RegisterService;
 import io.swagger.annotations.Api;
@@ -26,12 +29,21 @@ public class RegisterController {
     @Autowired
     private RegisterService registerService;
 
+    @Autowired
+    private AuthorizationConfig authorizationConfig;
 
-    @ApiOperation(value = "Register a user with the needed information", response = CompleteUserResource.class)
+    @ApiOperation(value = "Register a firm user with the needed information, registration can be done by firm admin", response = CompleteUserResource.class)
     @PostMapping("/user")
-    public ResponseEntity<CompleteUserResource> registerUser(@RequestBody @Valid RegisterDto registerDto) {
-        CompleteUserResource user = registerService.save(registerDto);
+    public ResponseEntity<CompleteUserResource> registerFirmUser(@RequestHeader String token,@RequestBody @Valid RegisterFirmUserDto registerFirmUserDto) {
+        authorizationConfig.permissionCheck(token, Role.FIRM_ADMIN);
+        CompleteUserResource user = registerService.saveFirmUser(registerFirmUserDto);
         return ResponseEntity.ok(user);
+    }
+
+    @ApiOperation(value = "Register a customer with the needed information", response = CompleteUserResource.class)
+    @PostMapping("/user/customer")
+    public ResponseEntity<CompleteUserResource> registerCustomer(@RequestBody @Valid RegisterCustomerDto registerCustomerDto) {
+        return ResponseEntity.ok(registerService.saveCustomer(registerCustomerDto));
     }
 
     @ApiOperation(value = "Confirm a registration by using the link from the user's confirmation mail", response = String.class)

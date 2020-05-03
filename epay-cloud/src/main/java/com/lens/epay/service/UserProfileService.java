@@ -3,7 +3,7 @@ package com.lens.epay.service;
 import com.lens.epay.exception.BadRequestException;
 import com.lens.epay.mapper.MinimalUserMapper;
 import com.lens.epay.mapper.UserMapper;
-import com.lens.epay.model.dto.user.RegisterDto;
+import com.lens.epay.model.dto.user.RegisterFirmUserDto;
 import com.lens.epay.model.dto.user.UpdatePasswordDto;
 import com.lens.epay.model.entity.User;
 import com.lens.epay.model.resource.user.CompleteUserResource;
@@ -48,7 +48,7 @@ public class UserProfileService {
     }
 
     @Transactional
-    public CompleteUserResource updateProfile(UUID userId, RegisterDto dto) {
+    public CompleteUserResource updateProfile(UUID userId, RegisterFirmUserDto dto) {
         User oldUser = userRepository.findUserById(userId);
         if (oldUser == null) {
             throw new BadRequestException(USER_NOT_EXIST);

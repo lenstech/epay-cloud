@@ -1,9 +1,11 @@
 package com.lens.epay.service;
 
 import com.lens.epay.constant.ErrorConstants;
+import com.lens.epay.enums.Role;
 import com.lens.epay.exception.BadRequestException;
 import com.lens.epay.mapper.UserMapper;
-import com.lens.epay.model.dto.user.RegisterDto;
+import com.lens.epay.model.dto.user.RegisterCustomerDto;
+import com.lens.epay.model.dto.user.RegisterFirmUserDto;
 import com.lens.epay.model.entity.Department;
 import com.lens.epay.model.entity.User;
 import com.lens.epay.model.resource.user.CompleteUserResource;
@@ -45,11 +47,11 @@ public class RegisterService {
     private DepartmentRepository departmentRepository;
 
     @Transactional
-    public CompleteUserResource save(RegisterDto registerDto) {
+    public CompleteUserResource saveFirmUser(RegisterFirmUserDto registerFirmUserDto) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        User user = mapper.toEntity(registerDto);
-        if (registerDto.getDepartmentId() != null) {
-            Department department = departmentRepository.findDepartmentById(registerDto.getDepartmentId());
+        User user = mapper.toEntity(registerFirmUserDto);
+        if (registerFirmUserDto.getDepartmentId() != null) {
+            Department department = departmentRepository.findDepartmentById(registerFirmUserDto.getDepartmentId());
             if (department == null) {
                 throw new BadRequestException(ID_IS_NOT_EXIST);
             }
@@ -58,7 +60,21 @@ public class RegisterService {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new BadRequestException(MAIL_ALREADY_EXISTS);
         }
-        user.setPassword(bCryptPasswordEncoder.encode(registerDto.getPassword()));
+        user.setPassword(bCryptPasswordEncoder.encode(registerFirmUserDto.getPassword()));
+        userRepository.saveAndFlush(user);
+        confirmationTokenService.sendActivationToken(user);
+        return mapper.toResource(user);
+    }
+
+    @Transactional
+    public CompleteUserResource saveCustomer(RegisterCustomerDto customerDto){
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        User user = mapper.customerDtoToUser(customerDto);
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new BadRequestException(MAIL_ALREADY_EXISTS);
+        }
+        user.setPassword(bCryptPasswordEncoder.encode(customerDto.getPassword()));
+        user.setRole(Role.CUSTOMER);
         userRepository.saveAndFlush(user);
         confirmationTokenService.sendActivationToken(user);
         return mapper.toResource(user);

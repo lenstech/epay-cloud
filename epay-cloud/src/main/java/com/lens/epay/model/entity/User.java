@@ -57,10 +57,4 @@ public class User extends AbstractEntity<UUID> {
     @Column(name = "confirmed")
     private boolean confirmed = false;
 
-
-    public String toStringForSearch() {
-        return (" " + email +
-                " " + name +
-                " " + surname).toLowerCase(/*Locale.ENGLISH*/);
-    }
 }

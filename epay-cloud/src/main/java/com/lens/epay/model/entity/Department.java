@@ -2,6 +2,7 @@ package com.lens.epay.model.entity;
 
 import com.lens.epay.common.AbstractEntity;
 import lombok.Data;
+import org.eclipse.persistence.annotations.Index;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -20,6 +21,7 @@ import java.util.UUID;
 public class Department extends AbstractEntity<UUID> {
 
     @NotNull
+    @Index
     private String name;
 
     @NotNull

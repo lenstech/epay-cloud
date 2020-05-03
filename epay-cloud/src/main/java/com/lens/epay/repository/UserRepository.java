@@ -2,6 +2,8 @@ package com.lens.epay.repository;
 
 import com.lens.epay.model.entity.Department;
 import com.lens.epay.model.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -24,6 +26,8 @@ public interface UserRepository extends EpayRepository<User, UUID> {
     Boolean existsByEmail(String email);
 
     Set<User> findUsersByDepartment(Department department);
+
+    Page<User> findUsersByDepartmentBranchFirmId(Pageable pageable, UUID firmId);
 
     @Query(value = "select * from users where name like '%:name%'", nativeQuery = true)
     List<User> findUsersByName(String name);

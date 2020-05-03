@@ -1,6 +1,6 @@
 package com.lens.epay.controller;//package com.lens.epay.controller;
 
-import com.lens.epay.model.dto.user.RegisterDto;
+import com.lens.epay.model.dto.user.RegisterFirmUserDto;
 import com.lens.epay.model.dto.user.UpdatePasswordDto;
 import com.lens.epay.model.resource.user.CompleteUserResource;
 import com.lens.epay.model.resource.user.MinimalUserResource;
@@ -45,7 +45,7 @@ public class UserProfileController {
 
     @ApiOperation(value = "Update a profile with the given info", response = CompleteUserResource.class)
     @PutMapping("/update-profile")
-    public ResponseEntity updateUserProfile(@RequestHeader("Authorization") String token, @RequestBody @Valid RegisterDto userDto) {
+    public ResponseEntity updateUserProfile(@RequestHeader("Authorization") String token, @RequestBody @Valid RegisterFirmUserDto userDto) {
         UUID userId = jwtResolver.getIdFromToken(token);
         CompleteUserResource user = userProfileService.updateProfile(userId, userDto);
         return ResponseEntity.ok(user);
