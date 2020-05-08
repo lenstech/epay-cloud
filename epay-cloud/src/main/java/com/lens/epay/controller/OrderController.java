@@ -15,10 +15,12 @@ import com.lens.epay.service.PaymentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -115,6 +117,14 @@ public class OrderController extends AbstractController<Order, UUID, OrderDto, O
                                                               @RequestHeader("Authorization") String token) {
         authorizationConfig.permissionCheck(token, Role.CUSTOMER);
         return ResponseEntity.ok(orderService.enterReturnCargoInfo(orderId, resolver.getIdFromToken(token), returnCargoFirm, returnCargoNo));
+    }
+
+    @GetMapping("/get-self-orders/{pageNo}")
+    @ApiOperation("Customer can reach orders of himself")
+    public ResponseEntity<Page<OrderResource>> getSelfOrders(@PathVariable int pageNo,
+                                                             @RequestHeader("Authorization") String token){
+        authorizationConfig.permissionCheck(token, Role.CUSTOMER);
+        return ResponseEntity.ok(orderService.getSelfOrders(resolver.getIdFromToken(token),pageNo));
     }
 
 }

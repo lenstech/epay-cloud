@@ -6,9 +6,7 @@ import com.lens.epay.enums.InvoiceType;
 import lombok.Data;
 import org.eclipse.persistence.annotations.Index;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.UUID;
@@ -60,9 +58,13 @@ public class Address extends AbstractEntity<UUID> {
     @NotNull
     private String receiverPhoneNumber;
 
-    private AddressType addressType;
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private AddressType addressType = AddressType.DELIVERY;
 
-    private InvoiceType invoiceType;
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private InvoiceType invoiceType = InvoiceType.INDIVIDUAL;
 
     @Size(min = 11, max = 11)
     private String identityNo;
@@ -71,4 +73,15 @@ public class Address extends AbstractEntity<UUID> {
     private String taxNo;
 
     private String taxAdministration;
+
+    public String toStringForAddress() {
+        return city +
+                district +
+                neighborhood +
+                street +
+                buildNo +
+                innerNo +
+                otherInfo ;
+    }
+
 }

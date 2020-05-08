@@ -50,9 +50,11 @@ public class Order extends AbstractEntity<UUID> {
     private Address invoiceAddress;
 
     @NumberFormat(style = NumberFormat.Style.CURRENCY)
+    @NotNull
     private Float totalPrice;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private PaymentType paymentType;
 
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
@@ -69,5 +71,17 @@ public class Order extends AbstractEntity<UUID> {
     private String returnRemittanceNo;
 
     private String returnRemittanceBank;
+
+    private String iyzicoPaymentId;
+
+    private Integer iyzicoFraudStatus;
+
+    private Float iyziCommissionFee;
+
+    private Float iyziCommissionRateAmount;
+
+    private String paymentMessage;
+
+    private String ipAddress;
 
 }
