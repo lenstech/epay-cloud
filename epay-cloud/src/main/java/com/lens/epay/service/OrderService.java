@@ -1,5 +1,7 @@
 package com.lens.epay.service;
 
+import com.iyzipay.model.Cancel;
+import com.iyzipay.model.Payment;
 import com.lens.epay.common.AbstractService;
 import com.lens.epay.common.Converter;
 import com.lens.epay.enums.OrderStatus;
@@ -10,6 +12,7 @@ import com.lens.epay.mapper.OrderMapper;
 import com.lens.epay.model.dto.sale.OrderDto;
 import com.lens.epay.model.entity.BasketObject;
 import com.lens.epay.model.entity.Order;
+import com.lens.epay.model.entity.User;
 import com.lens.epay.model.other.SearchCriteria;
 import com.lens.epay.model.resource.OrderResource;
 import com.lens.epay.repository.BasketRepository;
@@ -78,23 +81,35 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
         if (Math.abs(sum - order.getTotalPrice()) > 0.50) {
             throw new BadRequestException(TOTAL_PRICE_IS_NOT_CORRECT);
         }
-        if (orderDto.getPaymentType() == PaymentType.CREDIT_CARD) {
-            if (paymentService.payByCard(orderDto, userId)) {
-                order.setPaid(true);
-            } else {
-                throw new BadRequestException(PAYMENT_IS_UNSUCCESSFUL);
-            }
-        } else {
-            order.setPaid(false);
-        }
+        User user = userRepository.findUserById(userId);
         order.setOrderStatus(OrderStatus.TAKEN);
-        order.setUser(userRepository.findUserById(userId));
+        order.setUser(user);
+        order.setPaid(false);
+        getRepository().save(order);
+        if (orderDto.getPaymentType() == PaymentType.CREDIT_CARD) {
+            Payment payment = paymentService.payByCard(orderDto, user, order);
+            if (payment.getStatus().equals("success")) {
+                order.setPaid(true);
+                order.setIyziCommissionFee(payment.getIyziCommissionFee().floatValue());
+                order.setIyziCommissionRateAmount(payment.getMerchantCommissionRateAmount().floatValue());
+                order.setIyzicoPaymentId(payment.getPaymentId());
+                order.setIyzicoFraudStatus(payment.getFraudStatus());
+                order.setIpAddress(orderDto.getIpAddress());
+            } else if (payment.getFraudStatus() != null && payment.getFraudStatus() == 0) {
+                order.setPaid(false);
+                order.setPaymentMessage(payment.getErrorMessage());
+                order.setIyzicoFraudStatus(payment.getFraudStatus());
+            } else {
+                throw new BadRequestException(payment.getErrorMessage());
+            }
+        }
         getRepository().save(order);
         return getConverter().toResource(order);
     }
 
-    //Seller
+    // TODO: fraudDetectionCheck Eklenecek
     // TODO: 23 Nis 2020 updatei gözden geçir
+    // todo: delete fonksiyonları gözden geçirilecek.
     @Override
     public OrderResource put(UUID id, OrderDto updatedDto, UUID userId) {
         if (id == null) {
@@ -216,7 +231,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
 
         if (shippedDate != null) {
             try {
-                order.setShippedDate(ZonedDateTime.ofInstant(shippedDate.toInstant(),ZoneId.systemDefault()));
+                order.setShippedDate(ZonedDateTime.ofInstant(shippedDate.toInstant(), ZoneId.systemDefault()));
             } catch (Exception e) {
                 order.setShippedDate(ZonedDateTime.now());
             }
@@ -296,9 +311,14 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
 
             if (order.getPaid()) {
                 if (order.getPaymentType().equals(PaymentType.CREDIT_CARD)) {
-                    paymentService.repayByCard(orderId);
-                    order.setOrderStatus(OrderStatus.REPAID);
-                    order.setRepaid(true);
+                    Cancel cancel = paymentService.repayByCard(order);
+                    if (cancel.getStatus().equals("success")){
+                        order.setIyzicoRepaymentId(cancel.getPaymentId());
+                        order.setOrderStatus(OrderStatus.REPAID);
+                        order.setRepaid(true);
+                    } else {
+                        throw new BadRequestException(cancel.getErrorMessage());
+                    }
                 } else {
                     order.setOrderStatus(OrderStatus.RETURN_REMITTANCE_IS_WAITED);
                 }
@@ -346,9 +366,14 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
         if (orderStatus.equals(OrderStatus.TAKEN) || orderStatus.equals(OrderStatus.APPROVED) || orderStatus.equals(OrderStatus.PREPARED_FOR_CARGO) || orderStatus.equals(OrderStatus.REMITTANCE_INFO_WAITED)) {
             if (order.getPaid()) {
                 if (order.getPaymentType().equals(PaymentType.CREDIT_CARD)) {
-                    paymentService.repayByCard(orderId);
-                    order.setOrderStatus(OrderStatus.REPAID);
-                    order.setRepaid(true);
+                    Cancel cancel = paymentService.repayByCard(order);
+                    if (cancel.getStatus().equals("success")){
+                        order.setIyzicoRepaymentId(cancel.getPaymentId());
+                        order.setOrderStatus(OrderStatus.REPAID);
+                        order.setRepaid(true);
+                    } else {
+                        throw new BadRequestException(cancel.getErrorMessage());
+                    }
                 } else {
                     order.setOrderStatus(OrderStatus.RETURN_REMITTANCE_IS_WAITED);
                 }
@@ -369,9 +394,14 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
             throw new BadRequestException(NOT_APPROPRIATE_ORDER_STATUS);
         }
         if (order.getPaymentType().equals(PaymentType.CREDIT_CARD) && order.getPaid() && !order.getRepaid()) {
-            paymentService.repayByCard(orderId);
-            order.setOrderStatus(OrderStatus.REPAID);
-            order.setRepaid(true);
+            Cancel cancel = paymentService.repayByCard(order);
+            if (cancel.getStatus().equals("success")){
+                order.setIyzicoRepaymentId(cancel.getPaymentId());
+                order.setOrderStatus(OrderStatus.REPAID);
+                order.setRepaid(true);
+            } else {
+                throw new BadRequestException(cancel.getErrorMessage());
+            }
         } else {
             if (order.getPaid() && !order.getRepaid()) {
                 order.setOrderStatus(OrderStatus.RETURN_REMITTANCE_IS_WAITED);
@@ -416,7 +446,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
                                               Boolean desc,
                                               String sortBy,
                                               Date startDate,
-                                              Date  endDate,
+                                              Date endDate,
                                               OrderStatus orderStatus,
                                               PaymentType paymentType,
                                               String cargoFirm,
@@ -429,11 +459,11 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
 
         OrderSpecification spec = new OrderSpecification();
         if (startDate != null) {
-            ZonedDateTime start = ZonedDateTime.ofInstant(startDate.toInstant(),ZoneId.systemDefault());
+            ZonedDateTime start = ZonedDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());
             spec.add(new SearchCriteria("createdDate", start, SearchOperator.FROM));
         }
         if (endDate != null) {
-            ZonedDateTime end = ZonedDateTime.ofInstant(endDate.toInstant(),ZoneId.systemDefault());
+            ZonedDateTime end = ZonedDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault());
             spec.add(new SearchCriteria("createdDate", end, SearchOperator.TO));
         }
         if (orderStatus != null) {
