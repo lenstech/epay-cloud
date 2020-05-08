@@ -84,6 +84,4 @@ public class Order extends AbstractEntity<UUID> {
 
     private String ipAddress;
 
-    private String iyzicoRepaymentId;
-
 }
