@@ -110,6 +110,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
     // TODO: fraudDetectionCheck Eklenecek
     // TODO: 23 Nis 2020 updatei gözden geçir
     // todo: delete fonksiyonları gözden geçirilecek.
+    // todo: orderlar boş gelebilir null check eklemek gerek.
     @Override
     public OrderResource put(UUID id, OrderDto updatedDto, UUID userId) {
         if (id == null) {
@@ -313,7 +314,6 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
                 if (order.getPaymentType().equals(PaymentType.CREDIT_CARD)) {
                     Cancel cancel = paymentService.repayByCard(order);
                     if (cancel.getStatus().equals("success")){
-                        order.setIyzicoRepaymentId(cancel.getPaymentId());
                         order.setOrderStatus(OrderStatus.REPAID);
                         order.setRepaid(true);
                     } else {
@@ -368,7 +368,6 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
                 if (order.getPaymentType().equals(PaymentType.CREDIT_CARD)) {
                     Cancel cancel = paymentService.repayByCard(order);
                     if (cancel.getStatus().equals("success")){
-                        order.setIyzicoRepaymentId(cancel.getPaymentId());
                         order.setOrderStatus(OrderStatus.REPAID);
                         order.setRepaid(true);
                     } else {
@@ -396,7 +395,6 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
         if (order.getPaymentType().equals(PaymentType.CREDIT_CARD) && order.getPaid() && !order.getRepaid()) {
             Cancel cancel = paymentService.repayByCard(order);
             if (cancel.getStatus().equals("success")){
-                order.setIyzicoRepaymentId(cancel.getPaymentId());
                 order.setOrderStatus(OrderStatus.REPAID);
                 order.setRepaid(true);
             } else {
@@ -506,7 +504,4 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
         PageRequest pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.Direction.DESC, DEFAULT_SORT_BY);
         return getRepository().findOrdersByUserId(pageable, userId).map(getConverter()::toResource);
     }
-    // TODO: 19 Nis 2020 repaid remittanceDan sonrası
-    // TODO: 19 Nis 2020 graph çiz
-    // TODO: 25 Nis 2020 report (belli tarih arasında
 }
