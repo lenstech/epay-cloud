@@ -3,8 +3,6 @@ package com.lens.epay.repository;
 import com.lens.epay.enums.OrderStatus;
 import com.lens.epay.enums.PaymentType;
 import com.lens.epay.model.entity.Order;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -28,6 +26,9 @@ public interface OrderRepository extends EpayRepository<Order, UUID>, JpaSpecifi
                                                                                           @Nullable String remittanceBank,
                                                                                           @Nullable PaymentType paymentType,
                                                                                           @Nullable Boolean paid);
+
+    List<Order> findOrdersByIyzicoFraudStatus(Integer fraudStatus);
+
 //    Page<Order> findOrdersByOrderStatusAndCargoFirmAndRemittanceBankAndPaymentTypeAndPaid(Pageable pageable,
 //                                                                                          Example<Order> example);
 //    UUID userId,

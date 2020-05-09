@@ -5,6 +5,7 @@ import com.iyzipay.model.*;
 import com.iyzipay.request.CreateCancelRequest;
 import com.iyzipay.request.CreatePaymentRequest;
 import com.iyzipay.request.RetrieveInstallmentInfoRequest;
+import com.iyzipay.request.RetrievePaymentRequest;
 import com.lens.epay.exception.BadRequestException;
 import com.lens.epay.model.dto.CreditCardInstallmentCheckDto;
 import com.lens.epay.model.dto.sale.OrderDto;
@@ -49,6 +50,13 @@ public class PaymentService {
         options.setSecretKey("sandbox-1lXTgvsDQZ5LgKezahaNUYRbMkORnyGV");
         options.setBaseUrl("https://sandbox-api.iyzipay.com");
         return options;
+    }
+
+    public Payment getPayment(Order order){
+        RetrievePaymentRequest retrievePaymentRequest = new RetrievePaymentRequest();
+        retrievePaymentRequest.setPaymentId(order.getIyzicoPaymentId());
+        Options options = new Options();
+        return Payment.retrieve(retrievePaymentRequest, setOptions(options));
     }
 
     public Payment payByCard(OrderDto orderDto, User user, Order order) {

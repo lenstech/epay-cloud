@@ -23,12 +23,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import static com.lens.epay.constant.ErrorConstants.*;
@@ -97,8 +99,11 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
                 order.setIpAddress(orderDto.getIpAddress());
             } else if (payment.getFraudStatus() != null && payment.getFraudStatus() == 0) {
                 order.setPaid(false);
+                order.setIyzicoPaymentId(payment.getPaymentId());
                 order.setPaymentMessage(payment.getErrorMessage());
                 order.setIyzicoFraudStatus(payment.getFraudStatus());
+                order.setIpAddress(orderDto.getIpAddress());
+                order.setOrderStatus(OrderStatus.WAIT_FOR_FRAUD_CONTROL);
             } else {
                 throw new BadRequestException(payment.getErrorMessage());
             }
@@ -111,6 +116,28 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
     // TODO: 23 Nis 2020 updatei gözden geçir
     // todo: delete fonksiyonları gözden geçirilecek.
     // todo: orderlar boş gelebilir null check eklemek gerek.
+
+    @Scheduled(cron = "0 0 * * *")
+    public void checkFraudControlResult(){
+        List<Order> orders = getRepository().findOrdersByIyzicoFraudStatus(0);
+        for(Order order : orders){
+            if(!order.getOrderStatus().equals(OrderStatus.WAIT_FOR_APPROVE_REMITTANCE_BY_SELLER)){
+                continue;
+            }
+            Payment payment = paymentService.getPayment(order);
+            if(payment.getFraudStatus()==1){
+                order.setPaid(true);
+                order.setIyziCommissionFee(payment.getIyziCommissionFee().floatValue());
+                order.setIyziCommissionRateAmount(payment.getMerchantCommissionRateAmount().floatValue());
+                order.setIyzicoPaymentId(payment.getPaymentId());
+                order.setIyzicoFraudStatus(payment.getFraudStatus());
+                order.setOrderStatus(OrderStatus.TAKEN);
+            }else if (payment.getFraudStatus() == -1){
+                order.setOrderStatus(OrderStatus.REJECTED_FROM_FRAUD_CONTROLLER);
+            }
+        }
+    }
+
     @Override
     public OrderResource put(UUID id, OrderDto updatedDto, UUID userId) {
         if (id == null) {

@@ -7,6 +7,8 @@ package com.lens.epay.enums;
 
 public enum OrderStatus {
     TAKEN,
+    WAIT_FOR_FRAUD_CONTROL,
+    REJECTED_FROM_FRAUD_CONTROLLER,
     APPROVED,
     PREPARED_FOR_CARGO,
     REMITTANCE_INFO_WAITED,

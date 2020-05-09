@@ -155,6 +155,14 @@ public class OrderManagementController {
         return ResponseEntity.ok(orderService.setStatus(orderStatus, orderId));
     }
 
+
+    @GetMapping("/fraud")
+    @ApiOperation("Admin can update fraud suspect transactions. The check is automatically done at the beginning of every hour")
+    public void fraud(@RequestHeader("Authorization") String token){
+        authorizationConfig.permissionCheck(token, Role.FIRM_ADMIN);
+        orderService.checkFraudControlResult();
+    }
+
     @GetMapping("/report")
     @ApiOperation("Report of orders")
     public ResponseEntity<Page<OrderResource>> orderReport(@RequestParam int pageNumber,
