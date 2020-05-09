@@ -126,5 +126,4 @@ public class OrderController extends AbstractController<Order, UUID, OrderDto, O
         authorizationConfig.permissionCheck(token, Role.CUSTOMER);
         return ResponseEntity.ok(orderService.getSelfOrders(resolver.getIdFromToken(token),pageNo));
     }
-
 }

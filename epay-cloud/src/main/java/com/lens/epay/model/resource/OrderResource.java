@@ -60,16 +60,6 @@ public class OrderResource extends AbstractResource {
 
     private String returnRemittanceBank;
 
-    private String iyzicoPaymentId;
-
-    private Integer iyzicoFraudStatus;
-
-    private Float iyziCommissionFee;
-
-    private Float iyziCommissionRateAmount;
-
-    private String paymentMessage;
-
-    private String iyzicoRepaymentId;
+    private CreditCardTransactionResource creditCardTransaction;
 
 }

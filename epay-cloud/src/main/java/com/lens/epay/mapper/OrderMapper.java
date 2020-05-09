@@ -9,7 +9,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {MinimalUserMapper.class, AddressMapper.class, AddressService.class, BasketObjectMapper.class})
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {MinimalUserMapper.class, AddressMapper.class, AddressService.class, BasketObjectMapper.class, CreditCardTransactionMapper.class})
 public interface OrderMapper extends Converter<OrderDto, Order, OrderResource> {
 
     @Override
@@ -17,8 +17,5 @@ public interface OrderMapper extends Converter<OrderDto, Order, OrderResource> {
     @Mapping(source = "invoiceAddressId", target = "invoiceAddress", qualifiedByName = "fromIdToEntity")
     @Mapping(source = "basketObjectDtoList", target = "basketObjects")
     Order toEntity(OrderDto orderDto);
-//
-//    @Override
-//    @Mapping(source = "productQuantity", target = "productQuantity", qualifiedByName = "findOneById")
-//    OrderResource toResource(Order order);
+
 }

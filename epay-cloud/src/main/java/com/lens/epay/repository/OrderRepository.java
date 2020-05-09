@@ -27,7 +27,7 @@ public interface OrderRepository extends EpayRepository<Order, UUID>, JpaSpecifi
                                                                                           @Nullable PaymentType paymentType,
                                                                                           @Nullable Boolean paid);
 
-    List<Order> findOrdersByIyzicoFraudStatus(Integer fraudStatus);
+    List<Order> findOrdersByCreditCardTransactionIyzicoFraudStatus(Integer fraudStatus);
 
 //    Page<Order> findOrdersByOrderStatusAndCargoFirmAndRemittanceBankAndPaymentTypeAndPaid(Pageable pageable,
 //                                                                                          Example<Order> example);

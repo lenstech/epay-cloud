@@ -1,6 +1,7 @@
 package com.lens.epay.service;
 
 import com.iyzipay.Options;
+import com.iyzipay.model.Address;
 import com.iyzipay.model.*;
 import com.iyzipay.request.CreateCancelRequest;
 import com.iyzipay.request.CreatePaymentRequest;
@@ -9,10 +10,7 @@ import com.iyzipay.request.RetrievePaymentRequest;
 import com.lens.epay.exception.NotFoundException;
 import com.lens.epay.model.dto.CreditCardInstallmentCheckDto;
 import com.lens.epay.model.dto.sale.OrderDto;
-import com.lens.epay.model.entity.BasketObject;
-import com.lens.epay.model.entity.Order;
-import com.lens.epay.model.entity.Product;
-import com.lens.epay.model.entity.User;
+import com.lens.epay.model.entity.*;
 import com.lens.epay.repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,9 +50,9 @@ public class PaymentService {
         return options;
     }
 
-    public Payment getPayment(Order order) {
+    public Payment getPayment(CreditCardTransaction creditCardTransaction) {
         RetrievePaymentRequest retrievePaymentRequest = new RetrievePaymentRequest();
-        retrievePaymentRequest.setPaymentId(order.getIyzicoPaymentId());
+        retrievePaymentRequest.setPaymentId(creditCardTransaction.getIyzicoPaymentId());
         Options options = new Options();
         return Payment.retrieve(retrievePaymentRequest, setOptions(options));
     }
@@ -137,8 +135,9 @@ public class PaymentService {
         CreateCancelRequest request = new CreateCancelRequest();
         request.setLocale(Locale.TR.getValue());
         request.setConversationId(order.getId().toString());
-        request.setPaymentId(order.getIyzicoPaymentId());
-        request.setIp(order.getIpAddress());
+        CreditCardTransaction transaction = order.getCreditCardTransaction();
+        request.setPaymentId(transaction.getIyzicoPaymentId());
+        request.setIp(transaction.getIpAddress());
         Options options = new Options();
         return Cancel.create(request, setOptions(options));
     }

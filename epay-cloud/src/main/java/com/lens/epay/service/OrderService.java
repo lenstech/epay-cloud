@@ -9,9 +9,11 @@ import com.lens.epay.enums.PaymentType;
 import com.lens.epay.enums.SearchOperator;
 import com.lens.epay.exception.BadRequestException;
 import com.lens.epay.exception.NotFoundException;
+import com.lens.epay.mapper.CreditCardTransactionMapper;
 import com.lens.epay.mapper.OrderMapper;
 import com.lens.epay.model.dto.sale.OrderDto;
 import com.lens.epay.model.entity.BasketObject;
+import com.lens.epay.model.entity.CreditCardTransaction;
 import com.lens.epay.model.entity.Order;
 import com.lens.epay.model.entity.User;
 import com.lens.epay.model.other.SearchCriteria;
@@ -70,6 +72,9 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
     private OrderMapper mapper;
 
     @Autowired
+    private CreditCardTransactionMapper transactionMapper;
+
+    @Autowired
     private BasketRepository basketRepository;
 
     //Customer
@@ -90,48 +95,51 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
         order.setPaid(false);
         getRepository().save(order);
         if (orderDto.getPaymentType() == PaymentType.CREDIT_CARD) {
+            CreditCardTransaction transaction = new CreditCardTransaction();
             Payment payment = paymentService.payByCard(orderDto, user, order);
             if (payment.getStatus().equals("success")) {
                 order.setPaid(true);
-                order.setIyziCommissionFee(payment.getIyziCommissionFee().floatValue());
-                order.setIyziCommissionRateAmount(payment.getMerchantCommissionRateAmount().floatValue());
-                order.setIyzicoPaymentId(payment.getPaymentId());
-                order.setIyzicoFraudStatus(payment.getFraudStatus());
-                order.setIpAddress(orderDto.getIpAddress());
+                transaction.setIyziCommissionFee(payment.getIyziCommissionFee().floatValue());
+                transaction.setIyziCommissionRateAmount(payment.getMerchantCommissionRateAmount().floatValue());
+                transaction.setIpAddress(orderDto.getIpAddress());
             } else if (payment.getFraudStatus() != null && payment.getFraudStatus() == 0) {
                 order.setPaid(false);
-                order.setIyzicoPaymentId(payment.getPaymentId());
-                order.setPaymentMessage(payment.getErrorMessage());
-                order.setIyzicoFraudStatus(payment.getFraudStatus());
-                order.setIpAddress(orderDto.getIpAddress());
+                transaction.setErrrorMessage(payment.getErrorMessage());
                 order.setOrderStatus(OrderStatus.WAIT_FOR_FRAUD_CONTROL);
             } else {
                 throw new BadRequestException(payment.getErrorMessage());
             }
+            transaction.setIyzicoPaymentId(payment.getPaymentId());
+            transaction.setIpAddress(orderDto.getIpAddress());
+            transaction.setIyzicoFraudStatus(payment.getFraudStatus());
+            transaction.setOrder(order);
+            order.setCreditCardTransaction(transaction);
         }
         getRepository().save(order);
         return getConverter().toResource(order);
     }
 
     // TODO: 23 Nis 2020 updatei gözden geçir
-    // todo: delete fonksiyonları gözden geçirilecek.
-    // todo: orderlar boş gelebilir null check eklemek gerek.
-    // todo: payment tablosu oluşturulabilir
 
     @Scheduled(cron = "0 0 * * *")
     public void checkFraudControlResult(){
-        List<Order> orders = getRepository().findOrdersByIyzicoFraudStatus(0);
+        List<Order> orders = getRepository().findOrdersByCreditCardTransactionIyzicoFraudStatus(0);
+        if (orders == null){
+            return;
+        }
         for(Order order : orders){
             if(!order.getOrderStatus().equals(OrderStatus.WAIT_FOR_APPROVE_REMITTANCE_BY_SELLER)){
                 continue;
             }
-            Payment payment = paymentService.getPayment(order);
+            Payment payment = paymentService.getPayment(order.getCreditCardTransaction());
             if(payment.getFraudStatus()==1){
                 order.setPaid(true);
-                order.setIyziCommissionFee(payment.getIyziCommissionFee().floatValue());
-                order.setIyziCommissionRateAmount(payment.getMerchantCommissionRateAmount().floatValue());
-                order.setIyzicoPaymentId(payment.getPaymentId());
-                order.setIyzicoFraudStatus(payment.getFraudStatus());
+                CreditCardTransaction transaction = order.getCreditCardTransaction();
+                transaction.setIyziCommissionFee(payment.getIyziCommissionFee().floatValue());
+                transaction.setIyziCommissionRateAmount(payment.getMerchantCommissionRateAmount().floatValue());
+                transaction.setIyzicoPaymentId(payment.getPaymentId());
+                transaction.setIyzicoFraudStatus(payment.getFraudStatus());
+                order.setCreditCardTransaction(transaction);
                 order.setOrderStatus(OrderStatus.TAKEN);
             }else if (payment.getFraudStatus() == -1){
                 order.setOrderStatus(OrderStatus.REJECTED_FROM_FRAUD_CONTROLLER);

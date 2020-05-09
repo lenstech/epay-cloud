@@ -72,16 +72,6 @@ public class Order extends AbstractEntity<UUID> {
 
     private String returnRemittanceBank;
 
-    private String iyzicoPaymentId;
-
-    private Integer iyzicoFraudStatus;
-
-    private Float iyziCommissionFee;
-
-    private Float iyziCommissionRateAmount;
-
-    private String paymentMessage;
-
-    private String ipAddress;
-
+    @OneToOne(cascade = CascadeType.ALL)
+    private CreditCardTransaction creditCardTransaction;
 }
