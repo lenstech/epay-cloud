@@ -115,7 +115,7 @@ public abstract class AbstractController<T extends AbstractEntity, ID extends Se
     }
 
     @ApiOperation(value = "Delete Object,  it can be done by authorization", response = void.class)
-    @RequestMapping(method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping
     public String delete(@RequestHeader("Authorization") String token,
                          @RequestParam ID objectId) {
         LOGGER.debug(String.format("Request to delete the record [%s].", objectId));
