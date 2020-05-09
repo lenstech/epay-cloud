@@ -3,6 +3,7 @@ package com.lens.epay.service;
 import com.lens.epay.common.AbstractService;
 import com.lens.epay.common.Converter;
 import com.lens.epay.exception.BadRequestException;
+import com.lens.epay.exception.NotFoundException;
 import com.lens.epay.mapper.DepartmentMapper;
 import com.lens.epay.mapper.MinimalUserMapper;
 import com.lens.epay.model.dto.organization.DepartmentDto;
@@ -73,7 +74,7 @@ public class DepartmentService extends AbstractService<Department, UUID, Departm
         Department department = repository.findDepartmentById(departmentId);
         User user = userRepository.findUserById(userId);
         if (!user.getDepartment().equals(department)) {
-            throw new BadRequestException(USER_IS_NOT_EXIST);
+            throw new NotFoundException(USER_IS_NOT_EXIST);
         }
         user.setDepartment(null);
         userRepository.save(user);

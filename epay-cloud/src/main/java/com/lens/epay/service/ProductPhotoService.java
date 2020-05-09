@@ -2,7 +2,7 @@ package com.lens.epay.service;
 
 import com.lens.epay.constant.ErrorConstants;
 import com.lens.epay.constant.HttpSuccessMessagesConstants;
-import com.lens.epay.exception.UnauthorizedException;
+import com.lens.epay.exception.NotFoundException;
 import com.lens.epay.model.entity.Product;
 import com.lens.epay.model.entity.ProductPhoto;
 import com.lens.epay.repository.ProductPhotoRepository;
@@ -32,7 +32,7 @@ public class ProductPhotoService {
     public String uploadProductPhoto(MultipartFile file, UUID productId) {
         Product product = productRepository.findOneById(productId);
         if (product == null) {
-            throw new UnauthorizedException(ErrorConstants.PRODUCT_NOT_EXIST);
+            throw new NotFoundException(ErrorConstants.PRODUCT_NOT_EXIST);
         }
         ProductPhoto photo = new ProductPhoto();
         photo.setProduct(product);

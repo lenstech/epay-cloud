@@ -2,6 +2,7 @@ package com.lens.epay.service;
 
 import com.lens.epay.enums.Role;
 import com.lens.epay.exception.BadRequestException;
+import com.lens.epay.exception.NotFoundException;
 import com.lens.epay.exception.UnauthorizedException;
 import com.lens.epay.model.entity.User;
 import com.lens.epay.repository.UserRepository;
@@ -30,7 +31,7 @@ public class ResetPasswordService {
     public void resetPassword(String password, String confirmationToken) {
         User user = userRepository.findUserById(jwtResolver.getIdFromToken(confirmationToken));
         if (user == null) {
-            throw new BadRequestException(USER_NOT_EXIST);
+            throw new NotFoundException(USER_NOT_EXIST);
         }
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (encoder.matches(password, user.getPassword())) {
@@ -46,7 +47,7 @@ public class ResetPasswordService {
         User admin = userRepository.findUserById(jwtResolver.getIdFromToken(token));
         User user = userRepository.findByEmail(email);
         if (admin == null || user == null) {
-            throw new BadRequestException(USER_NOT_EXIST);
+            throw new NotFoundException(USER_NOT_EXIST);
         }
         Role role = user.getRole();
         if (role.equals(Role.ADMIN) || role.equals(Role.FIRM_ADMIN)) {

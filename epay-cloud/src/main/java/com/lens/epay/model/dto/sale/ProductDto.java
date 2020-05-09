@@ -31,4 +31,6 @@ public class ProductDto {
     private Float price;
 
     private UUID categoryId;
+
+    private String brand;
 }

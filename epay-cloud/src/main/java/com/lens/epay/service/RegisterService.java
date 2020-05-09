@@ -3,6 +3,7 @@ package com.lens.epay.service;
 import com.lens.epay.constant.ErrorConstants;
 import com.lens.epay.enums.Role;
 import com.lens.epay.exception.BadRequestException;
+import com.lens.epay.exception.NotFoundException;
 import com.lens.epay.mapper.UserMapper;
 import com.lens.epay.model.dto.user.RegisterCustomerDto;
 import com.lens.epay.model.dto.user.RegisterFirmUserDto;
@@ -53,7 +54,7 @@ public class RegisterService {
         if (registerFirmUserDto.getDepartmentId() != null) {
             Department department = departmentRepository.findDepartmentById(registerFirmUserDto.getDepartmentId());
             if (department == null) {
-                throw new BadRequestException(ID_IS_NOT_EXIST);
+                throw new NotFoundException(ID_IS_NOT_EXIST);
             }
             user.setDepartment(department);
         }
@@ -85,7 +86,7 @@ public class RegisterService {
         UUID id = jwtResolver.getIdFromToken(confirmationToken);
         User user = userRepository.findUserById(id);
         if (user == null) {
-            throw new BadRequestException(ErrorConstants.USER_NOT_EXIST);
+            throw new NotFoundException(ErrorConstants.USER_NOT_EXIST);
         }
         user.setConfirmed(true);
         userRepository.save(user);

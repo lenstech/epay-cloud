@@ -34,4 +34,6 @@ public class ProductResource extends AbstractResource {
     private Boolean stocked = true;
 
     private UUID photoId;
+
+    private String brand;
 }

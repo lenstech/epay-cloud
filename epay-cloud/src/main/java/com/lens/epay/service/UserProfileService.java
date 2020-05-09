@@ -1,6 +1,7 @@
 package com.lens.epay.service;
 
 import com.lens.epay.exception.BadRequestException;
+import com.lens.epay.exception.NotFoundException;
 import com.lens.epay.mapper.MinimalUserMapper;
 import com.lens.epay.mapper.UserMapper;
 import com.lens.epay.model.dto.user.RegisterFirmUserDto;
@@ -33,7 +34,7 @@ public class UserProfileService {
     public CompleteUserResource getSelfProfile(UUID selfId) {
         User selfUser = userRepository.findUserById(selfId);
         if (selfUser == null) {
-            throw new BadRequestException(USER_NOT_EXIST);
+            throw new NotFoundException(USER_NOT_EXIST);
         } else {
             return userMapper.toResource(selfUser);
         }
@@ -42,7 +43,7 @@ public class UserProfileService {
     public MinimalUserResource getOtherProfile(String email) {
         User otherUser = userRepository.findByEmail(email);
         if (otherUser == null) {
-            throw new BadRequestException(USER_NOT_EXIST);
+            throw new NotFoundException(USER_NOT_EXIST);
         }
         return minimalUserMapper.toResource(otherUser);
     }
@@ -51,7 +52,7 @@ public class UserProfileService {
     public CompleteUserResource updateProfile(UUID userId, RegisterFirmUserDto dto) {
         User oldUser = userRepository.findUserById(userId);
         if (oldUser == null) {
-            throw new BadRequestException(USER_NOT_EXIST);
+            throw new NotFoundException(USER_NOT_EXIST);
         }
         User updatedUser = userMapper.toEntity(dto);
         updatedUser.setId(oldUser.getId());
@@ -65,7 +66,7 @@ public class UserProfileService {
     public CompleteUserResource updatePassword(UUID userId, UpdatePasswordDto dto) {
         User user = userRepository.findUserById(userId);
         if (user == null) {
-            throw new BadRequestException(USER_NOT_EXIST);
+            throw new NotFoundException(USER_NOT_EXIST);
         }
         BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();
         if (!encoder.matches(dto.getOldPassword(),user.getPassword())){

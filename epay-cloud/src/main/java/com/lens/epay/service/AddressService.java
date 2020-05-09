@@ -2,7 +2,6 @@ package com.lens.epay.service;
 
 import com.lens.epay.common.AbstractService;
 import com.lens.epay.common.Converter;
-import com.lens.epay.exception.BadRequestException;
 import com.lens.epay.mapper.AddressMapper;
 import com.lens.epay.model.dto.AddressDto;
 import com.lens.epay.model.entity.Address;
@@ -14,9 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-
-import static com.lens.epay.constant.ErrorConstants.*;
-import static com.lens.epay.constant.ErrorConstants.ID_CANNOT_BE_EMPTY;
 
 /**
  * Created by Emir Gökdemir
@@ -45,33 +41,26 @@ public class AddressService extends AbstractService<Address, UUID, AddressDto, A
     }
 
     @Override
-    public AddressResource save(AddressDto addressDto, UUID userId) {
-        Address address = mapper.toEntity(addressDto);
-        address.setUser(userRepository.findUserById(userId));
-        return getConverter().toResource(getRepository().save(address));
+    protected Address putOperations(Address oldEntity, Address newEntity, UUID userId) {
+        newEntity.setUser(userRepository.findUserById(userId));
+        return super.putOperations(oldEntity, newEntity, userId);
     }
 
     @Override
-    public AddressResource put(UUID id, AddressDto updatedDto, UUID userId) {
-        if (id == null) {
-            throw new BadRequestException(ID_CANNOT_BE_EMPTY);
-        }
-        Address theReal = getRepository().findById(id).orElseThrow(() -> new BadRequestException(ID_IS_NOT_EXIST));
-        if (updatedDto == null) {
-            throw new BadRequestException(DTO_CANNOT_BE_EMPTY);
-        }
-        try {
-            Address updated = mapper.toEntity(updatedDto);
-            updated.setId(theReal.getId());
-            updated.setCreatedDate(theReal.getCreatedDate());
-            updated.setUser(userRepository.findUserById(userId));
-            return mapper.toResource(repository.save(updated));
-        } catch (Exception e) {
-            throw new BadRequestException(ID_CANNOT_BE_EMPTY);
-        }
+    protected Address saveOperations(Address entity, AddressDto addressDto, UUID userId) {
+        entity.setUser(userRepository.findUserById(userId));
+        return entity;
     }
 
     public List<AddressResource> getAddressesOfUser(UUID userId){
         return mapper.toResources(repository.findAddressByUserId(userId));
+    }
+
+    public AddressResource updateAddressByAdmin(UUID addressId, AddressDto addressDto, UUID userId){
+        return super.put(addressId,addressDto, userId);
+    }
+
+    public AddressResource saveAddressByAdmin(AddressDto addressDto, UUID userId){
+        return super.save(addressDto, userId);
     }
 }

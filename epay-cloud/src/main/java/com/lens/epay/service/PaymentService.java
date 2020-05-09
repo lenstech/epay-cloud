@@ -6,7 +6,7 @@ import com.iyzipay.request.CreateCancelRequest;
 import com.iyzipay.request.CreatePaymentRequest;
 import com.iyzipay.request.RetrieveInstallmentInfoRequest;
 import com.iyzipay.request.RetrievePaymentRequest;
-import com.lens.epay.exception.BadRequestException;
+import com.lens.epay.exception.NotFoundException;
 import com.lens.epay.model.dto.CreditCardInstallmentCheckDto;
 import com.lens.epay.model.dto.sale.OrderDto;
 import com.lens.epay.model.entity.BasketObject;
@@ -52,7 +52,7 @@ public class PaymentService {
         return options;
     }
 
-    public Payment getPayment(Order order){
+    public Payment getPayment(Order order) {
         RetrievePaymentRequest retrievePaymentRequest = new RetrievePaymentRequest();
         retrievePaymentRequest.setPaymentId(order.getIyzicoPaymentId());
         Options options = new Options();
@@ -83,7 +83,7 @@ public class PaymentService {
         com.lens.epay.model.entity.Address deliveryAddress = addressRepository.findOneById(orderDto.getDeliveryAddressId());
         com.lens.epay.model.entity.Address invoiceAddress = addressRepository.findOneById(orderDto.getInvoiceAddressId());
         if (deliveryAddress == null || invoiceAddress == null) {
-            throw new BadRequestException(ADDRESS_NOT_EXIST);
+            throw new NotFoundException(ADDRESS_NOT_EXIST);
         }
         Buyer buyer = new Buyer();
         buyer.setId(user.getId().toString());

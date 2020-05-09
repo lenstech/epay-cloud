@@ -17,4 +17,8 @@ public interface EpayRepository<T, ID extends Serializable> extends JpaRepositor
 
     @Named("findOneById")
     T findOneById(ID id);
+
+    void deleteById(ID id);
+
+    void delete(T entity);
 }

@@ -3,6 +3,7 @@ package com.lens.epay.service;
 import com.lens.epay.common.AbstractService;
 import com.lens.epay.common.Converter;
 import com.lens.epay.exception.BadRequestException;
+import com.lens.epay.exception.NotFoundException;
 import com.lens.epay.mapper.UserGroupMapper;
 import com.lens.epay.model.dto.user.UserGroupDto;
 import com.lens.epay.model.entity.User;
@@ -49,7 +50,7 @@ public class UserGroupService extends AbstractService<UserGroup, UUID, UserGroup
 
     @Override
     public UserGroupResource put(UUID id, UserGroupDto updatedDto, UUID userId) {
-        UserGroup theReal = repository.findById(id).orElseThrow(() -> new BadRequestException(ID_IS_NOT_EXIST));
+        UserGroup theReal = repository.findById(id).orElseThrow(() -> new NotFoundException(ID_IS_NOT_EXIST));
         if (updatedDto == null) {
             throw new BadRequestException(DTO_CANNOT_BE_EMPTY);
         }
@@ -65,7 +66,7 @@ public class UserGroupService extends AbstractService<UserGroup, UUID, UserGroup
 
     @Transactional
     public UserGroupResource addUsers(UUID groupId, List<UUID> userIds) {
-        UserGroup group = repository.findById(groupId).orElseThrow(() -> new BadRequestException(ID_IS_NOT_EXIST));
+        UserGroup group = repository.findById(groupId).orElseThrow(() -> new NotFoundException(ID_IS_NOT_EXIST));
         Set<User> users = group.getUsers();
         users.addAll(userRepository.findByIdIn(userIds));
         group.setUsers(users);
@@ -74,7 +75,7 @@ public class UserGroupService extends AbstractService<UserGroup, UUID, UserGroup
 
     @Transactional
     public UserGroupResource removeUsers(UUID groupId, List<UUID> userIds) {
-        UserGroup group = repository.findById(groupId).orElseThrow(() -> new BadRequestException(ID_IS_NOT_EXIST));
+        UserGroup group = repository.findById(groupId).orElseThrow(() -> new NotFoundException(ID_IS_NOT_EXIST));
         Set<User> users = group.getUsers();
         users.removeAll(userRepository.findByIdIn(userIds));
         group.setUsers(users);

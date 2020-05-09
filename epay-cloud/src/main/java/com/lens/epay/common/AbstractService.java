@@ -1,15 +1,18 @@
 package com.lens.epay.common;
 
 import com.lens.epay.exception.BadRequestException;
+import com.lens.epay.exception.NotFoundException;
 import com.lens.epay.repository.EpayRepository;
 import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.lens.epay.constant.ErrorConstants.*;
@@ -26,7 +29,8 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
     public abstract Converter<DTO, T, RES> getConverter();
 
     public RES save(DTO dto, UUID userId) {
-        return getConverter().toResource(getRepository().save(getConverter().toEntity(dto)));
+        T entity = getConverter().toEntity(dto);
+        return getConverter().toResource(getRepository().save(saveOperations(entity,dto,userId)));
     }
 
     public RES get(ID id) {
@@ -34,7 +38,7 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
         try {
             entity = getRepository().findOneById(id);
         } catch (NullPointerException e) {
-            throw new BadRequestException(ID_IS_NOT_EXIST);
+            throw new NotFoundException(ID_IS_NOT_EXIST);
         }
         return getConverter().toResource(entity);
     }
@@ -61,33 +65,45 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
         }
     }
 
-    @Transactional
+    @Modifying
     public RES put(ID id, DTO updatedDto, UUID userId) {
         if (id == null) {
             throw new BadRequestException(ID_CANNOT_BE_EMPTY);
         }
-        T theReal = getRepository().findById(id).orElseThrow(() -> new BadRequestException(ID_IS_NOT_EXIST));
+        T oldEntity;
+        Optional<T> oldEntityOpt = getRepository().findById(id);
+        if (!oldEntityOpt.isPresent()) {
+            throw new NotFoundException(ID_IS_NOT_EXIST);
+        } else {
+            oldEntity = oldEntityOpt.get();
+        }
         if (updatedDto == null) {
             throw new BadRequestException(DTO_CANNOT_BE_EMPTY);
         }
         try {
             T updated = getConverter().toEntity(updatedDto);
-            updated.setId(theReal.getId());
-            updated.setCreatedDate(theReal.getCreatedDate());
+            updated.setId(oldEntity.getId());
+            updated.setCreatedDate(oldEntity.getCreatedDate());
+            updated.setVersion(oldEntity.getVersion());
+            updated = putOperations(oldEntity, updated, userId);
             return getConverter().toResource(getRepository().save(updated));
         } catch (Exception e) {
             throw new BadRequestException(ID_CANNOT_BE_EMPTY);
         }
     }
 
-
     @Transactional
+    @Modifying
     public void delete(ID id) {
         if (id == null) {
             throw new BadRequestException(ID_CANNOT_BE_EMPTY);
         }
-        T entity = getRepository().findById(id).orElseThrow(() -> new BadRequestException(ID_IS_NOT_EXIST));
-        getRepository().delete(entity);
+        try {
+            deleteOperations(id);
+            getRepository().deleteById(id);
+        } catch (NullPointerException e) {
+            throw new NotFoundException(ID_IS_NOT_EXIST);
+        }
     }
 
     @Named("fromIdToEntity")
@@ -95,7 +111,19 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
         try {
             return getRepository().findOneById(id);
         } catch (NullPointerException e) {
-            throw new BadRequestException(ID_IS_NOT_EXIST);
+            throw new NotFoundException(ID_IS_NOT_EXIST);
         }
     }
+
+    protected T putOperations(T oldEntity, T newEntity, UUID userId) {
+        return newEntity;
+    }
+
+    protected T saveOperations(T entity, DTO dto, UUID userId) {
+        return entity;
+    }
+
+    protected void deleteOperations(ID id) {
+    }
+
 }

@@ -2,6 +2,7 @@ package com.lens.epay.controller;
 
 import com.lens.epay.common.AbstractController;
 import com.lens.epay.common.AbstractService;
+import com.lens.epay.configuration.AuthorizationConfig;
 import com.lens.epay.enums.Role;
 import com.lens.epay.model.dto.AddressDto;
 import com.lens.epay.model.entity.Address;
@@ -12,10 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -66,9 +64,33 @@ public class AddressController extends AbstractController<Address, UUID, Address
     @Autowired
     private JwtResolver resolver;
 
+    @Autowired
+    private AuthorizationConfig authorizationConfig;
+
     @ApiOperation(value = "Get addresses of an user", response = AddressResource.class, responseContainer = "List")
     @GetMapping("/user")
     public ResponseEntity<List<AddressResource>> getAddressesOfUser(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(service.getAddressesOfUser(resolver.getIdFromToken(token)));
     }
+
+    @ApiOperation(value = "Save address of an user by admin", response = AddressResource.class)
+    @PostMapping("/by-admin")
+    public ResponseEntity<AddressResource> saveAddressByAdmin(@RequestHeader("Authorization") String token,
+                                                                    @RequestBody AddressDto addressDto,
+                                                                    @RequestParam UUID userId) {
+        authorizationConfig.permissionCheck(token,Role.FIRM_ADMIN);
+        return ResponseEntity.ok(service.saveAddressByAdmin(addressDto,userId));
+    }
+
+    @ApiOperation(value = "Update address of an user by admin", response = AddressResource.class)
+    @PutMapping("/by-admin")
+    public ResponseEntity<AddressResource> updateAddressByAdmin(@RequestHeader("Authorization") String token,
+                                                                    @RequestParam UUID objectId,
+                                                                    @RequestBody AddressDto addressDto,
+                                                                    @RequestParam UUID userId) {
+        authorizationConfig.permissionCheck(token,Role.FIRM_ADMIN);
+        return ResponseEntity.ok(service.updateAddressByAdmin(objectId,addressDto,userId));
+    }
+
+
 }

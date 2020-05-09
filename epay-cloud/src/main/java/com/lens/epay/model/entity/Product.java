@@ -43,4 +43,6 @@ public class Product extends AbstractEntity<UUID> {
 
     @Column(name = "stocked")
     private Boolean stocked = true;
+
+    private String brand;
 }

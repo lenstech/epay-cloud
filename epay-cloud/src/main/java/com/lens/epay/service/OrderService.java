@@ -8,6 +8,7 @@ import com.lens.epay.enums.OrderStatus;
 import com.lens.epay.enums.PaymentType;
 import com.lens.epay.enums.SearchOperator;
 import com.lens.epay.exception.BadRequestException;
+import com.lens.epay.exception.NotFoundException;
 import com.lens.epay.mapper.OrderMapper;
 import com.lens.epay.model.dto.sale.OrderDto;
 import com.lens.epay.model.entity.BasketObject;
@@ -112,10 +113,10 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
         return getConverter().toResource(order);
     }
 
-    // TODO: fraudDetectionCheck Eklenecek
     // TODO: 23 Nis 2020 updatei gözden geçir
     // todo: delete fonksiyonları gözden geçirilecek.
     // todo: orderlar boş gelebilir null check eklemek gerek.
+    // todo: payment tablosu oluşturulabilir
 
     @Scheduled(cron = "0 0 * * *")
     public void checkFraudControlResult(){
@@ -143,7 +144,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
         if (id == null) {
             throw new BadRequestException(ID_CANNOT_BE_EMPTY);
         }
-        Order theReal = getRepository().findById(id).orElseThrow(() -> new BadRequestException(ID_IS_NOT_EXIST));
+        Order theReal = getRepository().findById(id).orElseThrow(() -> new NotFoundException(ID_IS_NOT_EXIST));
         if (updatedDto == null) {
             throw new BadRequestException(DTO_CANNOT_BE_EMPTY);
         }
