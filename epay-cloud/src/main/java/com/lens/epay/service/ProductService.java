@@ -58,7 +58,7 @@ public class ProductService extends AbstractService<Product, UUID, ProductDto, P
         return repository.findAll(spec, pageable).map(getConverter()::toResource);
     }
 
-    public Page<ProductResource> findProductByCategory(UUID categoryId, int pageNo){
+    public Page<ProductResource> findProductByCategory(UUID categoryId, int pageNo) {
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE);
         return repository.findProductsByCategoryId(pageable, categoryId).map(getConverter()::toResource);
     }

@@ -8,4 +8,6 @@ import java.util.UUID;
 @Repository
 public interface CategoryRepository extends EpayRepository<Category, UUID> {
 
+    Integer countCategoriesByIdAndProductsNotNull(UUID categoryId);
+
 }
