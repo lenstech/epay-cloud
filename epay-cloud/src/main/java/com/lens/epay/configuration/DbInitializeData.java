@@ -108,7 +108,5 @@ public class DbInitializeData {
             defaultDepartment.setDescription("default description");
             departmentRepository.save(defaultDepartment);
         }
-
-        // TODO: 25 Nis 2020  default firm branch department oluşturulacak.
     }
 }

@@ -119,8 +119,6 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
         return getConverter().toResource(order);
     }
 
-    // TODO: 23 Nis 2020 updatei gözden geçir
-
     @Scheduled(cron = "0 0 * * *")
     public void checkFraudControlResult(){
         List<Order> orders = getRepository().findOrdersByCreditCardTransactionIyzicoFraudStatus(0);
