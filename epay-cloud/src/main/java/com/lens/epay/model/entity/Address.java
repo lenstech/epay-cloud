@@ -53,7 +53,7 @@ public class Address extends AbstractEntity<UUID> {
     private String receiverName;
 
     @NotNull
-    private String receiverSurname;
+    private String receiverSurname = "";
 
     @NotNull
     private String receiverPhoneNumber;
@@ -66,17 +66,23 @@ public class Address extends AbstractEntity<UUID> {
     @NotNull
     private InvoiceType invoiceType = InvoiceType.INDIVIDUAL;
 
+    //Bireysel Fatura
     @Size(min = 11, max = 11)
     private String identityNo;
 
+    //Kurumsal Fatura
+    private String firmName;
+
+    //Kurumsal Fatura
     @Size(min = 10, max = 10)
     private String taxNo;
 
+    //Kurumsal Fatura
     private String taxAdministration;
 
 
     public String toStringForAddress() {
-        return  "country='" + country + '\'' +
+        return "country='" + country + '\'' +
                 ", city='" + city + '\'' +
                 ", district='" + district + '\'' +
                 ", neighborhood='" + neighborhood + '\'' +
@@ -84,6 +90,6 @@ public class Address extends AbstractEntity<UUID> {
                 ", buildNo='" + buildNo + '\'' +
                 ", innerNo='" + innerNo + '\'' +
                 ", otherInfo='" + otherInfo + '\'' +
-                ", postalCode=" + postalCode ;
+                ", postalCode=" + postalCode;
     }
 }

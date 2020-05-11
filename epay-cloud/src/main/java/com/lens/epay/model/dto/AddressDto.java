@@ -50,6 +50,8 @@ public class AddressDto {
 
     private InvoiceType invoiceType;
 
+    private String firmName;
+
     @Size(min = 11, max = 11)
     private String identityNo;
 

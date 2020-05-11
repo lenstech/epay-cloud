@@ -28,9 +28,6 @@ public class AgreementService {
     private FirmRepository firmRepository;
 
     @Autowired
-    private AddressRepository addressRepository;
-
-    @Autowired
     private OrderMapper orderMapper;
 
     public String getSalesAgreement(UUID userId, OrderDto orderDto) {

@@ -54,6 +54,8 @@ public class AddressResource extends AbstractResource {
 
     private String identityNo;
 
+    private String firmName;
+
     private String taxNo;
 
     private String taxAdministration;
