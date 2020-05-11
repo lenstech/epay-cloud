@@ -60,4 +60,9 @@ public class ErrorConstants {
     public static final String CATEGORY_CANNOT_BE_DELETED_WHEN_HAS_PRODUCT = "Categories cannot be deleted when it have products";
     public static final String PRODUCT_CANNOT_BE_DELETED_WHEN_HAS_ORDER = "Product cannot be deleted when some orders have this product";
 
+    public static final String FIRM_NAME_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL = "Firm Name Of Corporate Invoice Can Not Be Null";
+    public static final String TAX_NO_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL = "Tax No Of Corporate Invoice Can Not Be Null";
+    public static final String TAX_ADMINISTRATOR_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL = "Tax Administrator Of Corporate Invoice Can Not Be Null";
+    public static final String IDENTITY_NO_OF_INDIVIDUAL_INVOICE_CAN_NOT_BE_NULL = "Identity No Of Identity Invoice Can Not Be Null";
+
 }
