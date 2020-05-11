@@ -67,14 +67,14 @@ public class Address extends AbstractEntity<UUID> {
     private InvoiceType invoiceType = InvoiceType.INDIVIDUAL;
 
     //Bireysel Fatura
-    @Size(min = 11, max = 11)
+    @Size(max = 11)
     private String identityNo;
 
     //Kurumsal Fatura
     private String firmName;
 
     //Kurumsal Fatura
-    @Size(min = 10, max = 10)
+    @Size(max = 10)
     private String taxNo;
 
     //Kurumsal Fatura

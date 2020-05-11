@@ -53,12 +53,12 @@ public class AddressService extends AbstractService<Address, UUID, AddressDto, A
                     throw new BadRequestException(FIRM_NAME_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL);
                 } else if (newEntity.getTaxAdministration() == null) {
                     throw new BadRequestException(TAX_ADMINISTRATOR_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL);
-                } else if (newEntity.getTaxNo() == null) {
-                    throw new BadRequestException(TAX_NO_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL);
+                } else if (newEntity.getTaxNo().length() != 10) {
+                    throw new BadRequestException(TAX_NO_OF_CORPORATE_INVOICE_SHOULD_BE_10_CHARACTERS);
                 }
             } else {
-                if (newEntity.getIdentityNo() == null) {
-                    throw new BadRequestException(IDENTITY_NO_OF_INDIVIDUAL_INVOICE_CAN_NOT_BE_NULL);
+                if (newEntity.getIdentityNo().length() != 11) {
+                    throw new BadRequestException(IDENTITY_NO_OF_INDIVIDUAL_INVOICE_SHOULD_BE_11_CHARACTERS);
                 }
             }
         }
@@ -74,12 +74,12 @@ public class AddressService extends AbstractService<Address, UUID, AddressDto, A
                     throw new BadRequestException(FIRM_NAME_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL);
                 } else if (address.getTaxAdministration() == null) {
                     throw new BadRequestException(TAX_ADMINISTRATOR_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL);
-                } else if (address.getTaxNo() == null) {
-                    throw new BadRequestException(TAX_NO_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL);
+                } else if (address.getTaxNo().length() != 10) {
+                    throw new BadRequestException(TAX_NO_OF_CORPORATE_INVOICE_SHOULD_BE_10_CHARACTERS);
                 }
             } else {
-                if (address.getIdentityNo() == null) {
-                    throw new BadRequestException(IDENTITY_NO_OF_INDIVIDUAL_INVOICE_CAN_NOT_BE_NULL);
+                if (address.getIdentityNo().length() != 11) {
+                    throw new BadRequestException(IDENTITY_NO_OF_INDIVIDUAL_INVOICE_SHOULD_BE_11_CHARACTERS);
                 }
             }
         }
