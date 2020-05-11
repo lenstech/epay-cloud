@@ -10,4 +10,6 @@ import java.util.UUID;
 public interface BasketRepository extends EpayRepository<BasketObject, UUID> {
 
         List<BasketObject> findOrderProductsByOrderId(UUID id);
+
+        Integer countBasketObjectsByProductId(UUID productId);
 }

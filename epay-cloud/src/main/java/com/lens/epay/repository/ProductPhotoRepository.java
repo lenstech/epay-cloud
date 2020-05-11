@@ -10,5 +10,7 @@ public interface ProductPhotoRepository extends EpayRepository<ProductPhoto, UUI
 
     ProductPhoto findProductPhotoByProductId(UUID productId);
 
+    void deleteProductPhotoByProductId(UUID productId);
+
     Boolean existsByProductId(UUID productId);
 }

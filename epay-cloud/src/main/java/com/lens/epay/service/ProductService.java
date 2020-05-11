@@ -3,13 +3,18 @@ package com.lens.epay.service;
 import com.lens.epay.common.AbstractService;
 import com.lens.epay.common.Converter;
 import com.lens.epay.enums.SearchOperator;
+import com.lens.epay.exception.BadRequestException;
 import com.lens.epay.mapper.ProductMapper;
 import com.lens.epay.model.dto.sale.ProductDto;
 import com.lens.epay.model.entity.Product;
+import com.lens.epay.model.entity.ProductPhoto;
 import com.lens.epay.model.other.SearchCriteria;
 import com.lens.epay.model.resource.product.ProductResource;
+import com.lens.epay.repository.BasketRepository;
+import com.lens.epay.repository.ProductPhotoRepository;
 import com.lens.epay.repository.ProductRepository;
 import com.lens.epay.repository.specifications.ProductSpecification;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+import static com.lens.epay.constant.ErrorConstants.PRODUCT_CANNOT_BE_DELETED_WHEN_HAS_ORDER;
 import static com.lens.epay.constant.GeneralConstants.PAGE_SIZE;
 
 /**
@@ -32,6 +38,12 @@ public class ProductService extends AbstractService<Product, UUID, ProductDto, P
 
     @Autowired
     private ProductMapper mapper;
+
+    @Autowired
+    private ProductPhotoRepository productPhotoRepository;
+
+    @Autowired
+    private BasketRepository basketRepository;
 
     @Override
     public ProductRepository getRepository() {
@@ -61,5 +73,19 @@ public class ProductService extends AbstractService<Product, UUID, ProductDto, P
     public Page<ProductResource> findProductByCategory(UUID categoryId, int pageNo) {
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE);
         return repository.findProductsByCategoryId(pageable, categoryId).map(getConverter()::toResource);
+    }
+
+    @Override
+    protected void deleteOperations(UUID productId) {
+        productPhotoRepository.deleteProductPhotoByProductId(productId);
+        if (basketRepository.countBasketObjectsByProductId(productId)>0){
+            throw new BadRequestException(PRODUCT_CANNOT_BE_DELETED_WHEN_HAS_ORDER);
+        }
+    }
+
+    public ProductResource changeStockStatus(UUID productId, Boolean stocked){
+        Product product = repository.getOne(productId);
+        product.setStocked(stocked);
+        return mapper.toResource(repository.save(product));
     }
 }

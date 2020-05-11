@@ -12,5 +12,6 @@ public class HttpSuccessMessagesConstants {
     public static final String PASSWORD_WAS_CHANGED = "Password was changed successfully";
     public static final String YOUR_MAIL_WAS_CONFIRMED = "Your email was confirmed successfully";
     public static final String SUCCESSFULLY_DELETED = "Successfully Deleted";
+    public static final String DELETION_DID_NOT_OCCURED = "Successfully Deleted";
     public static final String PHOTO_SUCCESSFULLY_UPLOADED = "Photo was Successfully Uploaded";
 }

@@ -70,4 +70,10 @@ public class ProductController extends AbstractController<Product, UUID, Product
     public ResponseEntity<Page<ProductResource>> getAddressesOfUser(@RequestParam UUID categoryId, @PathVariable int pageNo) {
         return ResponseEntity.ok(productService.findProductByCategory(categoryId, pageNo));
     }
+
+    @ApiOperation(value = "Change Stock Status of Product", response = ProductResource.class)
+    @PutMapping("/change-stock-status")
+    public ResponseEntity<ProductResource> changeStockStatus(@RequestParam UUID productId, @RequestParam Boolean stockStatus) {
+        return ResponseEntity.ok(productService.changeStockStatus(productId, stockStatus));
+    }
 }

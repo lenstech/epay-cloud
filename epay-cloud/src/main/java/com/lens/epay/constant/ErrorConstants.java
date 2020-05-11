@@ -57,6 +57,7 @@ public class ErrorConstants {
     public static final String PAYMENT_IS_NOT_OCCURED = "Payment is not occured yet was already completed.";
     public static final String TOTAL_PRICE_IS_NOT_CORRECT = "Total price is not correct!";
 
-    public static final String CATEGORY_CANNOT_BE_DELETED_WHEN_HAS_PRODUCT = "Categories cannot be deleted when they have products";
+    public static final String CATEGORY_CANNOT_BE_DELETED_WHEN_HAS_PRODUCT = "Categories cannot be deleted when it have products";
+    public static final String PRODUCT_CANNOT_BE_DELETED_WHEN_HAS_ORDER = "Product cannot be deleted when some orders have this product";
 
 }

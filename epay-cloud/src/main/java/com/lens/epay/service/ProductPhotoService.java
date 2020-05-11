@@ -53,4 +53,17 @@ public class ProductPhotoService {
         }
         return photo.getFile();
     }
+
+    @Transactional
+    public void deletePhotoByProductId(UUID productId){
+        repository.deleteProductPhotoByProductId(productId);
+    }
+
+    @Transactional
+    public void deletePhoto(UUID photoId){
+        repository.deleteById(photoId);
+    }
+
+
+
 }
