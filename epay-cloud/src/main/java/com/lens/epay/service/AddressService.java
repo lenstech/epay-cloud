@@ -2,6 +2,7 @@ package com.lens.epay.service;
 
 import com.lens.epay.common.AbstractService;
 import com.lens.epay.common.Converter;
+import com.lens.epay.enums.AddressType;
 import com.lens.epay.enums.InvoiceType;
 import com.lens.epay.exception.BadRequestException;
 import com.lens.epay.mapper.AddressMapper;
@@ -46,17 +47,19 @@ public class AddressService extends AbstractService<Address, UUID, AddressDto, A
 
     @Override
     protected Address putOperations(Address oldEntity, Address newEntity, UUID userId) {
-        if (newEntity.getInvoiceType().equals(InvoiceType.CORPORATE)) {
-            if (newEntity.getFirmName() == null) {
-                throw new BadRequestException(FIRM_NAME_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL);
-            } else if (newEntity.getTaxAdministration() == null) {
-                throw new BadRequestException(TAX_ADMINISTRATOR_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL);
-            } else if (newEntity.getTaxNo() == null) {
-                throw new BadRequestException(TAX_NO_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL);
-            }
-        } else {
-            if (newEntity.getIdentityNo() == null) {
-                throw new BadRequestException(IDENTITY_NO_OF_INDIVIDUAL_INVOICE_CAN_NOT_BE_NULL);
+        if (newEntity.getAddressType().equals(AddressType.INVOICE)) {
+            if (newEntity.getInvoiceType().equals(InvoiceType.CORPORATE)) {
+                if (newEntity.getFirmName() == null) {
+                    throw new BadRequestException(FIRM_NAME_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL);
+                } else if (newEntity.getTaxAdministration() == null) {
+                    throw new BadRequestException(TAX_ADMINISTRATOR_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL);
+                } else if (newEntity.getTaxNo() == null) {
+                    throw new BadRequestException(TAX_NO_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL);
+                }
+            } else {
+                if (newEntity.getIdentityNo() == null) {
+                    throw new BadRequestException(IDENTITY_NO_OF_INDIVIDUAL_INVOICE_CAN_NOT_BE_NULL);
+                }
             }
         }
         newEntity.setUser(userRepository.findUserById(userId));
@@ -65,17 +68,19 @@ public class AddressService extends AbstractService<Address, UUID, AddressDto, A
 
     @Override
     protected Address saveOperations(Address address, AddressDto addressDto, UUID userId) {
-        if (address.getInvoiceType().equals(InvoiceType.CORPORATE)) {
-            if (address.getFirmName() == null) {
-                throw new BadRequestException(FIRM_NAME_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL);
-            } else if (address.getTaxAdministration() == null) {
-                throw new BadRequestException(TAX_ADMINISTRATOR_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL);
-            } else if (address.getTaxNo() == null) {
-                throw new BadRequestException(TAX_NO_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL);
-            }
-        } else {
-            if (address.getIdentityNo() == null) {
-                throw new BadRequestException(IDENTITY_NO_OF_INDIVIDUAL_INVOICE_CAN_NOT_BE_NULL);
+        if (address.getAddressType().equals(AddressType.INVOICE)) {
+            if (address.getInvoiceType().equals(InvoiceType.CORPORATE)) {
+                if (address.getFirmName() == null) {
+                    throw new BadRequestException(FIRM_NAME_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL);
+                } else if (address.getTaxAdministration() == null) {
+                    throw new BadRequestException(TAX_ADMINISTRATOR_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL);
+                } else if (address.getTaxNo() == null) {
+                    throw new BadRequestException(TAX_NO_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL);
+                }
+            } else {
+                if (address.getIdentityNo() == null) {
+                    throw new BadRequestException(IDENTITY_NO_OF_INDIVIDUAL_INVOICE_CAN_NOT_BE_NULL);
+                }
             }
         }
         address.setUser(userRepository.findUserById(userId));
