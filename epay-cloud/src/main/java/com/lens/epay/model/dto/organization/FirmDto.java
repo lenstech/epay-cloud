@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -14,10 +15,17 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 public class FirmDto {
-    @NotNull
+
     private String name;
 
     private String city;
 
     private String taxId;
+
+    private String Address;
+
+    private String phoneNo;
+
+    @Email
+    private String email;
 }

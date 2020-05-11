@@ -74,14 +74,16 @@ public class Address extends AbstractEntity<UUID> {
 
     private String taxAdministration;
 
-    public String toStringForAddress() {
-        return city +
-                district +
-                neighborhood +
-                street +
-                buildNo +
-                innerNo +
-                otherInfo ;
-    }
 
+    public String toStringForAddress() {
+        return  "country='" + country + '\'' +
+                ", city='" + city + '\'' +
+                ", district='" + district + '\'' +
+                ", neighborhood='" + neighborhood + '\'' +
+                ", street='" + street + '\'' +
+                ", buildNo='" + buildNo + '\'' +
+                ", innerNo='" + innerNo + '\'' +
+                ", otherInfo='" + otherInfo + '\'' +
+                ", postalCode=" + postalCode ;
+    }
 }

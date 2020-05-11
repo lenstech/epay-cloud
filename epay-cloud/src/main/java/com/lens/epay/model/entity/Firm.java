@@ -6,6 +6,7 @@ import org.eclipse.persistence.annotations.Index;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
@@ -26,4 +27,11 @@ public class Firm extends AbstractEntity<UUID> {
     private String city;
 
     private String taxId;
+
+    private String Address;
+
+    private String phoneNo;
+
+    @Email
+    private String email;
 }
