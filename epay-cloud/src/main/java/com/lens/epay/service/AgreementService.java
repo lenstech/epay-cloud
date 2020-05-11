@@ -9,7 +9,9 @@ import com.lens.epay.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -45,18 +47,19 @@ public class AgreementService {
 
         StringBuilder productPart = new StringBuilder();
 
+        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, new Locale("tr"));
+
         for (BasketObject object : order.getBasketObjects()) {
-            productPart.append("Ürün Açıklaması").append(object.getProduct().getName()).append("\n")
-                    .append("Adet").append(object.getProductQuantity()).append("\n")
-                    .append("Birim").append(object.getProduct().getUnit()).append("\n")
-                    .append("Fiyatı").append(object.getProduct().getPrice()).append("\n");
+            productPart.append("Ürün Açıklaması: ").append(object.getProduct().getName()).append("\n")
+                    .append("Adet: ").append(object.getProductQuantity()).append("\n")
+                    .append("Birim: ").append(object.getProduct().getUnit()).append("\n")
+                    .append("Fiyatı(₺): ").append(object.getProduct().getPrice()).append("\n");
         }
 
         return "MESAFELİ SATIŞ SÖZLEŞMESİ\n" +
                 "1.TARAFLAR\n" +
                 "İşbu Sözleşme aşağıdaki taraflar arasında aşağıda belirtilen hüküm ve şartlar çerçevesinde imzalanmıştır. \n" +
-                "A.‘ALICI’ ; (sözleşmede bundan sonra \"ALICI\" olarak anılacaktır)" + user.getName() +
-                "\n" +
+                "A.‘ALICI’ ; (sözleşmede bundan sonra \"ALICI\" olarak anılacaktır)" + user.getName() + user.getSurname() + "\n" +
                 "B.‘SATICI’ ; (sözleşmede bundan sonra \"SATICI\" olarak anılacaktır)\n" +
                 "AD- SOYAD: " + firm.getName() + "\n" +
                 "ADRES: " + firm.getAddress() + "\n" +
@@ -79,49 +82,49 @@ public class AgreementService {
                 "İşbu Sözleşme, ALICI’nın, SATICI’ya ait internet sitesi üzerinden elektronik ortamda siparişini verdiği aşağıda nitelikleri ve satış fiyatı belirtilen ürünün satışı ve teslimi ile ilgili olarak 6502 sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli Sözleşmelere Dair Yönetmelik hükümleri gereğince tarafların hak ve yükümlülüklerini düzenler.\n" +
                 "Listelenen ve sitede ilan edilen fiyatlar satış fiyatıdır. İlan edilen fiyatlar ve vaatler güncelleme yapılana ve değiştirilene kadar geçerlidir. Süreli olarak ilan edilen fiyatlar ise belirtilen süre sonuna kadar geçerlidir.\n" +
                 "4. SATICI BİLGİLERİ\n" +
-                "Ünvanı " + firm.getName() + "\n" +
-                "Adres" + firm.getName() + "\n" +
-                "Telefon " + firm.getPhoneNo() + "\n" +
-                "Faks " + firm.getPhoneNo() + "\n" +
-                "Eposta " + firm.getEmail() + "\n" +
+                "Ünvanı: " + firm.getName() + "\n" +
+                "Adres: " + firm.getName() + "\n" +
+                "Telefon: " + firm.getPhoneNo() + "\n" +
+                "Faks: " + firm.getPhoneNo() + "\n" +
+                "Eposta: " + firm.getEmail() + "\n" +
                 "5. ALICI BİLGİLERİ\n" +
-                "Teslim edilecek kişi " + deliveryAddress.getUser().getName() + "\n" +
-                "Teslimat Adresi " + deliveryAddress.toStringForAddress() + "\n" +
-                "Telefon " + deliveryAddress.getReceiverPhoneNumber() + "\n" +
-                "Faks" + deliveryAddress.getReceiverPhoneNumber() + "\n" +
+                "Teslim edilecek kişi: " + deliveryAddress.getUser().getName() + "\n" +
+                "Teslimat Adresi: " + deliveryAddress.toStringForAddress() + "\n" +
+                "Telefon: " + deliveryAddress.getReceiverPhoneNumber() + "\n" +
+                "Faks: " + deliveryAddress.getReceiverPhoneNumber() + "\n" +
                 "Eposta/kullanıcı adı\n" +
                 "6. SİPARİŞ VEREN KİŞİ BİLGİLERİ\n" +
-                "Ad/Soyad/Unvan " + user.getName() + "\n" +
-                "Adres " + deliveryAddress.toStringForAddress() + "\n" +
-                "Telefon " + user.getPhoneNumber() +
-                "Faks " + user.getPhoneNumber() +
-                "Eposta/kullanıcı adı\n" +
+                "Ad/Soyad/Unvan: " + user.getName() + "\n" +
+                "Adres: " + deliveryAddress.toStringForAddress() + "\n" +
+                "Telefon: " + user.getPhoneNumber() +"\n" +
+                "Faks: " + user.getPhoneNumber() +"\n" +
+                "Eposta/kullanıcı adı" + user.getEmail() +"\n" +
                 "7. SÖZLEŞME KONUSU ÜRÜN/ÜRÜNLER BİLGİLERİ\n" +
                 "1. Malın /Ürün/Ürünlerin/ Hizmetin temel özelliklerini (türü, miktarı, marka/modeli, rengi, adedi) SATICI’ya ait internet sitesinde yayınlanmaktadır. Satıcı tarafından kampanya düzenlenmiş ise ilgili ürünün temel özelliklerini kampanya süresince inceleyebilirsiniz. Kampanya tarihine kadar geçerlidir.\n" +
                 "7.2. Listelenen ve sitede ilan edilen fiyatlar satış fiyatıdır. İlan edilen fiyatlar ve vaatler güncelleme yapılana ve değiştirilene kadar geçerlidir. Süreli olarak ilan edilen fiyatlar ise belirtilen süre sonuna kadar geçerlidir.\n" +
                 "7.3. Sözleşme konusu mal ya da hizmetin tüm vergiler dâhil satış fiyatı aşağıda gösterilmiştir.\n" +
                 "\n" +
                 productPart +
-                "Ara Toplam" + order.getTotalPrice() + "\n" +
-                "(KDV Dahil)" +
+                "Ara Toplam(₺): " + order.getTotalPrice() + "\n" +
+                "(KDV Dahil) " +
                 "Kargo Tutarı\n" +
-                "Toplam :" + order.getTotalPrice() + "\n" +
+                "Toplam(₺) :" + order.getTotalPrice() + "\n" +
                 "\n" +
-                "Ödeme Şekli ve Planı " + order.getPaymentType() + "\n" +
-                "Teslimat Adresi " + deliveryAddress.toStringForAddress() + "\n" +
-                "Teslim Edilecek kişi " + deliveryAddress.getUser() + "\n" +
-                "Fatura Adresi " + invoiceAddress.toStringForAddress() + "\n" +
-                "Sipariş Tarihi " + new Date() + "\n" +
-                "Teslimat tarihi " + "1 hafta içerisinde" + "\n" +
-                "Teslim şekli " + "Kargo" + "\n" +
+                "Ödeme Şekli ve Planı: " + order.getPaymentType() + "\n" +
+                "Teslimat Adresi: " + deliveryAddress.toStringForAddress() + "\n" +
+                "Teslim Edilecek kişi: " + deliveryAddress.getUser() + "\n" +
+                "Fatura Adresi: " + invoiceAddress.toStringForAddress() + "\n" +
+                "Sipariş Tarihi: " + new Date() + "\n" +
+                "Teslimat tarihi: " + "1 hafta içerisinde" + "\n" +
+                "Teslim şekli: " + "Kargo" + "\n" +
                 "\n" +
                 "7.4.  Ürün sevkiyat masrafı olan kargo ücreti ALICI tarafından ödenecektir.\n" +
                 "8. FATURA BİLGİLERİ\n" +
-                "Ad/Soyad/Unvan" + invoiceAddress.getReceiverName() + "\n" +
-                "Adres" + invoiceAddress.toStringForAddress() + "\n" +
-                "Telefon" + invoiceAddress.getReceiverPhoneNumber() + "\n" +
-                "Faks" + invoiceAddress.getReceiverPhoneNumber() + "\n" +
-                "Eposta/kullanıcı adı" + user.getEmail() + "\n" +
+                "Ad/Soyad/Unvan: " + invoiceAddress.getReceiverName() +" "+ invoiceAddress.getReceiverSurname() +   "\n" +
+                "Adres: " + invoiceAddress.toStringForAddress() + "\n" +
+                "Telefon: " + invoiceAddress.getReceiverPhoneNumber() + "\n" +
+                "Faks: " + invoiceAddress.getReceiverPhoneNumber() + "\n" +
+                "Eposta/kullanıcı adı: " + user.getEmail() + "\n" +
                 "Fatura teslim : Fatura sipariş teslimatı sırasında fatura adresine sipariş ile birlikte \n" +
                 "teslim edilecektir.\n" +
                 "\n" +
@@ -169,8 +172,8 @@ public class AgreementService {
                 "İşbu Sözleşme ticari amaçlarla yapılmaktadır.\n" +
                 "14. YÜRÜRLÜK\n" +
                 "ALICI, Site üzerinden verdiği siparişe ait ödemeyi gerçekleştirdiğinde işbu sözleşmenin tüm şartlarını kabul etmiş sayılır. SATICI, siparişin gerçekleşmesi öncesinde işbu sözleşmenin sitede ALICI tarafından okunup kabul edildiğine dair onay alacak şekilde gerekli yazılımsal düzenlemeleri yapmakla yükümlüdür. \n" +
-                "SATICI:" + firm.getName() + "\n" +
-                "ALICI:" + user.getName() + "\n" +
-                "TARİH:" + new Date();
+                "SATICI: " + firm.getName() + "\n" +
+                "ALICI: " + user.getName() + "\n" +
+                "TARİH: " + df.format(new Date());
     }
 }
