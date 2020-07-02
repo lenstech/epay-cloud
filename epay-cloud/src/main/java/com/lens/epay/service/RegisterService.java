@@ -12,7 +12,9 @@ import com.lens.epay.model.entity.User;
 import com.lens.epay.model.resource.user.CompleteUserResource;
 import com.lens.epay.repository.DepartmentRepository;
 import com.lens.epay.repository.UserRepository;
+import com.lens.epay.security.JwtGenerator;
 import com.lens.epay.security.JwtResolver;
+import com.lens.epay.util.MailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,10 +44,16 @@ public class RegisterService {
     private JwtResolver jwtResolver;
 
     @Autowired
+    private JwtGenerator jwtGenerator;
+
+    @Autowired
     private UserMapper mapper;
 
     @Autowired
     private DepartmentRepository departmentRepository;
+
+    @Autowired
+    private MailUtil mailUtil;
 
     @Transactional
     public CompleteUserResource saveFirmUser(RegisterFirmUserDto registerFirmUserDto) {
@@ -63,7 +71,8 @@ public class RegisterService {
         }
         user.setPassword(bCryptPasswordEncoder.encode(registerFirmUserDto.getPassword()));
         userRepository.saveAndFlush(user);
-        confirmationTokenService.sendActivationToken(user);
+        mailUtil.sendActivationMail(user, jwtGenerator.generateMailConfirmationToken(user.getId()));
+//        confirmationTokenService.sendActivationToken(user);
         return mapper.toResource(user);
     }
 
@@ -77,7 +86,7 @@ public class RegisterService {
         user.setPassword(bCryptPasswordEncoder.encode(customerDto.getPassword()));
         user.setRole(Role.CUSTOMER);
         userRepository.saveAndFlush(user);
-        confirmationTokenService.sendActivationToken(user);
+        mailUtil.sendActivationMail(user, jwtGenerator.generateMailConfirmationToken(user.getId()));
         return mapper.toResource(user);
     }
 

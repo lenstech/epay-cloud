@@ -190,7 +190,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
     }
 
     //Customer
-    public OrderResource enterRemittanceNo(UUID orderId, String remittanceNo, String remittanceBank, UUID userId) {
+    public OrderResource enterRemittanceInfo(UUID orderId, String remittanceNo, String remittanceBank, UUID userId) {
         Order order = getRepository().getOne(orderId);
         if (!order.getUser().getId().equals(userId)) {
             throw new BadRequestException(THIS_OPERATION_IS_NOT_BELONG_TO_THIS_USER);
@@ -466,7 +466,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
      * From that point Management will be considered
      * -------------------------------------------------------------------------------------------------------------------------------------------------------
      */
-    //SELLER
+    //ADMIN
     public OrderResource setStatus(OrderStatus orderStatus, UUID orderId) {
         Order order = getRepository().getOne(orderId);
         order.setOrderStatus(orderStatus);
@@ -474,6 +474,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
         return getConverter().toResource(order);
     }
 
+    //SELLER
     public Page<OrderResource> getOrderReport(int pageNumber,
                                               Boolean desc,
                                               String sortBy,

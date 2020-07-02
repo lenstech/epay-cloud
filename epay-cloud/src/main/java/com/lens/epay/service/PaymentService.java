@@ -90,7 +90,7 @@ public class PaymentService {
         buyer.setGsmNumber(user.getSurname());
         buyer.setEmail(user.getEmail());
         buyer.setIdentityNumber(invoiceAddress.getIdentityNo());
-        buyer.setRegistrationAddress(invoiceAddress.toStringForAddress());
+        buyer.setRegistrationAddress(invoiceAddress.toStringForTurkishAddress());
         buyer.setIp(orderDto.getIpAddress());
         buyer.setCity(invoiceAddress.getCity());
         buyer.setCountry(invoiceAddress.getCountry());
@@ -100,14 +100,14 @@ public class PaymentService {
         shippingAddress.setContactName(deliveryAddress.getName());
         shippingAddress.setCity(deliveryAddress.getCity());
         shippingAddress.setCountry(deliveryAddress.getCountry());
-        shippingAddress.setAddress(deliveryAddress.toStringForAddress());
+        shippingAddress.setAddress(deliveryAddress.toStringForTurkishAddress());
         request.setShippingAddress(shippingAddress);
 
         Address billingAddress = new Address();
         billingAddress.setContactName(invoiceAddress.getName());
         billingAddress.setCity(invoiceAddress.getCity());
         billingAddress.setCountry(invoiceAddress.getCountry());
-        billingAddress.setAddress(invoiceAddress.toStringForAddress());
+        billingAddress.setAddress(invoiceAddress.toStringForTurkishAddress());
         request.setBillingAddress(billingAddress);
 
         List<BasketItem> basketItems = new ArrayList<BasketItem>();

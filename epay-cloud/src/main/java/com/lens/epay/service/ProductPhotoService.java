@@ -30,12 +30,17 @@ public class ProductPhotoService {
 
     @Transactional
     public String uploadProductPhoto(MultipartFile file, UUID productId) {
-        Product product = productRepository.findOneById(productId);
+        Product product = productRepository.findById(productId).orElse(null);
         if (product == null) {
             throw new NotFoundException(ErrorConstants.PRODUCT_NOT_EXIST);
         }
-        ProductPhoto photo = new ProductPhoto();
-        photo.setProduct(product);
+        ProductPhoto photo;
+        if(repository.existsByProductId(productId)){
+            photo = repository.findProductPhotoByProductId(productId);
+        } else {
+            photo = new ProductPhoto();
+            photo.setProduct(product);
+        }
         try {
             photo.setFile(file.getBytes());
         } catch (IOException e) {

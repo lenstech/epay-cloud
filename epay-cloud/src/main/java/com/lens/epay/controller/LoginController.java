@@ -19,14 +19,14 @@ public class LoginController {
 
     @ApiOperation(value = "Login with the username (email) and password", response = LoginResource.class)
     @PostMapping("")
-    public ResponseEntity login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<LoginResource> login(@RequestBody LoginDto loginDto) {
         return ResponseEntity.ok(loginService.login(loginDto));
     }
 
 
     @ApiOperation(value = "Update token of user by using old non-expired token", response = LoginResource.class)
     @GetMapping("/update-token")
-    public ResponseEntity tokenUpdate(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<String> tokenUpdate(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(loginService.updateToken(token));
     }
 }

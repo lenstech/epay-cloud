@@ -16,11 +16,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -87,7 +85,7 @@ public class OrderController extends AbstractController<Order, UUID, OrderDto, O
                                                            @RequestParam String remittanceBank,
                                                            @RequestHeader("Authorization") String token) {
         authorizationConfig.permissionCheck(token, Role.CUSTOMER);
-        return ResponseEntity.ok(orderService.enterRemittanceNo(orderId, remittanceNo, remittanceBank, resolver.getIdFromToken(token)));
+        return ResponseEntity.ok(orderService.enterRemittanceInfo(orderId, remittanceNo, remittanceBank, resolver.getIdFromToken(token)));
     }
 
     @PutMapping("/approve-cargo")

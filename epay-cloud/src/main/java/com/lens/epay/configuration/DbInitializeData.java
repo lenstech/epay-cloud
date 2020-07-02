@@ -37,7 +37,7 @@ public class DbInitializeData {
     @PostConstruct
     private void postConstruct() {
         List<User> initialUsers = new ArrayList<>();
-        if(!userRepository.existsByEmail("lensipt@gmail.com")){
+        if (!userRepository.existsByEmail("lensipt@gmail.com")) {
             User admin = new User();
             admin.setEmail("lensipt@gmail.com");
             admin.setPassword("$2a$10$mLpoOQQ1mf9217XGIBoW4.QOoMPSenH0hm8MU8Hwx2V6ycCA6DJIa");
@@ -48,7 +48,7 @@ public class DbInitializeData {
             admin.setConfirmed(true);
             initialUsers.add(admin);
         }
-        if(!userRepository.existsByEmail("gkdemir@hotmail.com")){
+        if (!userRepository.existsByEmail("gkdemir@hotmail.com")) {
             User basicUser = new User();
             basicUser.setEmail("gkdemir@hotmail.com");
             basicUser.setPassword("$2a$10$mLpoOQQ1mf9217XGIBoW4.QOoMPSenH0hm8MU8Hwx2V6ycCA6DJIa");
@@ -59,7 +59,7 @@ public class DbInitializeData {
             basicUser.setConfirmed(true);
             initialUsers.add(basicUser);
         }
-        if(!userRepository.existsByEmail("gokdeemir@gmail.com")){
+        if (!userRepository.existsByEmail("gokdeemir@gmail.com")) {
             User customer = new User();
             customer.setEmail("gokdeemir@gmail.com");
             customer.setPassword("$2a$10$mLpoOQQ1mf9217XGIBoW4.QOoMPSenH0hm8MU8Hwx2V6ycCA6DJIa");
@@ -70,7 +70,7 @@ public class DbInitializeData {
             customer.setConfirmed(true);
             initialUsers.add(customer);
         }
-        if(!userRepository.existsByEmail("ajangs@hotmail.com")){
+        if (!userRepository.existsByEmail("ajangs@hotmail.com")) {
             User firmAdmin = new User();
             firmAdmin.setEmail("ajangs@hotmail.com");
             firmAdmin.setPassword("$2a$10$mLpoOQQ1mf9217XGIBoW4.QOoMPSenH0hm8MU8Hwx2V6ycCA6DJIa");
@@ -81,18 +81,22 @@ public class DbInitializeData {
             firmAdmin.setConfirmed(true);
             initialUsers.add(firmAdmin);
         }
-        if (!initialUsers.isEmpty()){
+        if (!initialUsers.isEmpty()) {
             userRepository.saveAll(initialUsers);
         }
 
-        if(!firmRepository.existsByName("default firm")){
-            Firm defaultFirm  = new Firm();
+        if (!firmRepository.existsByName("default firm")) {
+            Firm defaultFirm = new Firm();
             defaultFirm.setName("default firm");
-            defaultFirm.setCity("İstanbul");
+            defaultFirm.setCity("Erzurum");
+            //TODO: Taha'dan alınıp ayarlanacak.
+            defaultFirm.setAddress(" Adres ");
+            defaultFirm.setPhoneNo("telefon");
+            defaultFirm.setEmail("email");
             firmRepository.save(defaultFirm);
         }
 
-        if(!branchRepository.existsByName("default branch")){
+        if (!branchRepository.existsByName("default branch")) {
             Branch defaultBranch = new Branch();
             defaultBranch.setName("default branch");
             defaultBranch.setCity("İstanbul");
@@ -101,7 +105,7 @@ public class DbInitializeData {
             branchRepository.save(defaultBranch);
         }
 
-        if(!departmentRepository.existsByName("default department")){
+        if (!departmentRepository.existsByName("default department")) {
             Department defaultDepartment = new Department();
             defaultDepartment.setName("default department");
             defaultDepartment.setBranch(branchRepository.findByName("default branch"));

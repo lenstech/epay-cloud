@@ -81,7 +81,8 @@ public class Address extends AbstractEntity<UUID> {
     private String taxAdministration;
 
 
-    public String toStringForAddress() {
+
+    public String toString() {
         return "country='" + country + '\'' +
                 ", city='" + city + '\'' +
                 ", district='" + district + '\'' +
@@ -91,5 +92,31 @@ public class Address extends AbstractEntity<UUID> {
                 ", innerNo='" + innerNo + '\'' +
                 ", otherInfo='" + otherInfo + '\'' +
                 ", postalCode=" + postalCode;
+    }
+
+    public String toStringForTurkishAddress() {
+        return  nullToEmpty(neighborhood ," mah. ")
+                + nullToEmpty(street, " cad. ")
+                + nullToEmptyNo("no: ", buildNo )
+                + nullToEmptyNo( "/", innerNo )
+                + " "
+                + nullToEmpty(otherInfo," ")
+                + nullToEmpty(district," ")
+                + nullToEmpty(city," ")
+                + nullToEmpty(country," ")
+                + nullToEmptyNo("posta kodu: ",postalCode.toString());
+    }
+
+    private String nullToEmpty(String s,String other){
+        if (s == null){
+            return "";
+        }
+        return s + other;
+    }
+    private String nullToEmptyNo(String init,String s){
+        if (s == null){
+            return "";
+        }
+        return init + s;
     }
 }

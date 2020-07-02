@@ -1,8 +1,8 @@
 package com.lens.epay.common;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -11,8 +11,6 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 import java.util.UUID;
-
-import static com.lens.epay.constant.GeneralConstants.ID_LENGTH;
 
 /**
  * Created by Emir Gökdemir
@@ -26,14 +24,14 @@ import static com.lens.epay.constant.GeneralConstants.ID_LENGTH;
 @AllArgsConstructor
 @ToString
 @EntityListeners(AuditingEntityListener.class)
-public class AbstractEntity <ID extends Serializable> {
+public class AbstractEntity<ID extends Serializable> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    @Column(name = "id", length = ID_LENGTH)
+    @Column(name = "id")
+    @Type(type = "uuid-char")
     protected UUID id;
-
 
     @CreatedDate
     @Column(name = "created_date", nullable = false)
