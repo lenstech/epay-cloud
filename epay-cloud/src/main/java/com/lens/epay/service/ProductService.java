@@ -19,8 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 import static com.lens.epay.constant.ErrorConstants.PRODUCT_CANNOT_BE_DELETED_WHEN_HAS_ORDER;
@@ -68,6 +70,28 @@ public class ProductService extends AbstractService<Product, UUID, ProductDto, P
 
         pageable = PageRequest.of(pageNumber, PAGE_SIZE);
         return repository.findAll(spec, pageable).map(getConverter()::toResource);
+    }
+
+    public List<ProductResource> getAllStocked() {
+        return mapper.toResources(getRepository().findProductsByStockedTrue());
+    }
+
+    public Page<ProductResource> getAllWithPageStocked(int pageNumber, String sortBy, Boolean desc) {
+        PageRequest pageable;
+        if (desc == null) {
+            desc = true;
+        }
+        try {
+            if (desc) {
+                pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.DESC, sortBy);
+            } else {
+                pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, sortBy);
+            }
+            return getRepository().findProductsByStockedTrue(pageable).map(getConverter()::toResource);
+        } catch (Exception e) {
+            pageable = PageRequest.of(pageNumber, PAGE_SIZE);
+            return getRepository().findProductsByStockedTrue(pageable).map(getConverter()::toResource);
+        }
     }
 
     public Page<ProductResource> findProductByCategory(UUID categoryId, int pageNo) {

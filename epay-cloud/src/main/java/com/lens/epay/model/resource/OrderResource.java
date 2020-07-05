@@ -62,4 +62,6 @@ public class OrderResource extends AbstractResource {
 
     private CreditCardTransactionResource creditCardTransaction;
 
+    private String orderNote;
+
 }

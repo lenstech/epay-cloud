@@ -6,6 +6,7 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 /**
@@ -18,8 +19,8 @@ public class AuditingEntityListener {
     @PreUpdate
     public void setLastModifiedDate(AbstractEntity entity) {
         if (StringUtils.isEmpty(entity.getId())) {
-            entity.setCreatedDate(ZonedDateTime.now());
+            entity.setCreatedDate(ZonedDateTime.now(ZoneId.of("Asia/Istanbul")));
         }
-        entity.setLastModifiedDate(ZonedDateTime.now());
+        entity.setLastModifiedDate(ZonedDateTime.now(ZoneId.of("Asia/Istanbul")));
     }
 }

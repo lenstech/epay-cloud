@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -65,9 +66,23 @@ public class ProductController extends AbstractController<Product, UUID, Product
         return ResponseEntity.ok(productService.search(word, pageNo));
     }
 
+    @ApiOperation(value = "Get All stocked products with page ", response = ProductResource.class, responseContainer = "List")
+    @GetMapping("/all/stocked/{pageNo}")
+    public ResponseEntity<Page<ProductResource>> getAllWithPageStocked(@PathVariable int pageNo,
+                                                                       @RequestParam(required = false) String sortBy,
+                                                                       @RequestParam(required = false) Boolean desc) {
+        return ResponseEntity.ok(productService.getAllWithPageStocked(pageNo,sortBy,desc));
+    }
+
+    @ApiOperation(value = "Get All stocked products ", response = ProductResource.class, responseContainer = "List")
+    @GetMapping("/all/stocked")
+    public ResponseEntity<List<ProductResource>> getAllStocked() {
+        return ResponseEntity.ok(productService.getAllStocked());
+    }
+
     @ApiOperation(value = "Get Products By category Id", response = ProductResource.class, responseContainer = "List")
     @GetMapping("/get/category/{pageNo}")
-    public ResponseEntity<Page<ProductResource>> getAddressesOfUser(@RequestParam UUID categoryId, @PathVariable int pageNo) {
+    public ResponseEntity<Page<ProductResource>> findProductByCategory(@RequestParam UUID categoryId, @PathVariable int pageNo) {
         return ResponseEntity.ok(productService.findProductByCategory(categoryId, pageNo));
     }
 

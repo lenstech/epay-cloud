@@ -8,6 +8,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -33,13 +34,13 @@ public class AbstractEntity<ID extends Serializable> {
     @Type(type = "uuid-char")
     protected UUID id;
 
-    @CreatedDate
+    @CreatedDate()
     @Column(name = "created_date", nullable = false)
-    protected ZonedDateTime createdDate = ZonedDateTime.now();
+    protected ZonedDateTime createdDate = ZonedDateTime.now(ZoneId.of("Asia/Istanbul"));
 
     @LastModifiedDate
     @Column(name = "last_modified_date")
-    protected ZonedDateTime lastModifiedDate = ZonedDateTime.now();
+    protected ZonedDateTime lastModifiedDate = ZonedDateTime.now(ZoneId.of("Asia/Istanbul"));
 
     @Version
     private Integer version;

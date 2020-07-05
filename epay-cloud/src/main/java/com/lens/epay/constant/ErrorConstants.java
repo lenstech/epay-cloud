@@ -15,6 +15,7 @@ public class ErrorConstants {
     //Mail Exception
     public static final String MAIL_ALREADY_EXISTS = "Mail already exists!";
     public static final String MAIL_SEND_FAILED = "Mail couldn't be sent!";
+    public static final String MAIL_NOT_EXIST = "Mail is not exists!";
 
     //Password Exception
     public static final String WRONG_EMAIL_OR_PASSWORD = "The given email or password is wrong!";

@@ -78,10 +78,11 @@ public class OrderManagementController {
     public ResponseEntity<OrderResource> setCargoInfo(@RequestParam String cargoNo,
                                                       @RequestParam String cargoFirm,
                                                       @RequestParam UUID orderId,
-                                                      @RequestParam @DateTimeFormat(pattern = DTO_DATE_TIME_FORMAT) Date shippedDate,
+//                                                      @RequestParam @DateTimeFormat(pattern = DTO_DATE_TIME_FORMAT) Date shippedDate,
+                                                      @RequestParam Long epochSecond,
                                                       @RequestHeader("Authorization") String token) {
         authorizationConfig.permissionCheck(token, Role.BASIC_USER);
-        return ResponseEntity.ok(orderService.setCargoInfo(cargoNo, cargoFirm, orderId, shippedDate));
+        return ResponseEntity.ok(orderService.setCargoInfo(cargoNo, cargoFirm, orderId, epochSecond));
     }
 
     @PutMapping("/approve-cargo-reached")

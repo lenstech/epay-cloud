@@ -104,7 +104,7 @@ public class Address extends AbstractEntity<UUID> {
                 + nullToEmpty(district," ")
                 + nullToEmpty(city," ")
                 + nullToEmpty(country," ")
-                + nullToEmptyNo("posta kodu: ",postalCode.toString());
+                + nullToEmptyPostalCode(postalCode);
     }
 
     private String nullToEmpty(String s,String other){
@@ -118,5 +118,11 @@ public class Address extends AbstractEntity<UUID> {
             return "";
         }
         return init + s;
+    }
+    private String nullToEmptyPostalCode(Integer s){
+        if (s == null){
+            return "";
+        }
+        return "posta kodu: " + s;
     }
 }

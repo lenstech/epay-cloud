@@ -5,7 +5,9 @@ package com.lens.epay.util;
  * on 28 Haz 2020
  */
 
+import com.lens.epay.exception.BadRequestException;
 import com.lens.epay.model.entity.User;
+import com.lens.epay.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -15,17 +17,23 @@ import org.springframework.stereotype.Component;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import static com.lens.epay.constant.ErrorConstants.MAIL_SEND_FAILED;
+import static com.lens.epay.constant.MailConstants.*;
+
 @Component
 public class MailUtil {
 
     @Autowired
     private JavaMailSender mailSender;
 
-    public void sendActivationMail(User user, String activationToken) {
+    @Autowired
+    private UserRepository userRepository;
+
+    public void sendActivationMail(User user, String activationToken, String subject, String text) {
         String emailAddress = user.getEmail();
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setSubject("Hesabınızı Aktifleştirin");
-        simpleMailMessage.setText("Hesabınızın aktifleştirilmesi için bu linke tıklayınız: \nhttp://localhost:8080/MemberRestAPIProject/activateMemberWebServiceEndpoint/activateMember?activationToken=%s/");
+        simpleMailMessage.setSubject(subject);
+        simpleMailMessage.setText( text);
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
@@ -37,7 +45,7 @@ public class MailUtil {
 //            mimeMessageHelper.addAttachment("Notes", file);
 
         } catch (MessagingException messagingException) {
-
+            throw new BadRequestException(MAIL_SEND_FAILED);
         }
         mailSender.send(mimeMessage);
     }

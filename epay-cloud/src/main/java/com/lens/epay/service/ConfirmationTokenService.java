@@ -5,6 +5,7 @@ import com.lens.epay.exception.BadRequestException;
 import com.lens.epay.model.entity.User;
 import com.lens.epay.repository.UserRepository;
 import com.lens.epay.security.JwtGenerator;
+import com.lens.epay.util.MailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
@@ -24,49 +25,24 @@ import static com.lens.epay.constant.MailConstants.*;
 public class ConfirmationTokenService {
 
     @Autowired
-    private JavaMailSender javaMailSender;
-
-    @Autowired
-    private Environment environment;
-
-    @Autowired
     private JwtGenerator jwtGenerator;
 
     @Autowired
     private UserRepository userRepository;
 
-
-    public void sendActivationToken(User user) {
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        String confirmationToken = jwtGenerator.generateMailConfirmationToken(user.getId());
-        mailMessage.setTo(user.getEmail());
-        mailMessage.setSubject(CONFIRM_ACCOUNT_HEADER);
-        mailMessage.setText(CONFIRM_ACCOUNT_BODY
-                + this.environment.getProperty("spring.url")
-                + CONFIRM_ACCOUNT_URL + confirmationToken);
-        sendMail(mailMessage);
-
-    }
+    @Autowired
+    private MailUtil mailUtil;
 
     public void sendResetPasswordsToken(String email) {
         User user = userRepository.findByEmail(email);
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        String confirmationToken = jwtGenerator.generateMailConfirmationToken(user.getId());
-        mailMessage.setTo(user.getEmail());
-        mailMessage.setSubject(RESET_PASSWORD_HEADER);
-        mailMessage.setText(RESET_PASSWORD_BODY
-                + this.environment.getProperty("spring.url")
-                + RESET_PASSWORD_URL + confirmationToken);
-        // TODO: 20 Şub 2020 Maile gönderilen adres değiştirilecek ki kullanıcı o adrese frontendde gidecek ve sonrasında şifre değişecek.
-        sendMail(mailMessage);
-    }
-
-    private void sendMail(SimpleMailMessage mailMessage){
-        try {
-            javaMailSender.send(mailMessage);
-        } catch (MailException exception) {
-            throw new BadRequestException(ErrorConstants.MAIL_SEND_FAILED);
+        if (user == null){
+            throw new BadRequestException(ErrorConstants.MAIL_NOT_EXIST);
         }
+        mailUtil.sendActivationMail(user,
+                jwtGenerator.generateMailConfirmationToken(user.getId()),
+                RESET_PASSWORD_HEADER,
+                RESET_PASSWORD_BODY + "\n" + CLIENT_URL + RESET_PASSWORD_URL);
+        // TODO: 20 Şub 2020 Maile gönderilen adres değiştirilecek ki kullanıcı o adrese frontendde gidecek ve sonrasında şifre değişecek.
     }
 }
 

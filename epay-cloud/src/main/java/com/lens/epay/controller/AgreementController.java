@@ -30,11 +30,19 @@ public class AgreementController {
     @Autowired
     private JwtResolver resolver;
 
-    @ApiOperation(value = "Get Sales Agreement of an order, it can be seen by only Admin", response = String.class)
+    @ApiOperation(value = "Get Sales Agreement of an order", response = String.class)
     @PostMapping("/sales-agreement")
     public ResponseEntity<String> getSalesAgreement(@RequestHeader("Authorization") String token,
                                                     @RequestBody OrderDto orderDto) {
         authorizationConfig.permissionCheck(token, Role.CUSTOMER);
         return ResponseEntity.ok(service.getSalesAgreement(resolver.getIdFromToken(token), orderDto));
+    }
+
+    @ApiOperation(value = "Get Preinformative Agreement of an order", response = String.class)
+    @PostMapping("/preinformative-agreement")
+    public ResponseEntity<String> getPreinformativeAgreement(@RequestHeader("Authorization") String token,
+                                                    @RequestBody OrderDto orderDto) {
+        authorizationConfig.permissionCheck(token, Role.CUSTOMER);
+        return ResponseEntity.ok(service.getPreinformativeAgreement(resolver.getIdFromToken(token), orderDto));
     }
 }

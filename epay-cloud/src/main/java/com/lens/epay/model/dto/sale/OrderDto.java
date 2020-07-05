@@ -57,4 +57,6 @@ public class OrderDto {
     private String cvc;
 
     private List<BasketObjectDto> basketObjectDtoList;
+
+    private String orderNote;
 }

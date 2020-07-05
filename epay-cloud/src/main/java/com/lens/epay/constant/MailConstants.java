@@ -7,15 +7,16 @@ package com.lens.epay.constant;
 
 public class MailConstants {
     //HEADER
-    public static final String CONFIRM_ACCOUNT_HEADER = "Epay Email Confirmation";
-    public static final String RESET_PASSWORD_HEADER  = "Epay Reset Password Request";
+    public static final String CONFIRM_ACCOUNT_HEADER = "Sutce Hesabınızı Aktifleştirin";
+    public static final String RESET_PASSWORD_HEADER  = "Sütçe Şifre Değişiklik Talebi";
 
     //BODY
-    public static final String CONFIRM_ACCOUNT_BODY = "To confirm your account, please click here : ";
-    public static final String RESET_PASSWORD_BODY  = "To reset your password, please click here : ";
+    public static final String CONFIRM_ACCOUNT_BODY = "Hesabınızın aktifleştirilmesi için linke tıklayınız: ";
+    public static final String RESET_PASSWORD_BODY  = "Şifrenizi yenilemek için tıklayınız: ";
 
     //URL
-    public static final String CONFIRM_ACCOUNT_URL = "/register/confirm-register?token=";
-    public static final String RESET_PASSWORD_URL  = "/reset-password/confirm?token=" ;
+    public static final String CONFIRM_ACCOUNT_URL = "/hesap/aktivasyon?activationToken=%s/";
+    public static final String RESET_PASSWORD_URL  = "/hesap/sifre-yenile?activationToken=%s/" ;
+    public static final String CLIENT_URL = "https://sutcemarket.com/#";
 
 }

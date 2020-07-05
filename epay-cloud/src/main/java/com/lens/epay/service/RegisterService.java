@@ -24,6 +24,7 @@ import java.util.UUID;
 
 import static com.lens.epay.constant.ErrorConstants.ID_IS_NOT_EXIST;
 import static com.lens.epay.constant.ErrorConstants.MAIL_ALREADY_EXISTS;
+import static com.lens.epay.constant.MailConstants.*;
 
 
 /**
@@ -71,8 +72,10 @@ public class RegisterService {
         }
         user.setPassword(bCryptPasswordEncoder.encode(registerFirmUserDto.getPassword()));
         userRepository.saveAndFlush(user);
-        mailUtil.sendActivationMail(user, jwtGenerator.generateMailConfirmationToken(user.getId()));
-//        confirmationTokenService.sendActivationToken(user);
+        mailUtil.sendActivationMail(user,
+                jwtGenerator.generateMailConfirmationToken(user.getId()),
+                CONFIRM_ACCOUNT_HEADER,
+                CONFIRM_ACCOUNT_BODY + "\n" + CLIENT_URL + CONFIRM_ACCOUNT_URL );
         return mapper.toResource(user);
     }
 
@@ -86,7 +89,10 @@ public class RegisterService {
         user.setPassword(bCryptPasswordEncoder.encode(customerDto.getPassword()));
         user.setRole(Role.CUSTOMER);
         userRepository.saveAndFlush(user);
-        mailUtil.sendActivationMail(user, jwtGenerator.generateMailConfirmationToken(user.getId()));
+        mailUtil.sendActivationMail(user,
+                jwtGenerator.generateMailConfirmationToken(user.getId()),
+                CONFIRM_ACCOUNT_HEADER,
+                CONFIRM_ACCOUNT_BODY + "\n" + CLIENT_URL + CONFIRM_ACCOUNT_URL);
         return mapper.toResource(user);
     }
 

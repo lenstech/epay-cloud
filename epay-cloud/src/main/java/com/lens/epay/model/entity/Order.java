@@ -74,4 +74,6 @@ public class Order extends AbstractEntity<UUID> {
 
     @OneToOne(cascade = CascadeType.ALL)
     private CreditCardTransaction creditCardTransaction;
+
+    private String orderNote;
 }

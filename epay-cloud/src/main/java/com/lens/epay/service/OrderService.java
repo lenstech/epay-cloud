@@ -30,6 +30,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -120,17 +121,17 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
     }
 
     @Scheduled(cron = "0 0 * * *")
-    public void checkFraudControlResult(){
+    public void checkFraudControlResult() {
         List<Order> orders = getRepository().findOrdersByCreditCardTransactionIyzicoFraudStatus(0);
-        if (orders == null){
+        if (orders == null) {
             return;
         }
-        for(Order order : orders){
-            if(!order.getOrderStatus().equals(OrderStatus.WAIT_FOR_APPROVE_REMITTANCE_BY_SELLER)){
+        for (Order order : orders) {
+            if (!order.getOrderStatus().equals(OrderStatus.WAIT_FOR_APPROVE_REMITTANCE_BY_SELLER)) {
                 continue;
             }
             Payment payment = paymentService.getPayment(order.getCreditCardTransaction());
-            if(payment.getFraudStatus()==1){
+            if (payment.getFraudStatus() == 1) {
                 order.setPaid(true);
                 CreditCardTransaction transaction = order.getCreditCardTransaction();
                 transaction.setIyziCommissionFee(payment.getIyziCommissionFee().floatValue());
@@ -139,7 +140,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
                 transaction.setIyzicoFraudStatus(payment.getFraudStatus());
                 order.setCreditCardTransaction(transaction);
                 order.setOrderStatus(OrderStatus.TAKEN);
-            }else if (payment.getFraudStatus() == -1){
+            } else if (payment.getFraudStatus() == -1) {
                 order.setOrderStatus(OrderStatus.REJECTED_FROM_FRAUD_CONTROLLER);
             }
         }
@@ -254,7 +255,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
     }
 
     //SELLER
-    public OrderResource setCargoInfo(String cargoNo, String cargoFirm, UUID orderId, Date shippedDate) {
+    public OrderResource  setCargoInfo(String cargoNo, String cargoFirm, UUID orderId, Long epochSecond) {
         Order order = getRepository().getOne(orderId);
         if (!order.getOrderStatus().equals(OrderStatus.APPROVED) &&
                 !order.getOrderStatus().equals(OrderStatus.PREPARED_FOR_CARGO)) {
@@ -264,14 +265,14 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
         order.setCargoFirm(cargoFirm);
         order.setOrderStatus(OrderStatus.SHIPPED);
 
-        if (shippedDate != null) {
+        if (epochSecond != null) {
             try {
-                order.setShippedDate(ZonedDateTime.ofInstant(shippedDate.toInstant(), ZoneId.systemDefault()));
+                order.setShippedDate(ZonedDateTime.ofInstant(Instant.ofEpochSecond(epochSecond), ZoneId.of("Asia/Istanbul")));
             } catch (Exception e) {
-                order.setShippedDate(ZonedDateTime.now());
+                order.setShippedDate(ZonedDateTime.now(ZoneId.of("Asia/Istanbul")));
             }
         } else {
-            order.setShippedDate(ZonedDateTime.now());
+            order.setShippedDate(ZonedDateTime.now(ZoneId.of("Asia/Istanbul")));
         }
         getRepository().save(order);
         return getConverter().toResource(order);
@@ -347,7 +348,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
             if (order.getPaid()) {
                 if (order.getPaymentType().equals(PaymentType.CREDIT_CARD)) {
                     Cancel cancel = paymentService.repayByCard(order);
-                    if (cancel.getStatus().equals("success")){
+                    if (cancel.getStatus().equals("success")) {
                         order.setOrderStatus(OrderStatus.REPAID);
                         order.setRepaid(true);
                     } else {
@@ -359,10 +360,10 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
             } else {
                 order.setOrderStatus(OrderStatus.CANCELLED_BY_CUSTOMER_BEFORE_SHIPPED);
             }
-        } else if (orderStatus.equals(OrderStatus.PREPARED_FOR_CARGO) || orderStatus.equals(OrderStatus.WAIT_FOR_APPROVE_REMITTANCE_BY_SELLER)) {
-            throw new BadRequestException(NOT_APPROPRIATE_CANCEL_AT_THIS_POINT);
-        } else {
+        } else if (orderStatus.equals(OrderStatus.COMPLETED) || orderStatus.equals(OrderStatus.SHIPPED)){
             order.setOrderStatus(OrderStatus.RETURN_REQUEST_SELLER_ACCEPT_WAITED);
+        } else {
+            throw new BadRequestException(NOT_APPROPRIATE_CANCEL_AT_THIS_POINT);
         }
         getRepository().save(order);
         return getConverter().toResource(order);
@@ -401,7 +402,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
             if (order.getPaid()) {
                 if (order.getPaymentType().equals(PaymentType.CREDIT_CARD)) {
                     Cancel cancel = paymentService.repayByCard(order);
-                    if (cancel.getStatus().equals("success")){
+                    if (cancel.getStatus().equals("success")) {
                         order.setOrderStatus(OrderStatus.REPAID);
                         order.setRepaid(true);
                     } else {
@@ -428,7 +429,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
         }
         if (order.getPaymentType().equals(PaymentType.CREDIT_CARD) && order.getPaid() && !order.getRepaid()) {
             Cancel cancel = paymentService.repayByCard(order);
-            if (cancel.getStatus().equals("success")){
+            if (cancel.getStatus().equals("success")) {
                 order.setOrderStatus(OrderStatus.REPAID);
                 order.setRepaid(true);
             } else {
