@@ -4,17 +4,17 @@ import com.lens.epay.common.AbstractService;
 import com.lens.epay.common.Converter;
 import com.lens.epay.enums.SearchOperator;
 import com.lens.epay.exception.BadRequestException;
+import com.lens.epay.exception.NotFoundException;
 import com.lens.epay.mapper.ProductMapper;
 import com.lens.epay.model.dto.sale.ProductDto;
 import com.lens.epay.model.entity.Product;
-import com.lens.epay.model.entity.ProductPhoto;
 import com.lens.epay.model.other.SearchCriteria;
 import com.lens.epay.model.resource.product.ProductResource;
 import com.lens.epay.repository.BasketRepository;
 import com.lens.epay.repository.ProductPhotoRepository;
 import com.lens.epay.repository.ProductRepository;
 import com.lens.epay.repository.specifications.ProductSpecification;
-import io.swagger.annotations.ApiOperation;
+import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
+import static com.lens.epay.constant.ErrorConstants.ID_IS_NOT_EXIST;
 import static com.lens.epay.constant.ErrorConstants.PRODUCT_CANNOT_BE_DELETED_WHEN_HAS_ORDER;
 import static com.lens.epay.constant.GeneralConstants.PAGE_SIZE;
 
@@ -102,14 +103,23 @@ public class ProductService extends AbstractService<Product, UUID, ProductDto, P
     @Override
     protected void deleteOperations(UUID productId) {
         productPhotoRepository.deleteProductPhotoByProductId(productId);
-        if (basketRepository.countBasketObjectsByProductId(productId)>0){
+        if (basketRepository.countBasketObjectsByProductId(productId) > 0) {
             throw new BadRequestException(PRODUCT_CANNOT_BE_DELETED_WHEN_HAS_ORDER);
         }
     }
 
-    public ProductResource changeStockStatus(UUID productId, Boolean stocked){
+    public ProductResource changeStockStatus(UUID productId, Boolean stocked) {
         Product product = repository.getOne(productId);
         product.setStocked(stocked);
         return mapper.toResource(repository.save(product));
+    }
+
+    @Named("getPriceFromId")
+    public Float getPriceFromId(UUID id) {
+        try {
+            return getRepository().findOneById(id).getPrice();
+        } catch (NullPointerException e) {
+            throw new NotFoundException(ID_IS_NOT_EXIST);
+        }
     }
 }

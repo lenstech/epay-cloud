@@ -18,7 +18,11 @@ public interface BasketObjectMapper extends Converter<BasketObjectDto, BasketObj
 
     @Override
     @Mapping(source = "productId", target = "product", qualifiedByName = "fromIdToEntity")
+    @Mapping(source = "productId", target = "unitPrice", qualifiedByName = "getPriceFromId")
     BasketObject toEntity(BasketObjectDto basketObjectDto);
+
+    @Mapping(source = "unitPrice", target = "unitPriceOfProductAtOrder")
+    BasketObjectResource toResource(BasketObject basketObject);
 
 
 }

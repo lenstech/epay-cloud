@@ -79,10 +79,10 @@ public class OrderManagementController {
                                                       @RequestParam String cargoFirm,
                                                       @RequestParam UUID orderId,
 //                                                      @RequestParam @DateTimeFormat(pattern = DTO_DATE_TIME_FORMAT) Date shippedDate,
-                                                      @RequestParam Long epochSecond,
+                                                      @RequestParam Long epochMilliSecond,
                                                       @RequestHeader("Authorization") String token) {
         authorizationConfig.permissionCheck(token, Role.BASIC_USER);
-        return ResponseEntity.ok(orderService.setCargoInfo(cargoNo, cargoFirm, orderId, epochSecond));
+        return ResponseEntity.ok(orderService.setCargoInfo(cargoNo, cargoFirm, orderId, epochMilliSecond));
     }
 
     @PutMapping("/approve-cargo-reached")
@@ -169,8 +169,8 @@ public class OrderManagementController {
     public ResponseEntity<Page<OrderResource>> orderReport(@RequestParam int pageNumber,
                                                            @RequestParam(required = false) Boolean desc,
                                                            @RequestParam(required = false) String sortBy,
-                                                           @RequestParam(required = false) @DateTimeFormat(pattern = DTO_DATE_FORMAT) Date startDate,
-                                                           @RequestParam(required = false) @DateTimeFormat(pattern = DTO_DATE_FORMAT) Date endDate,
+                                                           @RequestParam(required = false) Long startDateEpochMilliSecond,
+                                                           @RequestParam(required = false) Long endDateEpochMilliSecond,
                                                            @RequestParam(required = false) OrderStatus orderStatus,
                                                            @RequestParam(required = false) PaymentType paymentType,
                                                            @RequestParam(required = false) String cargoFirm,
@@ -178,6 +178,6 @@ public class OrderManagementController {
                                                            @RequestParam(required = false) Boolean paid,
                                                            @RequestHeader("Authorization") String token) {
         authorizationConfig.permissionCheck(token, Role.FIRM_ADMIN);
-        return ResponseEntity.ok(orderService.getOrderReport(pageNumber, desc, sortBy, startDate, endDate, orderStatus, paymentType, cargoFirm, remittanceBank, paid));
+        return ResponseEntity.ok(orderService.getOrderReport(pageNumber, desc, sortBy, startDateEpochMilliSecond, endDateEpochMilliSecond, orderStatus, paymentType, cargoFirm, remittanceBank, paid));
     }
 }

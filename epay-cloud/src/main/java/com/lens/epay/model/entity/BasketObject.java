@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lens.epay.common.AbstractEntity;
 import lombok.Data;
 import org.eclipse.persistence.annotations.Index;
+import org.springframework.format.annotation.NumberFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -23,6 +24,10 @@ public class BasketObject extends AbstractEntity<UUID> {
     @ManyToOne(optional = false)
     @NotNull
     private Product product;
+
+    @NotNull
+    @NumberFormat(style = NumberFormat.Style.CURRENCY)
+    private Float unitPrice;
 
     @NotNull
     private Integer productQuantity;

@@ -255,7 +255,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
     }
 
     //SELLER
-    public OrderResource  setCargoInfo(String cargoNo, String cargoFirm, UUID orderId, Long epochSecond) {
+    public OrderResource  setCargoInfo(String cargoNo, String cargoFirm, UUID orderId, Long epochMilli) {
         Order order = getRepository().getOne(orderId);
         if (!order.getOrderStatus().equals(OrderStatus.APPROVED) &&
                 !order.getOrderStatus().equals(OrderStatus.PREPARED_FOR_CARGO)) {
@@ -265,9 +265,9 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
         order.setCargoFirm(cargoFirm);
         order.setOrderStatus(OrderStatus.SHIPPED);
 
-        if (epochSecond != null) {
+        if (epochMilli != null) {
             try {
-                order.setShippedDate(ZonedDateTime.ofInstant(Instant.ofEpochSecond(epochSecond), ZoneId.of("Asia/Istanbul")));
+                order.setShippedDate(ZonedDateTime.ofInstant(Instant.ofEpochMilli(epochMilli), ZoneId.of("Asia/Istanbul")));
             } catch (Exception e) {
                 order.setShippedDate(ZonedDateTime.now(ZoneId.of("Asia/Istanbul")));
             }
@@ -479,8 +479,8 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
     public Page<OrderResource> getOrderReport(int pageNumber,
                                               Boolean desc,
                                               String sortBy,
-                                              Date startDate,
-                                              Date endDate,
+                                              Long startDateEpochMilliSecond,
+                                              Long endDateEpochMilliSecond,
                                               OrderStatus orderStatus,
                                               PaymentType paymentType,
                                               String cargoFirm,
@@ -492,12 +492,12 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
         }
 
         OrderSpecification spec = new OrderSpecification();
-        if (startDate != null) {
-            ZonedDateTime start = ZonedDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());
+        if (startDateEpochMilliSecond != null) {
+            ZonedDateTime start = ZonedDateTime.ofInstant(Instant.ofEpochMilli(startDateEpochMilliSecond), ZoneId.of("Asia/Istanbul"));
             spec.add(new SearchCriteria("createdDate", start, SearchOperator.FROM));
         }
-        if (endDate != null) {
-            ZonedDateTime end = ZonedDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault());
+        if (endDateEpochMilliSecond != null) {
+            ZonedDateTime end = ZonedDateTime.ofInstant(Instant.ofEpochMilli(endDateEpochMilliSecond), ZoneId.of("Asia/Istanbul"));
             spec.add(new SearchCriteria("createdDate", end, SearchOperator.TO));
         }
         if (orderStatus != null) {

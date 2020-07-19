@@ -18,5 +18,7 @@ public class BasketObjectResource {
 
     private ProductResource product;
 
+    private Float unitPriceOfProductAtOrder;
+
     private Integer productQuantity;
 }
