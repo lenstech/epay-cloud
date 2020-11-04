@@ -42,7 +42,9 @@ public class OrderResource extends AbstractResource {
 
     private AddressResource invoiceAddress;
 
-    private Float totalPrice;
+    private Float totalProductPrice;
+
+    private Float deliveryFee;
 
     private PaymentType paymentType;
 

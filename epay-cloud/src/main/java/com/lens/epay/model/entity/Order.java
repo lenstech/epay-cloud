@@ -51,7 +51,11 @@ public class Order extends AbstractEntity<UUID> {
 
     @NumberFormat(style = NumberFormat.Style.CURRENCY)
     @NotNull
-    private Float totalPrice;
+    private Float totalProductPrice;
+
+    @NumberFormat(style = NumberFormat.Style.CURRENCY)
+    @NotNull
+    private Float deliveryFee;
 
     @Enumerated(EnumType.STRING)
     @NotNull

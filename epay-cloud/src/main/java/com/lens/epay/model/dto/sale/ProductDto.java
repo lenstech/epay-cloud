@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 /**
@@ -28,7 +29,11 @@ public class ProductDto {
     @Enumerated(EnumType.STRING)
     private Unit unit = Unit.PIECE;
 
+    @NotNull
     private Float price;
+
+    @NotNull
+    private Float discountedPrice;
 
     private UUID categoryId;
 

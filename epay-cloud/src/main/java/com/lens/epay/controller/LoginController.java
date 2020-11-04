@@ -24,7 +24,7 @@ public class LoginController {
     }
 
 
-    @ApiOperation(value = "Update token of user by using old non-expired token", response = LoginResource.class)
+    @ApiOperation(value = "Update token of user by using old non-expired token", response = String.class)
     @GetMapping("/update-token")
     public ResponseEntity<String> tokenUpdate(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(loginService.updateToken(token));

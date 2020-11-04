@@ -31,7 +31,7 @@ public class OrderDto {
     private UUID invoiceAddressId;
 
     @NumberFormat(style = NumberFormat.Style.CURRENCY)
-    private Float totalPrice;
+    private Float totalProductPrice;
 
     @Enumerated(EnumType.STRING)
     private Currency currency;

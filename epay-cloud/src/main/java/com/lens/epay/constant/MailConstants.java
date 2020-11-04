@@ -15,8 +15,8 @@ public class MailConstants {
     public static final String RESET_PASSWORD_BODY  = "Şifrenizi yenilemek için tıklayınız: ";
 
     //URL
-    public static final String CONFIRM_ACCOUNT_URL = "/kayit-onay?token=%s/";
-    public static final String RESET_PASSWORD_URL  = "/hesap/sifre-yenile?activationToken=%s/" ;
+    public static final String CONFIRM_ACCOUNT_URL = "/kayit-onay?token=%s";
+    public static final String RESET_PASSWORD_URL  = "/hesap/sifre-yenile?activationToken=%s" ;
     public static final String CLIENT_URL = "https://sutcemarket.com/#";
 
 }

@@ -29,6 +29,9 @@ public class ProductResource extends AbstractResource {
     @NumberFormat(style = NumberFormat.Style.CURRENCY)
     private Float price;
 
+    @NumberFormat(style = NumberFormat.Style.CURRENCY)
+    private Float discountedPrice;
+
     private CategoryResource category;
 
     private Boolean stocked = true;

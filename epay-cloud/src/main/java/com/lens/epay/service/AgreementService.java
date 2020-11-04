@@ -50,7 +50,7 @@ public class AgreementService {
             productPart.append("Ürün Açıklaması: ").append(object.getProduct().getName()).append("\n")
                     .append("Adet: ").append(object.getProductQuantity()).append("\n")
                     .append("Birim: ").append(object.getProduct().getUnit().getTurkish()).append("\n")
-                    .append("Fiyatı(₺): ").append(object.getProduct().getPrice()).append("\n");
+                    .append("Fiyatı(₺): ").append(object.getProduct().getDiscountedPrice()).append("\n");
         }
 
         return "MESAFELİ SATIŞ SÖZLEŞMESİ\n" +
@@ -116,10 +116,10 @@ public class AgreementService {
                 "7.3. Sözleşme konusu mal ya da hizmetin tüm vergiler dâhil satış fiyatı aşağıda gösterilmiştir.\n" +
                 "\n" +
                 productPart +
-                "Ara Toplam(₺): " + order.getTotalPrice() + "\n" +
+                "Ara Toplam(₺): " + order.getTotalProductPrice() + "\n" +
                 "(KDV Dahil) " +
                 "Kargo Tutarı\n" +
-                "Toplam(₺) :" + order.getTotalPrice() + "\n" +
+                "Toplam(₺) :" + order.getTotalProductPrice() + "\n" +
                 "\n" +
                 "Ödeme Şekli ve Planı: " + order.getPaymentType().getTurkish() + "\n" +
                 "Teslimat Adresi: " + deliveryAddress.toStringForTurkishAddress() + "\n" +
@@ -235,7 +235,7 @@ public class AgreementService {
             productPart.append("Ürün Açıklaması: ").append(object.getProduct().getName()).append("\n")
                     .append("Adet: ").append(object.getProductQuantity()).append("\n")
                     .append("Birim: ").append(object.getProduct().getUnit().getTurkish()).append("\n")
-                    .append("Fiyatı(₺): ").append(object.getProduct().getPrice()).append("\n");
+                    .append("Fiyatı(₺): ").append(object.getProduct().getDiscountedPrice()).append("\n");
         }
 
         return
@@ -278,10 +278,10 @@ public class AgreementService {
                         "5.3Sözleşme konusu mal ya da hizmetin tüm vergiler dâhil satış fiyatı aşağıdaki tabloda gösterilmiştir.\n" +
                         "\n" +
                         productPart +
-                        "Ara Toplam(₺): " + order.getTotalPrice() + "\n" +
+                        "Ara Toplam(₺): " + order.getTotalProductPrice() + "\n" +
                         "(KDV Dahil) " +
                         "Kargo Tutarı\n" +
-                        "Toplam(₺) :" + order.getTotalPrice() + "\n" +
+                        "Toplam(₺) :" + order.getTotalProductPrice() + "\n" +
                         "\n" +
                         "Ödeme Şekli ve Planı: " + order.getPaymentType().getTurkish() + "\n" +
                         "Teslimat Adresi: " + deliveryAddress.toStringForTurkishAddress() + "\n" +

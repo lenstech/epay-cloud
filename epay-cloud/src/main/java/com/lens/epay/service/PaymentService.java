@@ -13,6 +13,7 @@ import com.lens.epay.model.dto.sale.OrderDto;
 import com.lens.epay.model.entity.*;
 import com.lens.epay.repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -32,6 +33,13 @@ public class PaymentService {
     @Autowired
     private AddressRepository addressRepository;
 
+    @Value("${payment.iyzico.apikey}")
+    private String apiKey;
+    @Value("${payment.iyzico.secretkey}")
+    private String secretKey;
+    @Value("${payment.iyzico.baseurl}")
+    private String baseUrl;
+
     public InstallmentInfo checkCardInstallment(CreditCardInstallmentCheckDto dto) {
         RetrieveInstallmentInfoRequest request = new RetrieveInstallmentInfoRequest();
         request.setLocale(Locale.TR.getValue());
@@ -44,9 +52,9 @@ public class PaymentService {
     }
 
     private Options setOptions(Options options) {
-        options.setApiKey("sandbox-FXQgNXYvyZtFAJf1ZokfE8i7kA1KbVUQ");
-        options.setSecretKey("sandbox-1lXTgvsDQZ5LgKezahaNUYRbMkORnyGV");
-        options.setBaseUrl("https://sandbox-api.iyzipay.com");
+        options.setApiKey(apiKey);
+        options.setSecretKey(secretKey);
+        options.setBaseUrl(baseUrl);
         return options;
     }
 
@@ -61,8 +69,8 @@ public class PaymentService {
         CreatePaymentRequest request = new CreatePaymentRequest();
         request.setLocale(Locale.TR.getValue());
         request.setConversationId(order.getId().toString());
-        request.setPrice(new BigDecimal(orderDto.getTotalPrice().toString()));
-        request.setPaidPrice(new BigDecimal(orderDto.getTotalPrice().toString()));
+        request.setPrice(new BigDecimal(orderDto.getTotalProductPrice().toString()));
+        request.setPaidPrice(new BigDecimal(orderDto.getTotalProductPrice() + order.getDeliveryFee()));
         request.setCurrency(orderDto.getCurrency().name());
         request.setInstallment(orderDto.getInstallmentNumber());
         request.setBasketId(order.getBasketObjects().get(0).getId().toString());
@@ -87,7 +95,7 @@ public class PaymentService {
         buyer.setId(user.getId().toString());
         buyer.setName(user.getName());
         buyer.setSurname(user.getSurname());
-        buyer.setGsmNumber(user.getSurname());
+        buyer.setGsmNumber(user.getPhoneNumber());
         buyer.setEmail(user.getEmail());
         buyer.setIdentityNumber(invoiceAddress.getIdentityNo());
         buyer.setRegistrationAddress(invoiceAddress.toStringForTurkishAddress());
@@ -97,14 +105,14 @@ public class PaymentService {
         request.setBuyer(buyer);
 
         Address shippingAddress = new Address();
-        shippingAddress.setContactName(deliveryAddress.getName());
+        shippingAddress.setContactName(deliveryAddress.getReceiverName() + deliveryAddress.getReceiverSurname());
         shippingAddress.setCity(deliveryAddress.getCity());
         shippingAddress.setCountry(deliveryAddress.getCountry());
         shippingAddress.setAddress(deliveryAddress.toStringForTurkishAddress());
         request.setShippingAddress(shippingAddress);
 
         Address billingAddress = new Address();
-        billingAddress.setContactName(invoiceAddress.getName());
+        billingAddress.setContactName(invoiceAddress.getReceiverName() + invoiceAddress.getReceiverSurname());
         billingAddress.setCity(invoiceAddress.getCity());
         billingAddress.setCountry(invoiceAddress.getCountry());
         billingAddress.setAddress(invoiceAddress.toStringForTurkishAddress());
@@ -127,7 +135,7 @@ public class PaymentService {
         basketItem.setName(product.getName());
         basketItem.setCategory1(product.getCategory().getName());
         basketItem.setItemType(BasketItemType.PHYSICAL.name());
-        basketItem.setPrice(new BigDecimal(product.getPrice().toString()));
+        basketItem.setPrice(new BigDecimal(product.getDiscountedPrice().toString()));
         return basketItem;
     }
 

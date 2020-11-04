@@ -23,6 +23,7 @@ import com.lens.epay.repository.OrderRepository;
 import com.lens.epay.repository.UserRepository;
 import com.lens.epay.repository.specifications.OrderSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -49,6 +50,9 @@ import static com.lens.epay.constant.GeneralConstants.PAGE_SIZE;
 @Service
 @Transactional
 public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderResource> {
+
+    @Value("${delivery.fee.amount}")
+    private Float deliveryFeeAmount;
 
     @Override
     public OrderRepository getRepository() {
@@ -84,13 +88,14 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
         Order order = getConverter().toEntity(orderDto);
         float sum = 0F;
         for (BasketObject object : order.getBasketObjects()) {
-            sum += object.getProduct().getPrice() * object.getProductQuantity();
+            sum += object.getProduct().getDiscountedPrice() * object.getProductQuantity();
             object.setOrder(order);
         }
-        if (Math.abs(sum - order.getTotalPrice()) > 0.50) {
+        if (Math.abs(sum - order.getTotalProductPrice()) > 0.50) {
             throw new BadRequestException(TOTAL_PRICE_IS_NOT_CORRECT);
         }
         User user = userRepository.findUserById(userId);
+        order.setDeliveryFee(deliveryFeeAmount);
         order.setOrderStatus(OrderStatus.TAKEN);
         order.setUser(user);
         order.setPaid(false);

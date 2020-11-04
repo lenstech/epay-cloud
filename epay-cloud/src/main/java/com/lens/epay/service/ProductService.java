@@ -117,7 +117,7 @@ public class ProductService extends AbstractService<Product, UUID, ProductDto, P
     @Named("getPriceFromId")
     public Float getPriceFromId(UUID id) {
         try {
-            return getRepository().findOneById(id).getPrice();
+            return getRepository().findOneById(id).getDiscountedPrice();
         } catch (NullPointerException e) {
             throw new NotFoundException(ID_IS_NOT_EXIST);
         }

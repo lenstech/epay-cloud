@@ -31,8 +31,13 @@ public class Product extends AbstractEntity<UUID> {
     @Enumerated(EnumType.STRING)
     private Unit unit = Unit.PIECE;
 
+    @NotNull
     @NumberFormat(style = NumberFormat.Style.CURRENCY)
     private Float price;
+
+    @NotNull
+    @NumberFormat(style = NumberFormat.Style.CURRENCY)
+    private Float discountedPrice;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "category_id")

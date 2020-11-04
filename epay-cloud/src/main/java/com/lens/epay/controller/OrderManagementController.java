@@ -11,15 +11,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.UUID;
-
-import static com.lens.epay.constant.GeneralConstants.DTO_DATE_FORMAT;
-import static com.lens.epay.constant.GeneralConstants.DTO_DATE_TIME_FORMAT;
 
 /**
  * Created by Emir Gökdemir
@@ -159,7 +154,7 @@ public class OrderManagementController {
 
     @GetMapping("/fraud")
     @ApiOperation("Admin can update fraud suspect transactions. The check is automatically done at the beginning of every hour")
-    public void fraud(@RequestHeader("Authorization") String token){
+    public void fraud(@RequestHeader("Authorization") String token) {
         authorizationConfig.permissionCheck(token, Role.FIRM_ADMIN);
         orderService.checkFraudControlResult();
     }
