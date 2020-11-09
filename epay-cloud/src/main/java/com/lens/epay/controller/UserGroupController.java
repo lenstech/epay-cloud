@@ -58,6 +58,12 @@ public class UserGroupController extends AbstractController<UserGroup, UUID, Use
         super.deleteRole = Role.DEPARTMENT_ADMIN;
     }
 
+    @Override
+    public void setEntityName() {
+        super.entityName = "User Group";
+    }
+
+
 
     @Override
     protected AbstractService<UserGroup, UUID, UserGroupDto, UserGroupResource> getService() {

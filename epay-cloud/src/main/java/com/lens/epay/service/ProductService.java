@@ -101,7 +101,7 @@ public class ProductService extends AbstractService<Product, UUID, ProductDto, P
     }
 
     @Override
-    protected void deleteOperations(UUID productId) {
+    protected void deleteOperations(UUID productId, UUID userId) {
         productPhotoRepository.deleteProductPhotoByProductId(productId);
         if (basketRepository.countBasketObjectsByProductId(productId) > 0) {
             throw new BadRequestException(PRODUCT_CANNOT_BE_DELETED_WHEN_HAS_ORDER);

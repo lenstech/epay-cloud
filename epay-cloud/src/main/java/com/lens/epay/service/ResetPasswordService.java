@@ -4,10 +4,14 @@ import com.lens.epay.enums.Role;
 import com.lens.epay.exception.BadRequestException;
 import com.lens.epay.exception.NotFoundException;
 import com.lens.epay.exception.UnauthorizedException;
+import com.lens.epay.mapper.UserMapper;
 import com.lens.epay.model.entity.User;
+import com.lens.epay.model.resource.user.LoginResource;
 import com.lens.epay.repository.UserRepository;
+import com.lens.epay.security.JwtGenerator;
 import com.lens.epay.security.JwtResolver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,16 +26,31 @@ public class ResetPasswordService {
     private UserRepository userRepository;
 
     @Autowired
-    private ConfirmationTokenService confirmationTokenService;
-
-    @Autowired
     private JwtResolver jwtResolver;
 
+    @Autowired
+    private TokenService tokenService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private JwtGenerator jwtGenerator;
+
     @Transactional
-    public void resetPassword(String password, String confirmationToken) {
-        User user = userRepository.findUserById(jwtResolver.getIdFromToken(confirmationToken));
+    public void resetPasswordRequest(String email){
+        tokenService.sendResetPasswordTokenToMail(email);
+    }
+
+    @Transactional
+    @Modifying
+    public LoginResource changePassword(String password, String confirmationToken) {
+        User user = userService.fromIdToEntity(jwtResolver.getIdFromToken(confirmationToken));
         if (user == null) {
-            throw new NotFoundException(USER_NOT_EXIST);
+            throw new BadRequestException(USER_NOT_EXIST);
         }
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (encoder.matches(password, user.getPassword())) {
@@ -40,14 +59,15 @@ public class ResetPasswordService {
         user.setPassword(encoder.encode(password));
         user.setConfirmed(true);
         userRepository.save(user);
+        return new LoginResource(userMapper.toResource(user),jwtGenerator.generateLoginToken(user.getId(), user.getRole()));
     }
 
     @Transactional
-    public void resetPasswordByAdmin(String email, String newPassword, String token) {
-        User admin = userRepository.findUserById(jwtResolver.getIdFromToken(token));
+    public void changePasswordByAdmin(String email, String newPassword, String token) {
+        User admin = userService.fromIdToEntity(jwtResolver.getIdFromToken(token));
         User user = userRepository.findByEmail(email);
         if (admin == null || user == null) {
-            throw new NotFoundException(USER_NOT_EXIST);
+            throw new BadRequestException(USER_NOT_EXIST);
         }
         Role role = user.getRole();
         if (role.equals(Role.ADMIN) || role.equals(Role.FIRM_ADMIN)) {

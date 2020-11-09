@@ -66,4 +66,6 @@ public class ErrorConstants {
     public static final String TAX_ADMINISTRATOR_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL = "Tax Administrator Of Corporate Invoice Can Not Be Null";
     public static final String IDENTITY_NO_OF_INDIVIDUAL_INVOICE_SHOULD_BE_11_CHARACTERS = "Identity No Of Individual Invoice Should Be 11 Characters";
 
+
+    public static final String PROVIDE_VALID_MAIL = "Please Provide Valid Mail Address";
 }

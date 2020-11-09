@@ -58,6 +58,11 @@ public class AddressController extends AbstractController<Address, UUID, Address
         super.deleteRole = Role.CUSTOMER;
     }
 
+    @Override
+    public void setEntityName() {
+        super.entityName = "Address";
+    }
+
     @Autowired
     private AddressService service;
 

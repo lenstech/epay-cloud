@@ -19,13 +19,30 @@ public class JwtGenerator {
     @Value("${jwt.secret}")
     private String secret;
 
-    // Generates a token with the given user's id and current time
-    public String generateToken(UUID id, Role role) {
+    /*
+    Subject: Id
+    Audience: Role
+    IssuedAt: CreatedDate
+    Issuer: Mail
+    "title": Title
+    */
+
+    public String generateLoginToken(UUID id, Role role) {
         Map<String, Object> claims = new HashMap<>();
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(id.toString())
                 .setAudience(role.toString())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
+                .signWith(SignatureAlgorithm.HS512, secret).compact();
+    }
+
+    public String generateResetPasswordToken(UUID id) {
+        Map<String, Object> claims = new HashMap<>();
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(id.toString())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();

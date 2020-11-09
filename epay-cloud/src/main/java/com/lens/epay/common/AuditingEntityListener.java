@@ -19,8 +19,8 @@ public class AuditingEntityListener {
     @PreUpdate
     public void setLastModifiedDate(AbstractEntity entity) {
         if (StringUtils.isEmpty(entity.getId())) {
-            entity.setCreatedDate(ZonedDateTime.now(ZoneId.of("Asia/Istanbul")));
+            entity.setCreatedDate(ZonedDateTime.now(ZoneId.systemDefault()));
         }
-        entity.setLastModifiedDate(ZonedDateTime.now(ZoneId.of("Asia/Istanbul")));
+        entity.setLastModifiedDate(ZonedDateTime.now(ZoneId.systemDefault()));
     }
 }

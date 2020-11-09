@@ -1,14 +1,8 @@
 package com.lens.epay.configuration;
 
 import com.lens.epay.enums.Role;
-import com.lens.epay.model.entity.Branch;
-import com.lens.epay.model.entity.Department;
-import com.lens.epay.model.entity.Firm;
-import com.lens.epay.model.entity.User;
-import com.lens.epay.repository.BranchRepository;
-import com.lens.epay.repository.DepartmentRepository;
-import com.lens.epay.repository.FirmRepository;
-import com.lens.epay.repository.UserRepository;
+import com.lens.epay.model.entity.*;
+import com.lens.epay.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +27,12 @@ public class DbInitializeData {
 
     @Autowired
     private DepartmentRepository departmentRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @PostConstruct
     private void postConstruct() {
@@ -92,7 +92,7 @@ public class DbInitializeData {
             //TODO: Taha'dan alınıp ayarlanacak.
             defaultFirm.setAddress(" Adres ");
             defaultFirm.setPhoneNo("telefon");
-            defaultFirm.setEmail("email");
+            defaultFirm.setEmail("email@gmail.com");
             firmRepository.save(defaultFirm);
         }
 
@@ -111,6 +111,27 @@ public class DbInitializeData {
             defaultDepartment.setBranch(branchRepository.findByName("default branch"));
             defaultDepartment.setDescription("default description");
             departmentRepository.save(defaultDepartment);
+        }
+        Category defaultCategory = new Category();
+
+        if(!categoryRepository.existsByName("default category")){
+            defaultCategory.setName("default category");
+            defaultCategory.setDescription(" default category description");
+            categoryRepository.save(defaultCategory);
+        } else {
+            defaultCategory = categoryRepository.findByName("default category");
+        }
+
+        if(!productRepository.existsByName("default product")){
+            Product defaultProduct = new Product();
+            defaultProduct.setStocked(true);
+            defaultProduct.setBrand("Lens");
+            defaultProduct.setDescription("default description");
+            defaultProduct.setName("default product");
+            defaultProduct.setPrice(100F);
+            defaultProduct.setDiscountedPrice(90F);
+            defaultProduct.setCategory(defaultCategory);
+            productRepository.save(defaultProduct);
         }
     }
 }

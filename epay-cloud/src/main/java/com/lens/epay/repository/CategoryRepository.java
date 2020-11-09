@@ -10,4 +10,7 @@ public interface CategoryRepository extends EpayRepository<Category, UUID> {
 
     Integer countCategoriesByIdAndProductsNotNull(UUID categoryId);
 
+    boolean existsByName(String name);
+
+    Category findByName(String name);
 }

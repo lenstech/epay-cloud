@@ -54,6 +54,11 @@ public class CategoryController extends AbstractController<Category, UUID, Categ
         super.deleteRole = Role.FIRM_ADMIN;
     }
 
+    @Override
+    public void setEntityName() {
+        super.entityName = "Category";
+    }
+
     @Autowired
     private CategoryService categoryService;
 }

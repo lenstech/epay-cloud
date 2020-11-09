@@ -61,6 +61,12 @@ public class OrderController extends AbstractController<Order, UUID, OrderDto, O
         super.deleteRole = Role.ADMIN;
     }
 
+    @Override
+    public void setEntityName() {
+        super.entityName = "Order";
+    }
+
+
     @Autowired
     private OrderService orderService;
 

@@ -26,28 +26,16 @@ public class MailUtil {
     @Autowired
     private JavaMailSender mailSender;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    public void sendActivationMail(User user, String activationToken, String subject, String text) {
-        String emailAddress = user.getEmail();
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setSubject(subject);
-        simpleMailMessage.setText( text);
+    public void sendTokenMail(String email, String activationToken, String subject, String text) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-            mimeMessageHelper.setText(String.format(simpleMailMessage.getText(), activationToken), true);
-            mimeMessageHelper.setTo(emailAddress);
-            mimeMessage.setSubject(simpleMailMessage.getSubject());
-
-//            FileSystemResource file= new FileSystemResource(new File("/home/ilkaygunel/Desktop/notlar.txt"));
-//            mimeMessageHelper.addAttachment("Notes", file);
-
+            mimeMessageHelper.setText(String.format(text, activationToken), true);
+            mimeMessageHelper.setTo(email);
+            mimeMessage.setSubject(subject);
         } catch (MessagingException messagingException) {
             throw new BadRequestException(MAIL_SEND_FAILED);
         }
         mailSender.send(mimeMessage);
     }
-
 }

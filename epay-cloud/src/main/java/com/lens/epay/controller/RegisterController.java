@@ -8,6 +8,8 @@ import com.lens.epay.model.resource.user.CompleteUserResource;
 import com.lens.epay.service.RegisterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,8 @@ public class RegisterController {
 
     @Autowired
     private AuthorizationConfig authorizationConfig;
+
+    private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
     @ApiOperation(value = "Register a firm user with the needed information, registration can be done by firm admin", response = CompleteUserResource.class)
     @PostMapping("/user")

@@ -24,7 +24,6 @@ public class Department extends AbstractEntity<UUID> {
     @Index
     private String name;
 
-    @NotNull
     private String description;
 
     @NotNull(message = "Branch cannot be blank")

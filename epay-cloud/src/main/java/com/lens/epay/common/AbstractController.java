@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
@@ -26,9 +27,10 @@ import static com.lens.epay.constant.HttpSuccessMessagesConstants.SUCCESSFULLY_D
 @Component
 public abstract class AbstractController<T extends AbstractEntity, ID extends Serializable, DTO, RES> {
 
+
     protected abstract AbstractService<T, ID, DTO, RES> getService();
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractController.class);
 
     @Autowired
     private AuthorizationConfig authorizationConfig;
@@ -43,16 +45,20 @@ public abstract class AbstractController<T extends AbstractEntity, ID extends Se
 
     public abstract void setDeleteRole();
 
+    public abstract void setEntityName();
+
     protected Role saveRole;
     protected Role getRole;
     protected Role getAllRole;
     protected Role updateRole;
     protected Role deleteRole;
+    protected String entityName;
 
     @ApiOperation(value = "Create Object, it can be done by authorization")
     @PostMapping
-    public RES save(@RequestHeader("Authorization") String token, @RequestBody DTO dto) {
-        LOGGER.debug(String.format("Saving the dto [%s].", dto));
+    public RES save(@RequestHeader("Authorization") String token, @RequestBody @Valid DTO dto) {
+        setEntityName();
+        logger.info(String.format("Saving the " + entityName + "Dto with id: %s.", dto));
         setSaveRole();
         UUID userId = authorizationConfig.permissionCheck(token, saveRole);
         return getService().save(dto, userId);
@@ -61,7 +67,8 @@ public abstract class AbstractController<T extends AbstractEntity, ID extends Se
     @ApiOperation(value = "Get Object")
     @GetMapping
     public RES get(@RequestHeader(value = "Authorization", required = false) String token, @RequestParam ID objectId) {
-        LOGGER.debug("Requesting {id} records.");
+        setEntityName();
+        logger.info(String.format("Requesting " + entityName + " id: %s records.", objectId));
         setGetRole();
         if (getRole == null) {
             return getService().get(objectId);
@@ -72,11 +79,27 @@ public abstract class AbstractController<T extends AbstractEntity, ID extends Se
         return getService().get(objectId);
     }
 
+
+    @ApiOperation(value = "Get Multiple Object")
+    @PostMapping("/multiple")
+    public List<RES> get(@RequestHeader(value = "Authorization", required = false) String token, @RequestBody List<ID> objectIds) {
+        logger.debug("Requesting  multiple " + entityName + " records.");
+        setGetRole();
+        if (getRole == null) {
+            return getService().getMultiple(objectIds);
+        } else if (token == null) {
+            throw new UnauthorizedException(NOT_AUTHORIZED_FOR_OPERATION);
+        }
+        authorizationConfig.permissionCheck(token, getRole);
+        return getService().getMultiple(objectIds);
+    }
+
     @ApiOperation(value = "Get All Object", responseContainer = "List")
     @GetMapping("/all")
     public List<RES> getAll(@RequestHeader(value = "Authorization", required = false) String token) {
+        setEntityName();
         setGetAllRole();
-        LOGGER.debug("Requesting all records.");
+        logger.info("Requesting all records of " + entityName + ".");
         if (getAllRole == null) {
             return getService().getAll();
         } else if (token == null) {
@@ -92,8 +115,9 @@ public abstract class AbstractController<T extends AbstractEntity, ID extends Se
                                     @PathVariable("page") int pageNo,
                                     @RequestParam(required = false) String sortBy,
                                     @RequestParam(required = false) Boolean desc) {
+        setEntityName();
         setGetAllRole();
-        LOGGER.debug("Requesting all records.");
+        logger.info("Requesting all records" + entityName + " by page.");
         if (getAllRole == null) {
             return getService().getAllWithPage(pageNo, sortBy, desc);
         } else if (token == null) {
@@ -106,9 +130,10 @@ public abstract class AbstractController<T extends AbstractEntity, ID extends Se
     @ApiOperation(value = "Update Object, it can be done by authorization")
     @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public RES update(@RequestHeader("Authorization") String token,
-                      @RequestBody DTO dto,
+                      @RequestBody @Valid DTO dto,
                       @RequestParam ID objectId) {
-        LOGGER.debug(String.format("Request to update the record [%s].", objectId));
+        setEntityName();
+        logger.info(String.format("Request to update a " + entityName + " object record with id: %s.", objectId));
         setUpdateRole();
         UUID userId = authorizationConfig.permissionCheck(token, updateRole);
         return getService().put(objectId, dto, userId);
@@ -118,10 +143,11 @@ public abstract class AbstractController<T extends AbstractEntity, ID extends Se
     @DeleteMapping
     public String delete(@RequestHeader("Authorization") String token,
                          @RequestParam ID objectId) {
-        LOGGER.debug(String.format("Request to delete the record [%s].", objectId));
+        setEntityName();
+        logger.info(String.format("Request to delete a " + entityName + "object record with id: %s.", objectId));
         setDeleteRole();
-        authorizationConfig.permissionCheck(token, deleteRole);
-        getService().delete(objectId);
+        UUID userId = authorizationConfig.permissionCheck(token, deleteRole);
+        getService().delete(objectId, userId);
         return SUCCESSFULLY_DELETED;
     }
 }

@@ -18,4 +18,5 @@ public interface ProductRepository extends EpayRepository<Product, UUID>, JpaSpe
 
     List<Product> findProductsByStockedTrue();
 
+    boolean existsByName(String name);
 }

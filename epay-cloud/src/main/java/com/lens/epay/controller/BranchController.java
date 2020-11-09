@@ -57,6 +57,11 @@ public class BranchController extends AbstractController<Branch, UUID, BranchDto
         super.deleteRole = Role.FIRM_ADMIN;
     }
 
+    @Override
+    public void setEntityName() {
+        super.entityName = "Branch";
+    }
+
 
     @Autowired
     private BranchService branchService;

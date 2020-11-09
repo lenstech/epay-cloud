@@ -83,6 +83,6 @@ public class DepartmentService extends AbstractService<Department, UUID, Departm
 
     public Set<MinimalUserResource> getPersonals(UUID departmentId) {
         Department department = repository.findDepartmentById(departmentId);
-        return userMapper.toResource(userRepository.findUsersByDepartment(department));
+        return userMapper.toResources(userRepository.findUsersByDepartment(department));
     }
 }

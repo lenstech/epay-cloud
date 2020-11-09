@@ -62,6 +62,11 @@ public class FirmController extends AbstractController<Firm, UUID, FirmDto, Firm
     }
 
     @Override
+    public void setEntityName() {
+        super.entityName = "Firm";
+    }
+
+    @Override
     protected AbstractService<Firm, UUID, FirmDto, FirmResource> getService() {
         return service;
     }

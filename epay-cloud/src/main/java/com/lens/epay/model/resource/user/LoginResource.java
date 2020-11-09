@@ -12,7 +12,9 @@ import javax.annotation.Resource;
 @Resource
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginResource extends CompleteUserResource{
+public class LoginResource {
+
+    private CompleteUserResource user;
 
     private String token;
 }

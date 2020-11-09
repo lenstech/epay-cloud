@@ -11,6 +11,8 @@ import com.lens.epay.model.resource.user.MinimalUserResource;
 import com.lens.epay.service.DepartmentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +34,9 @@ public class DepartmentController extends AbstractController<Department, UUID, D
 
     @Autowired
     private AuthorizationConfig authorizationConfig;
+
+    private static final Logger logger = LoggerFactory.getLogger(DepartmentController.class);
+
 
     @Override
     protected AbstractService<Department, UUID, DepartmentDto, DepartmentResource> getService() {
@@ -61,6 +66,11 @@ public class DepartmentController extends AbstractController<Department, UUID, D
     @Override
     public void setDeleteRole() {
         super.deleteRole = Role.FIRM_ADMIN;
+    }
+
+    @Override
+    public void setEntityName() {
+        super.entityName = "Department";
     }
 
     @ApiOperation(value = "Get all Personal of a Department , it can be seen by only Admin", response = DepartmentResource.class)

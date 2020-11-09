@@ -22,8 +22,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.UUID;
 
-import static com.lens.epay.constant.ErrorConstants.ID_IS_NOT_EXIST;
-import static com.lens.epay.constant.ErrorConstants.MAIL_ALREADY_EXISTS;
+import static com.lens.epay.constant.ErrorConstants.*;
 import static com.lens.epay.constant.MailConstants.*;
 
 
@@ -39,9 +38,6 @@ public class RegisterService {
     private UserRepository userRepository;
 
     @Autowired
-    private ConfirmationTokenService confirmationTokenService;
-
-    @Autowired
     private JwtResolver jwtResolver;
 
     @Autowired
@@ -54,7 +50,7 @@ public class RegisterService {
     private DepartmentRepository departmentRepository;
 
     @Autowired
-    private MailUtil mailUtil;
+    private TokenService tokenService;
 
     @Transactional
     public CompleteUserResource saveFirmUser(RegisterFirmUserDto registerFirmUserDto) {
@@ -63,7 +59,7 @@ public class RegisterService {
         if (registerFirmUserDto.getDepartmentId() != null) {
             Department department = departmentRepository.findDepartmentById(registerFirmUserDto.getDepartmentId());
             if (department == null) {
-                throw new NotFoundException(ID_IS_NOT_EXIST);
+                throw new BadRequestException(DEPARTMENT_IS_NOT_EXIST);
             }
             user.setDepartment(department);
         }
@@ -72,10 +68,7 @@ public class RegisterService {
         }
         user.setPassword(bCryptPasswordEncoder.encode(registerFirmUserDto.getPassword()));
         userRepository.saveAndFlush(user);
-        mailUtil.sendActivationMail(user,
-                jwtGenerator.generateMailConfirmationToken(user.getId()),
-                CONFIRM_ACCOUNT_HEADER,
-                CONFIRM_ACCOUNT_BODY + "\n" + CLIENT_URL + CONFIRM_ACCOUNT_URL );
+        tokenService.sendActivationTokenToMail(user);
         return mapper.toResource(user);
     }
 
@@ -89,10 +82,7 @@ public class RegisterService {
         user.setPassword(bCryptPasswordEncoder.encode(customerDto.getPassword()));
         user.setRole(Role.CUSTOMER);
         userRepository.saveAndFlush(user);
-        mailUtil.sendActivationMail(user,
-                jwtGenerator.generateMailConfirmationToken(user.getId()),
-                CONFIRM_ACCOUNT_HEADER,
-                CONFIRM_ACCOUNT_BODY + "\n" + CLIENT_URL + CONFIRM_ACCOUNT_URL);
+        tokenService.sendActivationTokenToMail(user);
         return mapper.toResource(user);
     }
 
@@ -101,7 +91,7 @@ public class RegisterService {
         UUID id = jwtResolver.getIdFromToken(confirmationToken);
         User user = userRepository.findUserById(id);
         if (user == null) {
-            throw new NotFoundException(ErrorConstants.USER_NOT_EXIST);
+            throw new BadRequestException(ErrorConstants.USER_NOT_EXIST);
         }
         user.setConfirmed(true);
         userRepository.save(user);

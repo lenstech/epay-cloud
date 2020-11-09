@@ -29,10 +29,16 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
     public abstract Converter<DTO, T, RES> getConverter();
 
     public RES save(DTO dto, UUID userId) {
-        T entity = getConverter().toEntity(dto);
-        return getConverter().toResource(getRepository().save(saveOperations(entity,dto,userId)));
+        try {
+            T entity = getConverter().toEntity(dto);
+            return getConverter().toResource(getRepository().save(saveOperations(entity, dto, userId)));
+        } catch (Exception e) {
+            throw new BadRequestException(ID_IS_NOT_EXIST);
+            //todo düzgün handle et.
+        }
     }
 
+    @Named("resourceFromId")
     public RES get(ID id) {
         T entity;
         try {
@@ -43,29 +49,22 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
         return getConverter().toResource(entity);
     }
 
+    public List<RES> getMultiple(List<ID> ids) {
+        List<T> entities;
+        try {
+            entities = getRepository().findAllByIdIn(ids);
+        } catch (NullPointerException e) {
+            throw new NotFoundException(ID_IS_NOT_EXIST);
+        }
+        return getConverter().toResources(entities);
+    }
+
     public List<RES> getAll() {
         return getConverter().toResources(getRepository().findAll());
     }
 
-    public Page<RES> getAllWithPage(int pageNumber, String sortBy, Boolean desc) {
-        PageRequest pageable;
-        if (desc == null) {
-            desc = true;
-        }
-        try {
-            if (desc) {
-                pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.DESC, sortBy);
-            } else {
-                pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, sortBy);
-            }
-            return getRepository().findAll(pageable).map(getConverter()::toResource);
-        } catch (Exception e) {
-            pageable = PageRequest.of(pageNumber, PAGE_SIZE);
-            return getRepository().findAll(pageable).map(getConverter()::toResource);
-        }
-    }
-
     @Modifying
+    @Transactional
     public RES put(ID id, DTO updatedDto, UUID userId) {
         if (id == null) {
             throw new BadRequestException(ID_CANNOT_BE_EMPTY);
@@ -94,24 +93,33 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
 
     @Transactional
     @Modifying
-    public void delete(ID id) {
+    public void delete(ID id, UUID userId) {
         if (id == null) {
             throw new BadRequestException(ID_CANNOT_BE_EMPTY);
         }
         try {
-            deleteOperations(id);
+            deleteOperations(id, userId);
             getRepository().deleteById(id);
         } catch (NullPointerException e) {
             throw new NotFoundException(ID_IS_NOT_EXIST);
         }
     }
 
-    @Named("fromIdToEntity")
-    public T fromIdToEntity(ID id) {
+    public Page<RES> getAllWithPage(int pageNumber, String sortBy, Boolean desc) {
+        PageRequest pageable;
+        if (desc == null) {
+            desc = true;
+        }
         try {
-            return getRepository().findOneById(id);
-        } catch (NullPointerException e) {
-            throw new NotFoundException(ID_IS_NOT_EXIST);
+            if (desc) {
+                pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.DESC, sortBy);
+            } else {
+                pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, sortBy);
+            }
+            return getRepository().findAll(pageable).map(getConverter()::toResource);
+        } catch (Exception e) {
+            pageable = PageRequest.of(pageNumber, PAGE_SIZE);
+            return getRepository().findAll(pageable).map(getConverter()::toResource);
         }
     }
 
@@ -123,7 +131,16 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
         return entity;
     }
 
-    protected void deleteOperations(ID id) {
+    protected void deleteOperations(ID id, UUID userId) {
     }
 
+    @Named("fromIdToEntity")
+    public T fromIdToEntity(ID id) {
+        try {
+            return getRepository().findById(id).orElseThrow(() -> new NotFoundException(ID_IS_NOT_EXIST));
+        } catch (NullPointerException e) {
+            throw new NotFoundException(ID_IS_NOT_EXIST);
+        }
+    }
 }
+
