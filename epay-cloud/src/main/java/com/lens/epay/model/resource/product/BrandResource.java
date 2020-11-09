@@ -19,22 +19,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductResource extends AbstractResource {
-    private String description;
+public class BrandResource extends AbstractResource {
 
-    private Unit unit;
-
-    @NumberFormat(style = NumberFormat.Style.CURRENCY)
-    private Float price;
-
-    @NumberFormat(style = NumberFormat.Style.CURRENCY)
-    private Float discountedPrice;
-
-    private CategoryResource category;
-
-    private Boolean stocked = true;
-
-    private UUID photoId;
-
-    private BrandResource brand;
+    private String country;
 }

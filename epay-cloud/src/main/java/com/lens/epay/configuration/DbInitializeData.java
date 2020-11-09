@@ -34,6 +34,9 @@ public class DbInitializeData {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private BrandRepository brandRepository;
+
     @PostConstruct
     private void postConstruct() {
         List<User> initialUsers = new ArrayList<>();
@@ -122,10 +125,17 @@ public class DbInitializeData {
             defaultCategory = categoryRepository.findByName("default category");
         }
 
+        Brand defaultBrand = new Brand();
+        if(!brandRepository.existsByName("default brand")){
+            defaultBrand.setCountry("Turkey");
+            defaultBrand.setName("default brand");
+            brandRepository.save(defaultBrand);
+        }
+
         if(!productRepository.existsByName("default product")){
             Product defaultProduct = new Product();
             defaultProduct.setStocked(true);
-            defaultProduct.setBrand("Lens");
+            defaultProduct.setBrand(defaultBrand);
             defaultProduct.setDescription("default description");
             defaultProduct.setName("default product");
             defaultProduct.setPrice(100F);

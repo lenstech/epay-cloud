@@ -18,4 +18,6 @@ import java.util.UUID;
 public class Brand extends AbstractEntity<UUID> {
 
     String name;
+
+    String country;
 }

@@ -20,22 +20,9 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDto {
+public class BrandDto {
 
     private String name;
 
-    private String description;
-
-    @Enumerated(EnumType.STRING)
-    private Unit unit = Unit.PIECE;
-
-    @NotNull
-    private Float price;
-
-    @NotNull
-    private Float discountedPrice;
-
-    private UUID categoryId;
-
-    private UUID brandId;
+    private String country;
 }
