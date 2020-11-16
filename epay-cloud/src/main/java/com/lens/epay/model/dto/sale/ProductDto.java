@@ -38,4 +38,6 @@ public class ProductDto {
     private UUID categoryId;
 
     private UUID brandId;
+
+    private Boolean stocked;
 }

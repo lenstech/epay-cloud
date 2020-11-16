@@ -32,7 +32,7 @@ public class ProductResource extends AbstractResource {
 
     private CategoryResource category;
 
-    private Boolean stocked = true;
+    private Boolean stocked;
 
     private UUID photoId;
 

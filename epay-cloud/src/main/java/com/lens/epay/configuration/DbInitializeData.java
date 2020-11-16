@@ -51,9 +51,20 @@ public class DbInitializeData {
             admin.setConfirmed(true);
             initialUsers.add(admin);
         }
-        if (!userRepository.existsByEmail("gkdemir@hotmail.com")) {
+        if (!userRepository.existsByEmail("admin@lenstech.vision")) {
+            User admin = new User();
+            admin.setEmail("admin@lenstech.vision");
+            admin.setPassword("$2a$10$mLpoOQQ1mf9217XGIBoW4.QOoMPSenH0hm8MU8Hwx2V6ycCA6DJIa");
+            admin.setName("admin");
+            admin.setSurname("admin");
+            admin.setPhoneNumber("05064066035");
+            admin.setRole(Role.ADMIN);
+            admin.setConfirmed(true);
+            initialUsers.add(admin);
+        }
+        if (!userRepository.existsByEmail("basic1@lenstech.vision")) {
             User basicUser = new User();
-            basicUser.setEmail("gkdemir@hotmail.com");
+            basicUser.setEmail("basic1@lenstech.vision");
             basicUser.setPassword("$2a$10$mLpoOQQ1mf9217XGIBoW4.QOoMPSenH0hm8MU8Hwx2V6ycCA6DJIa");
             basicUser.setName("default");
             basicUser.setSurname("basic");
@@ -62,9 +73,9 @@ public class DbInitializeData {
             basicUser.setConfirmed(true);
             initialUsers.add(basicUser);
         }
-        if (!userRepository.existsByEmail("gokdeemir@gmail.com")) {
+        if (!userRepository.existsByEmail("customer@lenstech.vision")) {
             User customer = new User();
-            customer.setEmail("gokdeemir@gmail.com");
+            customer.setEmail("customer@lenstech.vision");
             customer.setPassword("$2a$10$mLpoOQQ1mf9217XGIBoW4.QOoMPSenH0hm8MU8Hwx2V6ycCA6DJIa");
             customer.setName("default");
             customer.setSurname("customer");
@@ -73,15 +84,16 @@ public class DbInitializeData {
             customer.setConfirmed(true);
             initialUsers.add(customer);
         }
-        if (!userRepository.existsByEmail("ajangs@hotmail.com")) {
+        if (!userRepository.existsByEmail("firm@lenstech.vision")) {
             User firmAdmin = new User();
-            firmAdmin.setEmail("ajangs@hotmail.com");
+            firmAdmin.setEmail("firm@lenstech.vision");
             firmAdmin.setPassword("$2a$10$mLpoOQQ1mf9217XGIBoW4.QOoMPSenH0hm8MU8Hwx2V6ycCA6DJIa");
             firmAdmin.setName("default");
             firmAdmin.setSurname("firmAdmin");
             firmAdmin.setPhoneNumber("05064066029");
             firmAdmin.setRole(Role.FIRM_ADMIN);
             firmAdmin.setConfirmed(true);
+            firmAdmin.setTitle("genel müdür yardımcısı");
             initialUsers.add(firmAdmin);
         }
         if (!initialUsers.isEmpty()) {
@@ -95,7 +107,7 @@ public class DbInitializeData {
             //TODO: Taha'dan alınıp ayarlanacak.
             defaultFirm.setAddress(" Adres ");
             defaultFirm.setPhoneNo("telefon");
-            defaultFirm.setEmail("email@gmail.com");
+            defaultFirm.setEmail("firm@lenstech.vision");
             firmRepository.save(defaultFirm);
         }
 
