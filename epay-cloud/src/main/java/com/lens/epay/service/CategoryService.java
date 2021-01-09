@@ -40,7 +40,7 @@ public class CategoryService extends AbstractService<Category, UUID, CategoryDto
 
     @Override
     protected void deleteOperations(UUID uuid, UUID userId) {
-        if(repository.countCategoriesByIdAndProductsNotNull(uuid)>0){
+        if (repository.countCategoriesByIdAndProductsNotNull(uuid) > 0) {
             throw new BadRequestException(CATEGORY_CANNOT_BE_DELETED_WHEN_HAS_PRODUCT);
         }
     }

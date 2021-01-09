@@ -15,5 +15,6 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CreditCardTransactionMapper {
     CreditCardTransactionResource toResource(CreditCardTransaction entity);
+
     List<CreditCardTransactionResource> toResources(List<CreditCardTransaction> entities);
 }

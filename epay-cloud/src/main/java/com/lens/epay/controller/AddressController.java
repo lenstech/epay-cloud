@@ -28,6 +28,13 @@ import java.util.UUID;
 @Api(value = "Address", tags = {"Address Operations"})
 public class AddressController extends AbstractController<Address, UUID, AddressDto, AddressResource> {
 
+    @Autowired
+    private AddressService service;
+    @Autowired
+    private JwtResolver resolver;
+    @Autowired
+    private AuthorizationConfig authorizationConfig;
+
     @Override
     protected AbstractService<Address, UUID, AddressDto, AddressResource> getService() {
         return service;
@@ -63,15 +70,6 @@ public class AddressController extends AbstractController<Address, UUID, Address
         super.entityName = "Address";
     }
 
-    @Autowired
-    private AddressService service;
-
-    @Autowired
-    private JwtResolver resolver;
-
-    @Autowired
-    private AuthorizationConfig authorizationConfig;
-
     @ApiOperation(value = "Get addresses of an user", response = AddressResource.class, responseContainer = "List")
     @GetMapping("/user")
     public ResponseEntity<List<AddressResource>> getAddressesOfUser(@RequestHeader("Authorization") String token) {
@@ -81,20 +79,20 @@ public class AddressController extends AbstractController<Address, UUID, Address
     @ApiOperation(value = "Save address of an user by admin", response = AddressResource.class)
     @PostMapping("/by-admin")
     public ResponseEntity<AddressResource> saveAddressByAdmin(@RequestHeader("Authorization") String token,
-                                                                    @RequestBody AddressDto addressDto,
-                                                                    @RequestParam UUID userId) {
-        authorizationConfig.permissionCheck(token,Role.FIRM_ADMIN);
-        return ResponseEntity.ok(service.saveAddressByAdmin(addressDto,userId));
+                                                              @RequestBody AddressDto addressDto,
+                                                              @RequestParam UUID userId) {
+        authorizationConfig.permissionCheck(token, Role.FIRM_ADMIN);
+        return ResponseEntity.ok(service.saveAddressByAdmin(addressDto, userId));
     }
 
     @ApiOperation(value = "Update address of an user by admin", response = AddressResource.class)
     @PutMapping("/by-admin")
     public ResponseEntity<AddressResource> updateAddressByAdmin(@RequestHeader("Authorization") String token,
-                                                                    @RequestParam UUID objectId,
-                                                                    @RequestBody AddressDto addressDto,
-                                                                    @RequestParam UUID userId) {
-        authorizationConfig.permissionCheck(token,Role.FIRM_ADMIN);
-        return ResponseEntity.ok(service.updateAddressByAdmin(objectId,addressDto,userId));
+                                                                @RequestParam UUID objectId,
+                                                                @RequestBody AddressDto addressDto,
+                                                                @RequestParam UUID userId) {
+        authorizationConfig.permissionCheck(token, Role.FIRM_ADMIN);
+        return ResponseEntity.ok(service.updateAddressByAdmin(objectId, addressDto, userId));
     }
 
 

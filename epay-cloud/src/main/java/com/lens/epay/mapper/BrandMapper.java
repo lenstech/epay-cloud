@@ -4,9 +4,7 @@ import com.lens.epay.common.Converter;
 import com.lens.epay.model.dto.sale.BrandDto;
 import com.lens.epay.model.entity.Brand;
 import com.lens.epay.model.resource.product.BrandResource;
-import com.lens.epay.service.FirmService;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 /**
@@ -14,7 +12,7 @@ import org.mapstruct.ReportingPolicy;
  * on 29 Şub 2020
  */
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE )
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface BrandMapper extends Converter<BrandDto, Brand, BrandResource> {
 
 }

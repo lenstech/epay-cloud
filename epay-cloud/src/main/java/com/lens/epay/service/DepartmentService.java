@@ -11,7 +11,6 @@ import com.lens.epay.model.entity.Department;
 import com.lens.epay.model.entity.User;
 import com.lens.epay.model.resource.organization.DepartmentResource;
 import com.lens.epay.model.resource.user.MinimalUserResource;
-import com.lens.epay.repository.BranchRepository;
 import com.lens.epay.repository.DepartmentRepository;
 import com.lens.epay.repository.UserRepository;
 import org.slf4j.Logger;
@@ -23,7 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Set;
 import java.util.UUID;
 
-import static com.lens.epay.constant.ErrorConstants.*;
+import static com.lens.epay.constant.ErrorConstants.USER_ALREADY_ADDED_TO_DEPARTMENT;
+import static com.lens.epay.constant.ErrorConstants.USER_IS_NOT_EXIST;
 
 /**
  * Created by Emir Gökdemir

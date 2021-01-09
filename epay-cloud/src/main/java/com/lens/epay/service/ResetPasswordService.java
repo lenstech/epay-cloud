@@ -2,7 +2,6 @@ package com.lens.epay.service;
 
 import com.lens.epay.enums.Role;
 import com.lens.epay.exception.BadRequestException;
-import com.lens.epay.exception.NotFoundException;
 import com.lens.epay.exception.UnauthorizedException;
 import com.lens.epay.mapper.UserMapper;
 import com.lens.epay.model.entity.User;
@@ -41,7 +40,7 @@ public class ResetPasswordService {
     private JwtGenerator jwtGenerator;
 
     @Transactional
-    public void resetPasswordRequest(String email){
+    public void resetPasswordRequest(String email) {
         tokenService.sendResetPasswordTokenToMail(email);
     }
 
@@ -59,7 +58,7 @@ public class ResetPasswordService {
         user.setPassword(encoder.encode(password));
         user.setConfirmed(true);
         userRepository.save(user);
-        return new LoginResource(userMapper.toResource(user),jwtGenerator.generateLoginToken(user.getId(), user.getRole()));
+        return new LoginResource(userMapper.toResource(user), jwtGenerator.generateLoginToken(user.getId(), user.getRole()));
     }
 
     @Transactional

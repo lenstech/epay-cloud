@@ -13,7 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.lens.epay.constant.HttpSuccessMessagesConstants.*;
+import static com.lens.epay.constant.HttpSuccessMessagesConstants.MAIL_SEND_YOUR_EMAIL;
+import static com.lens.epay.constant.HttpSuccessMessagesConstants.PASSWORD_WAS_CHANGED;
 
 /**
  * Created by Emir Gökdemir
@@ -25,16 +26,13 @@ import static com.lens.epay.constant.HttpSuccessMessagesConstants.*;
 @Api(value = "Reset Forgotten Password", tags = {"Password Reset For Forgotten"})
 public class ResetPasswordController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ResetPasswordController.class);
     @Autowired
     private JwtResolver jwtResolver;
-
     @Autowired
     private ResetPasswordService resetPasswordService;
-
     @Autowired
     private AuthorizationConfig authorizationConfig;
-
-    private static final Logger logger = LoggerFactory.getLogger(ResetPasswordController.class);
 
     @ApiOperation(value = "Send a reset password URL to the email of the user", response = String.class)
     @GetMapping("/mail-request")

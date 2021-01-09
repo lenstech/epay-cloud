@@ -28,17 +28,15 @@ import static com.lens.epay.constant.HttpSuccessMessagesConstants.YOUR_MAIL_WAS_
 @Api(value = "Registration", tags = {"Registration"})
 public class RegisterController {
 
+    private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
     @Autowired
     private RegisterService registerService;
-
     @Autowired
     private AuthorizationConfig authorizationConfig;
 
-    private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
-
     @ApiOperation(value = "Register a firm user with the needed information, registration can be done by firm admin", response = CompleteUserResource.class)
     @PostMapping("/user")
-    public ResponseEntity<CompleteUserResource> registerFirmUser(@RequestHeader String token,@RequestBody @Valid RegisterFirmUserDto registerFirmUserDto) {
+    public ResponseEntity<CompleteUserResource> registerFirmUser(@RequestHeader String token, @RequestBody @Valid RegisterFirmUserDto registerFirmUserDto) {
         authorizationConfig.permissionCheck(token, Role.FIRM_ADMIN);
         CompleteUserResource user = registerService.saveFirmUser(registerFirmUserDto);
         return ResponseEntity.ok(user);

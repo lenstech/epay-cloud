@@ -61,12 +61,12 @@ public class Order extends AbstractEntity<UUID> {
     @NotNull
     private PaymentType paymentType;
 
-    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<BasketObject> basketObjects;
 
     private Boolean paid;
 
-    private Boolean repaid =  false;
+    private Boolean repaid = false;
 
     private String remittanceNo;
 

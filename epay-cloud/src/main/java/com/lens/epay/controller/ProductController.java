@@ -27,6 +27,9 @@ import java.util.UUID;
 @Api(value = "Product", tags = {"Product Operations"})
 public class ProductController extends AbstractController<Product, UUID, ProductDto, ProductResource> {
 
+    @Autowired
+    private ProductService productService;
+
     @Override
     protected AbstractService<Product, UUID, ProductDto, ProductResource> getService() {
         return productService;
@@ -62,10 +65,6 @@ public class ProductController extends AbstractController<Product, UUID, Product
         super.entityName = "Product";
     }
 
-
-    @Autowired
-    private ProductService productService;
-
     @ApiOperation(value = "Search for Product", response = ProductResource.class, responseContainer = "List")
     @GetMapping("/search/{word}/{pageNo}")
     public ResponseEntity<Page<ProductResource>> searchProducts(@PathVariable String word, @PathVariable int pageNo) {
@@ -77,7 +76,7 @@ public class ProductController extends AbstractController<Product, UUID, Product
     public ResponseEntity<Page<ProductResource>> getAllWithPageStocked(@PathVariable int pageNo,
                                                                        @RequestParam(required = false) String sortBy,
                                                                        @RequestParam(required = false) Boolean desc) {
-        return ResponseEntity.ok(productService.getAllWithPageStocked(pageNo,sortBy,desc));
+        return ResponseEntity.ok(productService.getAllWithPageStocked(pageNo, sortBy, desc));
     }
 
     @ApiOperation(value = "Get All stocked products ", response = ProductResource.class, responseContainer = "List")

@@ -68,12 +68,12 @@ public class UserProfileService {
         if (user == null) {
             throw new NotFoundException(USER_NOT_EXIST);
         }
-        BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();
-        if (!encoder.matches(dto.getOldPassword(),user.getPassword())){
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if (!encoder.matches(dto.getOldPassword(), user.getPassword())) {
             throw new BadRequestException(OLD_PASSWORD_IS_WRONG);
         }
         String newPassword = dto.getNewPassword();
-        if (encoder.matches(newPassword,user.getPassword())){
+        if (encoder.matches(newPassword, user.getPassword())) {
             throw new BadRequestException(NEW_PASSWORD_CANNOT_BE_SAME_AS_OLD);
         }
         user.setPassword(encoder.encode(newPassword));

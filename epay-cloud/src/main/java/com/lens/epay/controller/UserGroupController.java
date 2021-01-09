@@ -64,7 +64,6 @@ public class UserGroupController extends AbstractController<UserGroup, UUID, Use
     }
 
 
-
     @Override
     protected AbstractService<UserGroup, UUID, UserGroupDto, UserGroupResource> getService() {
         return service;

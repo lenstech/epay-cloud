@@ -11,8 +11,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 import static com.lens.epay.constant.MailConstants.*;
 
 

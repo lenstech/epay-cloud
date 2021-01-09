@@ -24,6 +24,9 @@ import java.util.UUID;
 @Api(value = "Category", tags = {"Category Operations"})
 public class CategoryController extends AbstractController<Category, UUID, CategoryDto, CategoryResource> {
 
+    @Autowired
+    private CategoryService categoryService;
+
     @Override
     protected AbstractService<Category, UUID, CategoryDto, CategoryResource> getService() {
         return categoryService;
@@ -58,7 +61,4 @@ public class CategoryController extends AbstractController<Category, UUID, Categ
     public void setEntityName() {
         super.entityName = "Category";
     }
-
-    @Autowired
-    private CategoryService categoryService;
 }

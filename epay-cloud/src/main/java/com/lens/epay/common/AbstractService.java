@@ -1,5 +1,6 @@
 package com.lens.epay.common;
 
+import com.lens.epay.constant.GeneralConstants;
 import com.lens.epay.exception.BadRequestException;
 import com.lens.epay.exception.NotFoundException;
 import com.lens.epay.repository.EpayRepository;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
@@ -28,24 +30,14 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
 
     public abstract Converter<DTO, T, RES> getConverter();
 
+    @Transactional
     public RES save(DTO dto, UUID userId) {
-        try {
-            T entity = getConverter().toEntity(dto);
-            return getConverter().toResource(getRepository().save(saveOperations(entity, dto, userId)));
-        } catch (Exception e) {
-            throw new BadRequestException(ID_IS_NOT_EXIST);
-            //todo düzgün handle et.
-        }
+        T entity = getConverter().toEntity(dto);
+        return getConverter().toResource(getRepository().save(saveOperations(entity, dto, userId)));
     }
 
-    @Named("resourceFromId")
-    public RES get(ID id) {
-        T entity;
-        try {
-            entity = getRepository().findOneById(id);
-        } catch (NullPointerException e) {
-            throw new NotFoundException(ID_IS_NOT_EXIST);
-        }
+    public RES get(ID id, UUID userId) {
+        T entity = fromIdToEntity(id);
         return getConverter().toResource(entity);
     }
 
@@ -59,8 +51,25 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
         return getConverter().toResources(entities);
     }
 
-    public List<RES> getAll() {
+    public List<RES> getAll(UUID userId) {
         return getConverter().toResources(getRepository().findAll());
+    }
+
+    public Page<RES> getAllWithPage(int pageNumber, String sortBy, Sort.Direction direction, UUID userId) {
+        PageRequest pageable;
+        if (sortBy == null) {
+            pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.by(GeneralConstants.DEFAULT_SORT_BY).descending());
+        } else {
+            if (direction == null) {
+                direction = Sort.Direction.DESC;
+            }
+            try {
+                pageable = PageRequest.of(pageNumber, PAGE_SIZE, direction, sortBy);
+            } catch (PropertyReferenceException exception) {
+                pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.by(GeneralConstants.DEFAULT_SORT_BY).descending());
+            }
+        }
+        return getRepository().findAll(pageable).map(getConverter()::toResource);
     }
 
     @Modifying
@@ -69,23 +78,14 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
         if (id == null) {
             throw new BadRequestException(ID_CANNOT_BE_EMPTY);
         }
-        T oldEntity;
-        Optional<T> oldEntityOpt = getRepository().findById(id);
-        if (!oldEntityOpt.isPresent()) {
-            throw new NotFoundException(ID_IS_NOT_EXIST);
-        } else {
-            oldEntity = oldEntityOpt.get();
-        }
+        T entity = fromIdToEntity(id);
         if (updatedDto == null) {
             throw new BadRequestException(DTO_CANNOT_BE_EMPTY);
         }
         try {
-            T updated = getConverter().toEntity(updatedDto);
-            updated.setId(oldEntity.getId());
-            updated.setCreatedDate(oldEntity.getCreatedDate());
-            updated.setVersion(oldEntity.getVersion());
-            updated = putOperations(oldEntity, updated, userId);
-            return getConverter().toResource(getRepository().save(updated));
+            getConverter().toEntityForUpdate(updatedDto, entity);
+            entity = putOperations(entity, userId);
+            return getConverter().toResource(getRepository().save(entity));
         } catch (Exception e) {
             throw new BadRequestException(ID_CANNOT_BE_EMPTY);
         }
@@ -105,26 +105,18 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
         }
     }
 
-    public Page<RES> getAllWithPage(int pageNumber, String sortBy, Boolean desc) {
-        PageRequest pageable;
-        if (desc == null) {
-            desc = true;
-        }
-        try {
-            if (desc) {
-                pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.DESC, sortBy);
-            } else {
-                pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, sortBy);
-            }
-            return getRepository().findAll(pageable).map(getConverter()::toResource);
-        } catch (Exception e) {
-            pageable = PageRequest.of(pageNumber, PAGE_SIZE);
-            return getRepository().findAll(pageable).map(getConverter()::toResource);
+    @Named("fromIdToEntity")
+    public T fromIdToEntity(ID id) {
+        Optional<T> entityOpt = getRepository().findById(id);
+        if (!entityOpt.isPresent()) {
+            throw new NotFoundException(ID_IS_NOT_EXIST);
+        } else {
+            return entityOpt.get();
         }
     }
 
-    protected T putOperations(T oldEntity, T newEntity, UUID userId) {
-        return newEntity;
+    protected T putOperations(T entity, UUID userId) {
+        return entity;
     }
 
     protected T saveOperations(T entity, DTO dto, UUID userId) {
@@ -132,15 +124,6 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
     }
 
     protected void deleteOperations(ID id, UUID userId) {
-    }
-
-    @Named("fromIdToEntity")
-    public T fromIdToEntity(ID id) {
-        try {
-            return getRepository().findById(id).orElseThrow(() -> new NotFoundException(ID_IS_NOT_EXIST));
-        } catch (NullPointerException e) {
-            throw new NotFoundException(ID_IS_NOT_EXIST);
-        }
     }
 }
 

@@ -41,7 +41,7 @@ public class AgreementController {
     @ApiOperation(value = "Get Preinformative Agreement of an order", response = String.class)
     @PostMapping("/preinformative-agreement")
     public ResponseEntity<String> getPreinformativeAgreement(@RequestHeader("Authorization") String token,
-                                                    @RequestBody OrderDto orderDto) {
+                                                             @RequestBody OrderDto orderDto) {
         authorizationConfig.permissionCheck(token, Role.CUSTOMER);
         return ResponseEntity.ok(service.getPreinformativeAgreement(resolver.getIdFromToken(token), orderDto));
     }

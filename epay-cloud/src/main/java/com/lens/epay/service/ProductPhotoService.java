@@ -35,7 +35,7 @@ public class ProductPhotoService {
             throw new NotFoundException(ErrorConstants.PRODUCT_NOT_EXIST);
         }
         ProductPhoto photo;
-        if(repository.existsByProductId(productId)){
+        if (repository.existsByProductId(productId)) {
             photo = repository.findProductPhotoByProductId(productId);
         } else {
             photo = new ProductPhoto();
@@ -60,15 +60,14 @@ public class ProductPhotoService {
     }
 
     @Transactional
-    public void deletePhotoByProductId(UUID productId){
+    public void deletePhotoByProductId(UUID productId) {
         repository.deleteProductPhotoByProductId(productId);
     }
 
     @Transactional
-    public void deletePhoto(UUID photoId){
+    public void deletePhoto(UUID photoId) {
         repository.deleteById(photoId);
     }
-
 
 
 }

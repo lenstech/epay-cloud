@@ -12,7 +12,7 @@ import java.util.UUID;
 @Repository
 public interface ProductRepository extends EpayRepository<Product, UUID>, JpaSpecificationExecutor<Product> {
 
-    Page<Product> findProductsByCategoryId(Pageable pageable,UUID catrgoryId);
+    Page<Product> findProductsByCategoryId(Pageable pageable, UUID catrgoryId);
 
     Page<Product> findProductsByStockedTrue(Pageable pageable);
 

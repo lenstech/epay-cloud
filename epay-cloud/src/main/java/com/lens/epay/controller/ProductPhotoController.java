@@ -53,10 +53,10 @@ public class ProductPhotoController {
 
     @DeleteMapping
     @ApiOperation("Delete photo of product by productId")
-    public ResponseEntity<String> deleteProductPhoto(@RequestParam("productId") UUID productId){
+    public ResponseEntity<String> deleteProductPhoto(@RequestParam("productId") UUID productId) {
         try {
             service.deletePhotoByProductId(productId);
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.ok(DELETION_DID_NOT_OCCURED);
         }
         return ResponseEntity.ok(SUCCESSFULLY_DELETED);

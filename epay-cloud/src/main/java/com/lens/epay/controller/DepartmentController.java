@@ -29,14 +29,11 @@ import java.util.UUID;
 @Api(value = "Department", tags = {"Department Operations"})
 public class DepartmentController extends AbstractController<Department, UUID, DepartmentDto, DepartmentResource> {
 
+    private static final Logger logger = LoggerFactory.getLogger(DepartmentController.class);
     @Autowired
     private DepartmentService service;
-
     @Autowired
     private AuthorizationConfig authorizationConfig;
-
-    private static final Logger logger = LoggerFactory.getLogger(DepartmentController.class);
-
 
     @Override
     protected AbstractService<Department, UUID, DepartmentDto, DepartmentResource> getService() {

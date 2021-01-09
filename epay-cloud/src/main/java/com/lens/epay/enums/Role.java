@@ -8,11 +8,11 @@ public enum Role {
     FIRM_ADMIN(4),
     ADMIN(5);  //the developer mode
 
+    private int value;
+
     Role(int value) {
         this.value = value;
     }
-
-    private int value;
 
     public int toValue() {
         return value;

@@ -15,7 +15,7 @@ public class DateUtil {
         return ZonedDateTime.parse(dateTime, formatter);
     }
 
-     public static ZonedDateTime stringToZonedDate(String date) {
+    public static ZonedDateTime stringToZonedDate(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return ZonedDateTime.parse(date, formatter);
     }

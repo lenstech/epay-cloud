@@ -34,7 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,6 +52,18 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
 
     @Value("${delivery.fee.amount}")
     private Float deliveryFeeAmount;
+    @Autowired
+    private PaymentService paymentService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private OrderRepository repository;
+    @Autowired
+    private OrderMapper mapper;
+    @Autowired
+    private CreditCardTransactionMapper transactionMapper;
+    @Autowired
+    private BasketRepository basketRepository;
 
     @Override
     public OrderRepository getRepository() {
@@ -63,24 +74,6 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
     public Converter<OrderDto, Order, OrderResource> getConverter() {
         return mapper;
     }
-
-    @Autowired
-    private PaymentService paymentService;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private OrderRepository repository;
-
-    @Autowired
-    private OrderMapper mapper;
-
-    @Autowired
-    private CreditCardTransactionMapper transactionMapper;
-
-    @Autowired
-    private BasketRepository basketRepository;
 
     //Customer
     @Override
@@ -260,7 +253,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
     }
 
     //SELLER
-    public OrderResource  setCargoInfo(String cargoNo, String cargoFirm, UUID orderId, Long epochMilli) {
+    public OrderResource setCargoInfo(String cargoNo, String cargoFirm, UUID orderId, Long epochMilli) {
         Order order = getRepository().getOne(orderId);
         if (!order.getOrderStatus().equals(OrderStatus.APPROVED) &&
                 !order.getOrderStatus().equals(OrderStatus.PREPARED_FOR_CARGO)) {
@@ -365,7 +358,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
             } else {
                 order.setOrderStatus(OrderStatus.CANCELLED_BY_CUSTOMER_BEFORE_SHIPPED);
             }
-        } else if (orderStatus.equals(OrderStatus.COMPLETED) || orderStatus.equals(OrderStatus.SHIPPED)){
+        } else if (orderStatus.equals(OrderStatus.COMPLETED) || orderStatus.equals(OrderStatus.SHIPPED)) {
             order.setOrderStatus(OrderStatus.RETURN_REQUEST_SELLER_ACCEPT_WAITED);
         } else {
             throw new BadRequestException(NOT_APPROPRIATE_CANCEL_AT_THIS_POINT);

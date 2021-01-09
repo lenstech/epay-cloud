@@ -99,7 +99,6 @@ public class DbInitializeData {
         if (!initialUsers.isEmpty()) {
             userRepository.saveAll(initialUsers);
         }
-
         if (!firmRepository.existsByName("default firm")) {
             Firm defaultFirm = new Firm();
             defaultFirm.setName("default firm");
@@ -110,7 +109,6 @@ public class DbInitializeData {
             defaultFirm.setEmail("firm@lenstech.vision");
             firmRepository.save(defaultFirm);
         }
-
         if (!branchRepository.existsByName("default branch")) {
             Branch defaultBranch = new Branch();
             defaultBranch.setName("default branch");
@@ -119,7 +117,6 @@ public class DbInitializeData {
             defaultBranch.setFirm(firmRepository.findByName("default firm"));
             branchRepository.save(defaultBranch);
         }
-
         if (!departmentRepository.existsByName("default department")) {
             Department defaultDepartment = new Department();
             defaultDepartment.setName("default department");
@@ -128,23 +125,20 @@ public class DbInitializeData {
             departmentRepository.save(defaultDepartment);
         }
         Category defaultCategory = new Category();
-
-        if(!categoryRepository.existsByName("default category")){
+        if (!categoryRepository.existsByName("default category")) {
             defaultCategory.setName("default category");
             defaultCategory.setDescription(" default category description");
             categoryRepository.save(defaultCategory);
         } else {
             defaultCategory = categoryRepository.findByName("default category");
         }
-
         Brand defaultBrand = new Brand();
-        if(!brandRepository.existsByName("default brand")){
+        if (!brandRepository.existsByName("default brand")) {
             defaultBrand.setCountry("Turkey");
             defaultBrand.setName("default brand");
             brandRepository.save(defaultBrand);
         }
-
-        if(!productRepository.existsByName("default product")){
+        if (!productRepository.existsByName("default product")) {
             Product defaultProduct = new Product();
             defaultProduct.setStocked(true);
             defaultProduct.setBrand(defaultBrand);

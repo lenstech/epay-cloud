@@ -16,10 +16,9 @@ import org.springframework.web.bind.annotation.*;
 @Api(value = "Login", tags = {"Login"})
 public class LoginController {
 
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     @Autowired
     private LoginService loginService;
-
-    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @ApiOperation(value = "Login with the username (email) and password", response = LoginResource.class)
     @PostMapping("")

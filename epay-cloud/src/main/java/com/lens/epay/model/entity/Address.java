@@ -81,7 +81,6 @@ public class Address extends AbstractEntity<UUID> {
     private String taxAdministration;
 
 
-
     public String toString() {
         return "country='" + country + '\'' +
                 ", city='" + city + '\'' +
@@ -95,32 +94,34 @@ public class Address extends AbstractEntity<UUID> {
     }
 
     public String toStringForTurkishAddress() {
-        return  nullToEmpty(neighborhood ," mah. ")
+        return nullToEmpty(neighborhood, " mah. ")
                 + nullToEmpty(street, " cad. ")
-                + nullToEmptyNo("no: ", buildNo )
-                + nullToEmptyNo( "/", innerNo )
+                + nullToEmptyNo("no: ", buildNo)
+                + nullToEmptyNo("/", innerNo)
                 + " "
-                + nullToEmpty(otherInfo," ")
-                + nullToEmpty(district," ")
-                + nullToEmpty(city," ")
-                + nullToEmpty(country," ")
+                + nullToEmpty(otherInfo, " ")
+                + nullToEmpty(district, " ")
+                + nullToEmpty(city, " ")
+                + nullToEmpty(country, " ")
                 + nullToEmptyPostalCode(postalCode);
     }
 
-    private String nullToEmpty(String s,String other){
-        if (s == null){
+    private String nullToEmpty(String s, String other) {
+        if (s == null) {
             return "";
         }
         return s + other;
     }
-    private String nullToEmptyNo(String init,String s){
-        if (s == null){
+
+    private String nullToEmptyNo(String init, String s) {
+        if (s == null) {
             return "";
         }
         return init + s;
     }
-    private String nullToEmptyPostalCode(Integer s){
-        if (s == null){
+
+    private String nullToEmptyPostalCode(Integer s) {
+        if (s == null) {
             return "";
         }
         return "posta kodu: " + s;

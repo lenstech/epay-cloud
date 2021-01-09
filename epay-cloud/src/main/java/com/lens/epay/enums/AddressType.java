@@ -5,6 +5,6 @@ package com.lens.epay.enums;
  * on 18 Nis 2020
  */
 
-public enum  AddressType {
+public enum AddressType {
     DELIVERY, INVOICE
 }

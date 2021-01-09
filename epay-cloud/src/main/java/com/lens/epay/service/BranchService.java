@@ -10,9 +10,6 @@ import com.lens.epay.model.resource.organization.BranchResource;
 import com.lens.epay.model.resource.organization.DepartmentResource;
 import com.lens.epay.repository.BranchRepository;
 import com.lens.epay.repository.DepartmentRepository;
-import com.lens.epay.repository.FirmRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,5 @@
 package com.lens.epay.repository.specifications;
 
-import com.lens.epay.enums.SearchOperator;
 import com.lens.epay.model.entity.Order;
 import com.lens.epay.model.other.SearchCriteria;
 import org.springframework.data.jpa.domain.Specification;

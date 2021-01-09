@@ -3,7 +3,6 @@ package com.lens.epay.service;
 import com.lens.epay.constant.ErrorConstants;
 import com.lens.epay.enums.Role;
 import com.lens.epay.exception.BadRequestException;
-import com.lens.epay.exception.NotFoundException;
 import com.lens.epay.mapper.UserMapper;
 import com.lens.epay.model.dto.user.RegisterCustomerDto;
 import com.lens.epay.model.dto.user.RegisterFirmUserDto;
@@ -14,7 +13,6 @@ import com.lens.epay.repository.DepartmentRepository;
 import com.lens.epay.repository.UserRepository;
 import com.lens.epay.security.JwtGenerator;
 import com.lens.epay.security.JwtResolver;
-import com.lens.epay.util.MailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,8 +20,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.UUID;
 
-import static com.lens.epay.constant.ErrorConstants.*;
-import static com.lens.epay.constant.MailConstants.*;
+import static com.lens.epay.constant.ErrorConstants.DEPARTMENT_IS_NOT_EXIST;
+import static com.lens.epay.constant.ErrorConstants.MAIL_ALREADY_EXISTS;
 
 
 /**
@@ -73,7 +71,7 @@ public class RegisterService {
     }
 
     @Transactional
-    public CompleteUserResource saveCustomer(RegisterCustomerDto customerDto){
+    public CompleteUserResource saveCustomer(RegisterCustomerDto customerDto) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         User user = mapper.customerDtoToUser(customerDto);
         if (userRepository.existsByEmail(user.getEmail())) {

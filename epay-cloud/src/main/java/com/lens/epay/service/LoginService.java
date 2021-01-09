@@ -2,7 +2,6 @@ package com.lens.epay.service;
 
 import com.lens.epay.constant.ErrorConstants;
 import com.lens.epay.exception.UnauthorizedException;
-import com.lens.epay.mapper.LoginMapper;
 import com.lens.epay.mapper.UserMapper;
 import com.lens.epay.model.dto.user.LoginDto;
 import com.lens.epay.model.entity.User;
@@ -53,6 +52,6 @@ public class LoginService {
     public LoginResource updateToken(String token) {
         UUID userId = jwtResolver.getIdFromToken(token);
         User user = userService.fromIdToEntity(userId);
-        return new LoginResource(userMapper.toResource(user),jwtGenerator.generateLoginToken(userId, user.getRole()));
+        return new LoginResource(userMapper.toResource(user), jwtGenerator.generateLoginToken(userId, user.getRole()));
     }
 }

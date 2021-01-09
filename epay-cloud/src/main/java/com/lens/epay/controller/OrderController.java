@@ -31,6 +31,15 @@ import java.util.UUID;
 @Api(value = "Order", tags = {"Order Operations"})
 public class OrderController extends AbstractController<Order, UUID, OrderDto, OrderResource> {
 
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private PaymentService paymentService;
+    @Autowired
+    private JwtResolver resolver;
+    @Autowired
+    private AuthorizationConfig authorizationConfig;
+
     @Override
     protected AbstractService<Order, UUID, OrderDto, OrderResource> getService() {
         return orderService;
@@ -65,19 +74,6 @@ public class OrderController extends AbstractController<Order, UUID, OrderDto, O
     public void setEntityName() {
         super.entityName = "Order";
     }
-
-
-    @Autowired
-    private OrderService orderService;
-
-    @Autowired
-    private PaymentService paymentService;
-
-    @Autowired
-    private JwtResolver resolver;
-
-    @Autowired
-    private AuthorizationConfig authorizationConfig;
 
     @PostMapping("/check-installment")
     public ResponseEntity<InstallmentInfo> checkCreditCardInstallment(@RequestBody CreditCardInstallmentCheckDto creditCardInstallmentCheckDto, @RequestHeader("Authorization") String token) {
@@ -126,8 +122,8 @@ public class OrderController extends AbstractController<Order, UUID, OrderDto, O
     @GetMapping("/get-self-orders/{pageNo}")
     @ApiOperation("Customer can reach orders of himself")
     public ResponseEntity<Page<OrderResource>> getSelfOrders(@PathVariable int pageNo,
-                                                             @RequestHeader("Authorization") String token){
+                                                             @RequestHeader("Authorization") String token) {
         authorizationConfig.permissionCheck(token, Role.CUSTOMER);
-        return ResponseEntity.ok(orderService.getSelfOrders(resolver.getIdFromToken(token),pageNo));
+        return ResponseEntity.ok(orderService.getSelfOrders(resolver.getIdFromToken(token), pageNo));
     }
 }

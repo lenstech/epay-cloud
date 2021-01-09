@@ -1,6 +1,5 @@
 package com.lens.epay.enums;
 
-import com.iyzipay.model.Payment;
 import lombok.Getter;
 
 @Getter
@@ -13,7 +12,7 @@ public enum PaymentType {
         this.turkish = turkish;
     }
 
-    public String getTurkish(PaymentType paymentType){
+    public String getTurkish(PaymentType paymentType) {
         return paymentType.getTurkish();
     }
 }

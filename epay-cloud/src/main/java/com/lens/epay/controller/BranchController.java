@@ -27,6 +27,11 @@ import java.util.UUID;
 @Api(value = "Branch", tags = {"Branch Operations"})
 public class BranchController extends AbstractController<Branch, UUID, BranchDto, BranchResource> {
 
+    @Autowired
+    private BranchService branchService;
+    @Autowired
+    private AuthorizationConfig authorizationConfig;
+
     @Override
     protected AbstractService<Branch, UUID, BranchDto, BranchResource> getService() {
         return branchService;
@@ -61,13 +66,6 @@ public class BranchController extends AbstractController<Branch, UUID, BranchDto
     public void setEntityName() {
         super.entityName = "Branch";
     }
-
-
-    @Autowired
-    private BranchService branchService;
-
-    @Autowired
-    private AuthorizationConfig authorizationConfig;
 
     @ApiOperation(value = "Get all Departments of a Branch , it can be seen by only Admin", response = DepartmentResource.class, responseContainer = "Set")
     @GetMapping("/get-departments")

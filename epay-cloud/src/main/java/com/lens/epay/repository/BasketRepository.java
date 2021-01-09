@@ -9,7 +9,7 @@ import java.util.UUID;
 @Repository
 public interface BasketRepository extends EpayRepository<BasketObject, UUID> {
 
-        List<BasketObject> findOrderProductsByOrderId(UUID id);
+    List<BasketObject> findOrderProductsByOrderId(UUID id);
 
-        Integer countBasketObjectsByProductId(UUID productId);
+    Integer countBasketObjectsByProductId(UUID productId);
 }

@@ -24,6 +24,9 @@ import java.util.UUID;
 @Api(value = "Brand", tags = {"Brand Operations"})
 public class BrandController extends AbstractController<Brand, UUID, BrandDto, BrandResource> {
 
+    @Autowired
+    private BrandService service;
+
     @Override
     protected AbstractService<Brand, UUID, BrandDto, BrandResource> getService() {
         return service;
@@ -58,8 +61,5 @@ public class BrandController extends AbstractController<Brand, UUID, BrandDto, B
     public void setEntityName() {
         super.entityName = "Brand";
     }
-
-    @Autowired
-    private BrandService service;
 
 }
