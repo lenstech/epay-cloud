@@ -46,24 +46,24 @@ public class AddressService extends AbstractService<Address, UUID, AddressDto, A
     }
 
     @Override
-    protected Address putOperations(Address oldEntity, Address newEntity, UUID userId) {
-        if (newEntity.getAddressType().equals(AddressType.INVOICE)) {
-            if (newEntity.getInvoiceType().equals(InvoiceType.CORPORATE)) {
-                if (newEntity.getFirmName() == null) {
+    protected Address putOperations(Address entity, UUID userId) {
+        if (entity.getAddressType().equals(AddressType.INVOICE)) {
+            if (entity.getInvoiceType().equals(InvoiceType.CORPORATE)) {
+                if (entity.getFirmName() == null) {
                     throw new BadRequestException(FIRM_NAME_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL);
-                } else if (newEntity.getTaxAdministration() == null) {
+                } else if (entity.getTaxAdministration() == null) {
                     throw new BadRequestException(TAX_ADMINISTRATOR_OF_CORPORATE_INVOICE_CAN_NOT_BE_NULL);
-                } else if (newEntity.getTaxNo().length() != 10) {
+                } else if (entity.getTaxNo().length() != 10) {
                     throw new BadRequestException(TAX_NO_OF_CORPORATE_INVOICE_SHOULD_BE_10_CHARACTERS);
                 }
             } else {
-                if (newEntity.getIdentityNo().length() != 11) {
+                if (entity.getIdentityNo().length() != 11) {
                     throw new BadRequestException(IDENTITY_NO_OF_INDIVIDUAL_INVOICE_SHOULD_BE_11_CHARACTERS);
                 }
             }
         }
-        newEntity.setUser(userRepository.findUserById(userId));
-        return super.putOperations(oldEntity, newEntity, userId);
+        entity.setUser(userRepository.findUserById(userId));
+        return entity;
     }
 
     @Override
