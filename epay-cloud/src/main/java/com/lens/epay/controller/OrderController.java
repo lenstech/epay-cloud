@@ -86,16 +86,16 @@ public class OrderController extends AbstractController<Order, UUID, OrderDto, O
                                                            @RequestParam String remittanceNo,
                                                            @RequestParam String remittanceBank,
                                                            @RequestHeader("Authorization") String token) {
-        authorizationConfig.permissionCheck(token, Role.CUSTOMER);
-        return ResponseEntity.ok(orderService.enterRemittanceInfo(orderId, remittanceNo, remittanceBank, resolver.getIdFromToken(token)));
+        UUID userId = authorizationConfig.permissionCheck(token, Role.CUSTOMER);
+        return ResponseEntity.ok(orderService.enterRemittanceInfo(orderId, remittanceNo, remittanceBank, userId));
     }
 
     @PutMapping("/approve-cargo")
     @ApiOperation("Customer approves that cargo is reached by using this endpoint")
     public ResponseEntity<OrderResource> approveCargo(@RequestParam UUID orderId,
                                                       @RequestHeader("Authorization") String token) {
-        authorizationConfig.permissionCheck(token, Role.CUSTOMER);
-        return ResponseEntity.ok(orderService.approveCargoByCustomer(orderId, resolver.getIdFromToken(token)));
+        UUID userId = authorizationConfig.permissionCheck(token, Role.CUSTOMER);
+        return ResponseEntity.ok(orderService.approveCargoByCustomer(orderId, userId));
     }
 
     @PutMapping("/cancel-request")
@@ -105,8 +105,8 @@ public class OrderController extends AbstractController<Order, UUID, OrderDto, O
             " approve return request")
     public ResponseEntity<OrderResource> cancelRequestByCustomer(@RequestParam UUID orderId,
                                                                  @RequestHeader("Authorization") String token) {
-        authorizationConfig.permissionCheck(token, Role.CUSTOMER);
-        return ResponseEntity.ok(orderService.cancelRequestByCustomer(orderId, resolver.getIdFromToken(token)));
+        UUID userId = authorizationConfig.permissionCheck(token, Role.CUSTOMER);
+        return ResponseEntity.ok(orderService.cancelRequestByCustomer(orderId, userId));
     }
 
     @PutMapping("/enter-return-cargo-info")
@@ -115,15 +115,15 @@ public class OrderController extends AbstractController<Order, UUID, OrderDto, O
                                                               @RequestParam String returnCargoFirm,
                                                               @RequestParam String returnCargoNo,
                                                               @RequestHeader("Authorization") String token) {
-        authorizationConfig.permissionCheck(token, Role.CUSTOMER);
-        return ResponseEntity.ok(orderService.enterReturnCargoInfo(orderId, resolver.getIdFromToken(token), returnCargoFirm, returnCargoNo));
+        UUID userId = authorizationConfig.permissionCheck(token, Role.CUSTOMER);
+        return ResponseEntity.ok(orderService.enterReturnCargoInfo(orderId, userId, returnCargoFirm, returnCargoNo));
     }
 
     @GetMapping("/get-self-orders/{pageNo}")
     @ApiOperation("Customer can reach orders of himself")
     public ResponseEntity<Page<OrderResource>> getSelfOrders(@PathVariable int pageNo,
                                                              @RequestHeader("Authorization") String token) {
-        authorizationConfig.permissionCheck(token, Role.CUSTOMER);
-        return ResponseEntity.ok(orderService.getSelfOrders(resolver.getIdFromToken(token), pageNo));
+        UUID userId = authorizationConfig.permissionCheck(token, Role.CUSTOMER);
+        return ResponseEntity.ok(orderService.getSelfOrders(userId, pageNo));
     }
 }

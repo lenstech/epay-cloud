@@ -20,6 +20,7 @@ public class JwtResolver {
     @Value("${jwt.secret}")
     private String secret;
 
+    // Extracts the username(id) from the given token
     public UUID getIdFromToken(String token) {
         tokenExpireCheck(token);
         String idString;
@@ -31,19 +32,11 @@ public class JwtResolver {
         return UUID.fromString(idString);
     }
 
+    // Extracts the role from the given token
     public Role getRoleFromToken(String token) {
         tokenExpireCheck(token);
         try {
             return Role.valueOf(getClaimFromToken(token, Claims::getAudience));
-        } catch (Exception e) {
-            throw new UnauthorizedException(INVALID_TOKEN);
-        }
-    }
-
-    public String getMailFromToken(String token) {
-        tokenExpireCheck(token);
-        try {
-            return getClaimFromToken(token, Claims::getIssuer);
         } catch (Exception e) {
             throw new UnauthorizedException(INVALID_TOKEN);
         }
@@ -64,7 +57,6 @@ public class JwtResolver {
                 throw new UnauthorizedException(EXPIRED_TOKEN);
             }
         } catch (Exception e) {
-            e.printStackTrace();
             throw new UnauthorizedException(INVALID_TOKEN);
         }
     }

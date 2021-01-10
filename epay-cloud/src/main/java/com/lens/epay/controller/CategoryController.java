@@ -39,12 +39,12 @@ public class CategoryController extends AbstractController<Category, UUID, Categ
 
     @Override
     public void setGetRole() {
-        super.getRole = null;
+        super.getRole = Role.NOT_AUTH;
     }
 
     @Override
     public void setGetAllRole() {
-        super.getAllRole = null;
+        super.getAllRole = Role.NOT_AUTH;
     }
 
     @Override

@@ -1,12 +1,13 @@
 package com.lens.epay.enums;
 
 public enum Role {
-    CUSTOMER(0),
-    BASIC_USER(1),
-    DEPARTMENT_ADMIN(2),
-    BRANCH_ADMIN(3),
-    FIRM_ADMIN(4),
-    ADMIN(5);  //the developer mode
+    NOT_AUTH(0),
+    CUSTOMER(1),
+    BASIC_USER(2),
+    DEPARTMENT_ADMIN(3),
+    BRANCH_ADMIN(4),
+    FIRM_ADMIN(5),
+    ADMIN(6);  //the developer mode
 
     private int value;
 

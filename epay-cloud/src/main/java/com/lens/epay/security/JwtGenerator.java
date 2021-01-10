@@ -15,6 +15,7 @@ import java.util.UUID;
 public class JwtGenerator {
 
     private static final long JWT_TOKEN_VALIDITY = 168 * 60 * 60 * 1000; // 168 hours, 7 days
+    private static final long REGISTER_TOKEN_VALIDITY = 24 * 60 * 60 * 1000; // 168 hours, 7 days
 
     @Value("${jwt.secret}")
     private String secret;
@@ -27,6 +28,7 @@ public class JwtGenerator {
     "title": Title
     */
 
+    // Generates a token with the given user's id and current time
     public String generateLoginToken(UUID id, Role role) {
         Map<String, Object> claims = new HashMap<>();
         return Jwts.builder()

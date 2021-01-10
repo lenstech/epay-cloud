@@ -2,6 +2,7 @@ package com.lens.epay.controller;
 
 import com.lens.epay.common.AbstractController;
 import com.lens.epay.common.AbstractService;
+import com.lens.epay.configuration.AuthorizationConfig;
 import com.lens.epay.enums.Role;
 import com.lens.epay.model.dto.sale.ProductDto;
 import com.lens.epay.model.entity.Product;
@@ -30,6 +31,9 @@ public class ProductController extends AbstractController<Product, UUID, Product
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private AuthorizationConfig authorizationConfig;
+
     @Override
     protected AbstractService<Product, UUID, ProductDto, ProductResource> getService() {
         return productService;
@@ -42,12 +46,12 @@ public class ProductController extends AbstractController<Product, UUID, Product
 
     @Override
     public void setGetRole() {
-        super.getRole = null;
+        super.getRole = Role.NOT_AUTH;
     }
 
     @Override
     public void setGetAllRole() {
-        super.getAllRole = null;
+        super.getAllRole = Role.NOT_AUTH;
     }
 
     @Override
@@ -93,7 +97,8 @@ public class ProductController extends AbstractController<Product, UUID, Product
 
     @ApiOperation(value = "Change Stock Status of Product", response = ProductResource.class)
     @PutMapping("/change-stock-status")
-    public ResponseEntity<ProductResource> changeStockStatus(@RequestParam UUID productId, @RequestParam Boolean stockStatus) {
+    public ResponseEntity<ProductResource> changeStockStatus(@RequestHeader("Authorization") String token, @RequestParam UUID productId, @RequestParam Boolean stockStatus) {
+        UUID userId = authorizationConfig.permissionCheck(token, Role.FIRM_ADMIN);
         return ResponseEntity.ok(productService.changeStockStatus(productId, stockStatus));
     }
 }

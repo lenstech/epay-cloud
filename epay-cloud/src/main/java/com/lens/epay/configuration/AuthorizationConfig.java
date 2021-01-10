@@ -21,14 +21,19 @@ public class AuthorizationConfig {
     private JwtResolver jwtResolver;
 
     public UUID permissionCheck(String token, Role minAuthRole) {
-        Role userRole = jwtResolver.getRoleFromToken(token);
-        if (!greaterCheck(userRole, minAuthRole)) {
-            throw new UnauthorizedException(NOT_AUTHORIZED_FOR_OPERATION);
+        Role userRole = Role.NOT_AUTH;
+        if (token != null && !token.isEmpty()) {
+            userRole = jwtResolver.getRoleFromToken(token);
+            greaterCheck(userRole, minAuthRole);
+            return jwtResolver.getIdFromToken(token);
         }
-        return jwtResolver.getIdFromToken(token);
+        greaterCheck(userRole, minAuthRole);
+        return null;
     }
 
-    private Boolean greaterCheck(Role userRole, Role minRole) {
-        return userRole.toValue() >= minRole.toValue();
+    private void greaterCheck(Role userRole, Role minRole) {
+        if (userRole.toValue() < minRole.toValue()) {
+            throw new UnauthorizedException(NOT_AUTHORIZED_FOR_OPERATION);
+        }
     }
 }
