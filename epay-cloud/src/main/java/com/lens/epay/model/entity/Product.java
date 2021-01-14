@@ -34,7 +34,6 @@ public class Product extends AbstractEntity<UUID> {
     @NumberFormat(style = NumberFormat.Style.CURRENCY)
     private Float price;
 
-    @NotNull
     @NumberFormat(style = NumberFormat.Style.CURRENCY)
     private Float discountedPrice;
 
@@ -49,7 +48,6 @@ public class Product extends AbstractEntity<UUID> {
     private Boolean stocked = true;
 
     @ManyToOne
-    @NotNull
     @JoinColumn(name = "brand_id")
     private Brand brand;
 }

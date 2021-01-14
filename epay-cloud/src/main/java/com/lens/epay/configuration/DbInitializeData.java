@@ -4,6 +4,7 @@ import com.lens.epay.enums.Role;
 import com.lens.epay.model.entity.*;
 import com.lens.epay.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -15,6 +16,7 @@ import java.util.List;
  * on 17 Nis 2020
  */
 @Component
+@Profile({"dev", "test"})
 public class DbInitializeData {
     @Autowired
     private UserRepository userRepository;

@@ -33,32 +33,28 @@ public class CategoryController extends AbstractController<Category, UUID, Categ
     }
 
     @Override
-    public void setSaveRole() {
-        super.saveRole = Role.FIRM_ADMIN;
+    public Role getSaveRole() {
+        return Role.FIRM_ADMIN;
     }
 
     @Override
-    public void setGetRole() {
-        super.getRole = Role.NOT_AUTH;
+    public Role getGetRole() {
+        return Role.NOT_AUTH;
     }
 
     @Override
-    public void setGetAllRole() {
-        super.getAllRole = Role.NOT_AUTH;
+    public Role getGetAllRole() {
+        return Role.NOT_AUTH;
     }
 
     @Override
-    public void setUpdateRole() {
-        super.updateRole = Role.FIRM_ADMIN;
+    public Role getUpdateRole() {
+        return Role.FIRM_ADMIN;
     }
 
     @Override
-    public void setDeleteRole() {
-        super.deleteRole = Role.FIRM_ADMIN;
+    public Role getDeleteRole() {
+        return Role.FIRM_ADMIN;
     }
 
-    @Override
-    public void setEntityName() {
-        super.entityName = "Category";
-    }
 }

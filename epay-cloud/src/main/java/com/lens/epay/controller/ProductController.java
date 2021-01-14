@@ -40,33 +40,28 @@ public class ProductController extends AbstractController<Product, UUID, Product
     }
 
     @Override
-    public void setSaveRole() {
-        super.saveRole = Role.BASIC_USER;
+    public Role getSaveRole() {
+        return Role.BASIC_USER;
     }
 
     @Override
-    public void setGetRole() {
-        super.getRole = Role.NOT_AUTH;
+    public Role getGetRole() {
+        return Role.NOT_AUTH;
     }
 
     @Override
-    public void setGetAllRole() {
-        super.getAllRole = Role.NOT_AUTH;
+    public Role getGetAllRole() {
+        return Role.NOT_AUTH;
     }
 
     @Override
-    public void setUpdateRole() {
-        super.updateRole = Role.BASIC_USER;
+    public Role getUpdateRole() {
+        return Role.BASIC_USER;
     }
 
     @Override
-    public void setDeleteRole() {
-        super.deleteRole = Role.BASIC_USER;
-    }
-
-    @Override
-    public void setEntityName() {
-        super.entityName = "Product";
+    public Role getDeleteRole() {
+        return Role.BASIC_USER;
     }
 
     @ApiOperation(value = "Search for Product", response = ProductResource.class, responseContainer = "List")

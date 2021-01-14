@@ -1,5 +1,6 @@
 package com.lens.epay.controller;//package com.lens.epay.controller;
 
+import com.lens.epay.exception.BadRequestException;
 import com.lens.epay.model.dto.user.RegisterFirmUserDto;
 import com.lens.epay.model.dto.user.UpdatePasswordDto;
 import com.lens.epay.model.resource.user.CompleteUserResource;
@@ -10,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -45,7 +47,10 @@ public class UserProfileController {
 
     @ApiOperation(value = "Update a profile with the given info", response = CompleteUserResource.class)
     @PutMapping("/update-profile")
-    public ResponseEntity updateUserProfile(@RequestHeader("Authorization") String token, @RequestBody @Valid RegisterFirmUserDto userDto) {
+    public ResponseEntity updateUserProfile(@RequestHeader("Authorization") String token, @RequestBody @Valid RegisterFirmUserDto userDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new BadRequestException(bindingResult.getAllErrors().get(0).getDefaultMessage());
+        }
         UUID userId = jwtResolver.getIdFromToken(token);
         CompleteUserResource user = userProfileService.updateProfile(userId, userDto);
         return ResponseEntity.ok(user);
@@ -53,7 +58,7 @@ public class UserProfileController {
 
     @ApiOperation(value = "Update password with the old password and the new password", response = CompleteUserResource.class)
     @PutMapping("/update-password")
-    public ResponseEntity updatePassword(@RequestHeader("Authorization") String token, @RequestBody UpdatePasswordDto updatePasswordDto) {
+    public ResponseEntity updatePassword(@RequestHeader("Authorization") String token, @RequestBody @Valid UpdatePasswordDto updatePasswordDto, BindingResult bindingResult) {
         UUID userId = jwtResolver.getIdFromToken(token);
         CompleteUserResource user = userProfileService.updatePassword(userId, updatePasswordDto);
         return ResponseEntity.ok(user);

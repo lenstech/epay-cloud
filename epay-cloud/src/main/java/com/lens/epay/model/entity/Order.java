@@ -80,4 +80,6 @@ public class Order extends AbstractEntity<UUID> {
     private CreditCardTransaction creditCardTransaction;
 
     private String orderNote;
+
+    private Float totalPrice;
 }

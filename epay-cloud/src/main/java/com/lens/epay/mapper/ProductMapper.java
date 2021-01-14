@@ -6,9 +6,7 @@ import com.lens.epay.model.entity.Product;
 import com.lens.epay.model.resource.product.ProductResource;
 import com.lens.epay.service.BrandService;
 import com.lens.epay.service.CategoryService;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 
 /**
  * Created by Emir Gökdemir
@@ -20,6 +18,7 @@ public interface ProductMapper extends Converter<ProductDto, Product, ProductRes
 
     @Override
     @Mapping(source = "categoryId", target = "category", qualifiedByName = "fromIdToEntity")
-    @Mapping(source = "brandId", target = "brand", qualifiedByName = "fromIdToEntity")
+    @Mapping(source = "brandId", target = "brand", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
+            nullValuePropertyMappingStrategy =  NullValuePropertyMappingStrategy.SET_TO_NULL, qualifiedByName = "fromIdToEntity")
     Product toEntity(ProductDto productDto);
 }

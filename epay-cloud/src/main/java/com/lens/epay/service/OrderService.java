@@ -12,10 +12,7 @@ import com.lens.epay.exception.NotFoundException;
 import com.lens.epay.mapper.CreditCardTransactionMapper;
 import com.lens.epay.mapper.OrderMapper;
 import com.lens.epay.model.dto.sale.OrderDto;
-import com.lens.epay.model.entity.BasketObject;
-import com.lens.epay.model.entity.CreditCardTransaction;
-import com.lens.epay.model.entity.Order;
-import com.lens.epay.model.entity.User;
+import com.lens.epay.model.entity.*;
 import com.lens.epay.model.other.SearchCriteria;
 import com.lens.epay.model.resource.OrderResource;
 import com.lens.epay.repository.BasketRepository;
@@ -50,8 +47,6 @@ import static com.lens.epay.constant.GeneralConstants.PAGE_SIZE;
 @Transactional
 public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderResource> {
 
-    @Value("${delivery.fee.amount}")
-    private Float deliveryFeeAmount;
     @Autowired
     private PaymentService paymentService;
     @Autowired
@@ -81,14 +76,26 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
         Order order = getConverter().toEntity(orderDto);
         float sum = 0F;
         for (BasketObject object : order.getBasketObjects()) {
-            sum += object.getProduct().getDiscountedPrice() * object.getProductQuantity();
+            Product product = object.getProduct();
+            if (product.getDiscountedPrice() == null) {
+                sum += object.getProduct().getPrice() * object.getProductQuantity();
+            } else {
+                sum += object.getProduct().getDiscountedPrice() * object.getProductQuantity();
+            }
             object.setOrder(order);
         }
-        if (Math.abs(sum - order.getTotalProductPrice()) > 0.50) {
+        if (order.getTotalProductPrice() == null) {
+            order.setTotalProductPrice(sum);
+        } else if (Math.abs(sum - order.getTotalProductPrice()) > 0.50) {
             throw new BadRequestException(TOTAL_PRICE_IS_NOT_CORRECT);
         }
+        if (order.getTotalProductPrice()>=160){
+            order.setDeliveryFee(0F);
+        } else {
+            order.setDeliveryFee(14F);
+        }
+        order.setTotalPrice(order.getTotalProductPrice() + order.getDeliveryFee());
         User user = userRepository.findUserById(userId);
-        order.setDeliveryFee(deliveryFeeAmount);
         order.setOrderStatus(OrderStatus.TAKEN);
         order.setUser(user);
         order.setPaid(false);

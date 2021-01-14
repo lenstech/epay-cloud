@@ -32,9 +32,9 @@ public class ProductDto {
     @NotNull
     private Float price;
 
-    @NotNull
     private Float discountedPrice;
 
+    @NotNull(message = "Kategori belirtilmeli!")
     private UUID categoryId;
 
     private UUID brandId;

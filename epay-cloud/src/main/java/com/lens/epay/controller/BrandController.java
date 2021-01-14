@@ -33,33 +33,28 @@ public class BrandController extends AbstractController<Brand, UUID, BrandDto, B
     }
 
     @Override
-    public void setSaveRole() {
-        super.saveRole = Role.CUSTOMER;
+    public Role getSaveRole() {
+        return Role.CUSTOMER;
     }
 
     @Override
-    public void setGetRole() {
-        super.getRole = Role.CUSTOMER;
+    public Role getGetRole() {
+        return Role.CUSTOMER;
     }
 
     @Override
-    public void setGetAllRole() {
-        super.getAllRole = Role.FIRM_ADMIN;
+    public Role getGetAllRole() {
+        return Role.FIRM_ADMIN;
     }
 
     @Override
-    public void setUpdateRole() {
-        super.updateRole = Role.CUSTOMER;
+    public Role getUpdateRole() {
+        return Role.CUSTOMER;
     }
 
     @Override
-    public void setDeleteRole() {
-        super.deleteRole = Role.CUSTOMER;
-    }
-
-    @Override
-    public void setEntityName() {
-        super.entityName = "Brand";
+    public Role getDeleteRole() {
+        return Role.CUSTOMER;
     }
 
 }

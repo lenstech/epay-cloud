@@ -70,7 +70,7 @@ public class PaymentService {
         request.setLocale(Locale.TR.getValue());
         request.setConversationId(order.getId().toString());
         request.setPrice(new BigDecimal(orderDto.getTotalProductPrice().toString()));
-        request.setPaidPrice(new BigDecimal(orderDto.getTotalProductPrice() + order.getDeliveryFee()));
+        request.setPaidPrice(new BigDecimal(order.getTotalPrice().toString()));
         request.setCurrency(orderDto.getCurrency().name());
         request.setInstallment(orderDto.getInstallmentNumber());
         request.setBasketId(order.getBasketObjects().get(0).getId().toString());
@@ -86,8 +86,8 @@ public class PaymentService {
         paymentCard.setRegisterCard(0);
         request.setPaymentCard(paymentCard);
 
-        com.lens.epay.model.entity.Address deliveryAddress = addressRepository.findOneById(orderDto.getDeliveryAddressId());
-        com.lens.epay.model.entity.Address invoiceAddress = addressRepository.findOneById(orderDto.getInvoiceAddressId());
+        com.lens.epay.model.entity.Address deliveryAddress = order.getDeliveryAddress();
+        com.lens.epay.model.entity.Address invoiceAddress = order.getInvoiceAddress();
         if (deliveryAddress == null || invoiceAddress == null) {
             throw new NotFoundException(ADDRESS_NOT_EXIST);
         }

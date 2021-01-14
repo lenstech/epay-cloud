@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/login")
 @Api(value = "Login", tags = {"Login"})
@@ -22,7 +24,7 @@ public class LoginController {
 
     @ApiOperation(value = "Login with the username (email) and password", response = LoginResource.class)
     @PostMapping("")
-    public ResponseEntity<LoginResource> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<LoginResource> login(@RequestBody @Valid LoginDto loginDto) {
         logger.info(String.format("Requesting login user's mail: %s ", loginDto.getEmail()));
         return ResponseEntity.ok(loginService.login(loginDto));
     }

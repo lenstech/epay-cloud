@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 /**
@@ -46,37 +47,32 @@ public class OrderController extends AbstractController<Order, UUID, OrderDto, O
     }
 
     @Override
-    public void setSaveRole() {
-        super.saveRole = Role.CUSTOMER;
+    public Role getSaveRole() {
+        return Role.CUSTOMER;
     }
 
     @Override
-    public void setGetRole() {
-        super.getRole = Role.CUSTOMER;
+    public Role getGetRole() {
+        return Role.CUSTOMER;
     }
 
     @Override
-    public void setGetAllRole() {
-        super.getAllRole = Role.BASIC_USER;
+    public Role getGetAllRole() {
+        return Role.BASIC_USER;
     }
 
     @Override
-    public void setUpdateRole() {
-        super.updateRole = Role.ADMIN;
+    public Role getUpdateRole() {
+        return Role.ADMIN;
     }
 
     @Override
-    public void setDeleteRole() {
-        super.deleteRole = Role.ADMIN;
-    }
-
-    @Override
-    public void setEntityName() {
-        super.entityName = "Order";
+    public Role getDeleteRole() {
+        return Role.ADMIN;
     }
 
     @PostMapping("/check-installment")
-    public ResponseEntity<InstallmentInfo> checkCreditCardInstallment(@RequestBody CreditCardInstallmentCheckDto creditCardInstallmentCheckDto, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<InstallmentInfo> checkCreditCardInstallment(@RequestBody @Valid CreditCardInstallmentCheckDto creditCardInstallmentCheckDto, @RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(paymentService.checkCardInstallment(creditCardInstallmentCheckDto));
     }
 

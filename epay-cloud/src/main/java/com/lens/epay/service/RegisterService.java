@@ -9,6 +9,7 @@ import com.lens.epay.model.dto.user.RegisterFirmUserDto;
 import com.lens.epay.model.entity.Department;
 import com.lens.epay.model.entity.User;
 import com.lens.epay.model.resource.user.CompleteUserResource;
+import com.lens.epay.model.resource.user.LoginResource;
 import com.lens.epay.repository.DepartmentRepository;
 import com.lens.epay.repository.UserRepository;
 import com.lens.epay.security.JwtGenerator;
@@ -51,7 +52,7 @@ public class RegisterService {
     private TokenService tokenService;
 
     @Transactional
-    public CompleteUserResource saveFirmUser(RegisterFirmUserDto registerFirmUserDto) {
+    public LoginResource saveFirmUser(RegisterFirmUserDto registerFirmUserDto) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         User user = mapper.toEntity(registerFirmUserDto);
         if (registerFirmUserDto.getDepartmentId() != null) {
@@ -67,11 +68,12 @@ public class RegisterService {
         user.setPassword(bCryptPasswordEncoder.encode(registerFirmUserDto.getPassword()));
         userRepository.saveAndFlush(user);
         tokenService.sendActivationTokenToMail(user);
-        return mapper.toResource(user);
+        CompleteUserResource completeUserResource = mapper.toResource(user);
+        return new LoginResource(completeUserResource, jwtGenerator.generateLoginToken(user.getId(), user.getRole()));
     }
 
     @Transactional
-    public CompleteUserResource saveCustomer(RegisterCustomerDto customerDto) {
+    public LoginResource saveCustomer(RegisterCustomerDto customerDto) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         User user = mapper.customerDtoToUser(customerDto);
         if (userRepository.existsByEmail(user.getEmail())) {
@@ -81,11 +83,12 @@ public class RegisterService {
         user.setRole(Role.CUSTOMER);
         userRepository.saveAndFlush(user);
         tokenService.sendActivationTokenToMail(user);
-        return mapper.toResource(user);
+        CompleteUserResource completeUserResource = mapper.toResource(user);
+        return new LoginResource(completeUserResource, jwtGenerator.generateLoginToken(user.getId(), user.getRole()));
     }
 
     @Transactional
-    public void confirmRegister(String confirmationToken) {
+    public LoginResource confirmRegister(String confirmationToken) {
         UUID id = jwtResolver.getIdFromToken(confirmationToken);
         User user = userRepository.findUserById(id);
         if (user == null) {
@@ -93,6 +96,8 @@ public class RegisterService {
         }
         user.setConfirmed(true);
         userRepository.save(user);
+        return new LoginResource(mapper.toResource(user), jwtGenerator.generateLoginToken(user.getId(), user.getRole()));
+
     }
 
 }

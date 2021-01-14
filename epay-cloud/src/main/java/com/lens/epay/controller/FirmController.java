@@ -6,7 +6,6 @@ import com.lens.epay.configuration.AuthorizationConfig;
 import com.lens.epay.enums.Role;
 import com.lens.epay.model.dto.organization.FirmDto;
 import com.lens.epay.model.entity.Firm;
-import com.lens.epay.model.resource.organization.BranchResource;
 import com.lens.epay.model.resource.organization.FirmResource;
 import com.lens.epay.model.resource.user.MinimalUserResource;
 import com.lens.epay.service.FirmService;
@@ -17,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -37,33 +35,28 @@ public class FirmController extends AbstractController<Firm, UUID, FirmDto, Firm
     private AuthorizationConfig authorizationConfig;
 
     @Override
-    public void setSaveRole() {
-        super.saveRole = Role.FIRM_ADMIN;
+    public Role getSaveRole() {
+        return Role.ADMIN;
     }
 
     @Override
-    public void setGetRole() {
-        super.getRole = Role.BASIC_USER;
+    public Role getGetRole() {
+        return Role.BASIC_USER;
     }
 
     @Override
-    public void setGetAllRole() {
-        super.getAllRole = Role.ADMIN;
+    public Role getGetAllRole() {
+        return Role.ADMIN;
     }
 
     @Override
-    public void setUpdateRole() {
-        super.updateRole = Role.FIRM_ADMIN;
+    public Role getUpdateRole() {
+        return Role.FIRM_ADMIN;
     }
 
     @Override
-    public void setDeleteRole() {
-        super.deleteRole = Role.FIRM_ADMIN;
-    }
-
-    @Override
-    public void setEntityName() {
-        super.entityName = "Firm";
+    public Role getDeleteRole() {
+        return Role.ADMIN;
     }
 
     @Override
@@ -71,12 +64,12 @@ public class FirmController extends AbstractController<Firm, UUID, FirmDto, Firm
         return service;
     }
 
-    @ApiOperation(value = "Get all Branches of a Firm , it can be seen by basic user", response = BranchResource.class, responseContainer = "Set")
-    @GetMapping("/get-branches")
-    public ResponseEntity<Set<BranchResource>> getBranchesOfFirm(@RequestHeader("Authorization") String token, @RequestParam UUID firmId) {
-        authorizationConfig.permissionCheck(token, Role.BASIC_USER);
-        return ResponseEntity.ok(service.getBranches(firmId));
-    }
+//    @ApiOperation(value = "Get all Branches of a Firm , it can be seen by basic user", response = BranchResource.class, responseContainer = "Set")
+//    @GetMapping("/get-branches")
+//    public ResponseEntity<Set<BranchResource>> getBranchesOfFirm(@RequestHeader("Authorization") String token, @RequestParam UUID firmId) {
+//        authorizationConfig.permissionCheck(token, Role.BASIC_USER);
+//        return ResponseEntity.ok(service.getBranches(firmId));
+//    }
 
     @ApiOperation(value = "Get all Users of a Firm , it can be seen by firm admin", response = MinimalUserResource.class, responseContainer = "List")
     @GetMapping("/get-users")
