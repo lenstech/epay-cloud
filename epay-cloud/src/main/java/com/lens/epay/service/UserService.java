@@ -2,6 +2,8 @@ package com.lens.epay.service;
 
 import com.lens.epay.common.AbstractService;
 import com.lens.epay.common.Converter;
+import com.lens.epay.constant.ErrorConstants;
+import com.lens.epay.exception.BadRequestException;
 import com.lens.epay.mapper.MinimalUserMapper;
 import com.lens.epay.mapper.UserMapper;
 import com.lens.epay.model.dto.user.RegisterCustomerDto;
@@ -42,6 +44,14 @@ public class UserService extends AbstractService<User, UUID, RegisterCustomerDto
 
     public MinimalUserResource findUserByIdToMinRes(UUID id) {
         return minimalUserMapper.toResource(fromIdToEntity(id));
+    }
+
+    public User findUserByEmail(String email) {
+        User user = repository.findByEmail(email);
+        if (user == null) {
+            throw new BadRequestException(ErrorConstants.USER_NOT_EXIST);
+        }
+        return user;
     }
 
     //todo: userSearch

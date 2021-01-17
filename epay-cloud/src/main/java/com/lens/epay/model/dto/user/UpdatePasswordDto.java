@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by Emir Gökdemir
  * on 11 Nis 2020
@@ -15,6 +17,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdatePasswordDto {
+    @NotNull(message = "Lütfen eski şifrenizi giriniz.")
     private String oldPassword;
+    @NotNull(message = "Lütfen yeni şifrenizi giriniz.")
     private String newPassword;
 }

@@ -55,15 +55,15 @@ public class RegisterService {
     public LoginResource saveFirmUser(RegisterFirmUserDto registerFirmUserDto) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         User user = mapper.toEntity(registerFirmUserDto);
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new BadRequestException(MAIL_ALREADY_EXISTS);
+        }
         if (registerFirmUserDto.getDepartmentId() != null) {
             Department department = departmentRepository.findDepartmentById(registerFirmUserDto.getDepartmentId());
             if (department == null) {
                 throw new BadRequestException(DEPARTMENT_IS_NOT_EXIST);
             }
             user.setDepartment(department);
-        }
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new BadRequestException(MAIL_ALREADY_EXISTS);
         }
         user.setPassword(bCryptPasswordEncoder.encode(registerFirmUserDto.getPassword()));
         userRepository.saveAndFlush(user);

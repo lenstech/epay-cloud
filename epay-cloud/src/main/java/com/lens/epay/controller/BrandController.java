@@ -8,6 +8,8 @@ import com.lens.epay.model.entity.Brand;
 import com.lens.epay.model.resource.product.BrandResource;
 import com.lens.epay.service.BrandService;
 import io.swagger.annotations.Api;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +26,7 @@ import java.util.UUID;
 @Api(value = "Brand", tags = {"Brand Operations"})
 public class BrandController extends AbstractController<Brand, UUID, BrandDto, BrandResource> {
 
+    private final Logger logger = LoggerFactory.getLogger(BrandController.class);
     @Autowired
     private BrandService service;
 

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.List;
@@ -47,12 +48,14 @@ public abstract class AbstractController<T extends AbstractEntity<ID>, ID extend
 
     @ApiOperation(value = "Create Object, it can be done by authorization")
     @PostMapping
-    public RES save(@RequestHeader("Authorization") String token, @Valid @RequestBody DTO dto, BindingResult bindingResult) {
+    public RES save(@RequestHeader("Authorization") String token, @Valid @RequestBody DTO dto, BindingResult bindingResult, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
-            throw new BadRequestException(bindingResult.getAllErrors().get(0).getDefaultMessage());
+            String message = bindingResult.getAllErrors().get(0).getDefaultMessage();
+            logger.info(message);
+            throw new BadRequestException(message);
         }
-        logger.info(String.format("Saving the Dto with id: %s.", dto));
         UUID userId = authorizationConfig.permissionCheck(token, getSaveRole());
+        logger.info(String.format("Saving the Dto with userId: %s.", userId));
         return getService().save(dto, userId);
     }
 
@@ -67,7 +70,7 @@ public abstract class AbstractController<T extends AbstractEntity<ID>, ID extend
     @ApiOperation(value = "Get Multiple Object")
     @PostMapping("/multiple")
     public List<RES> get(@RequestHeader(value = "Authorization", required = false) String token, @RequestBody List<ID> objectIds) {
-        logger.info("Requesting  multiple %s  records.");
+        logger.info("Requesting  multiple records.");
         authorizationConfig.permissionCheck(token, getGetRole());
         return getService().getMultiple(objectIds);
     }
@@ -98,7 +101,9 @@ public abstract class AbstractController<T extends AbstractEntity<ID>, ID extend
                       BindingResult bindingResult,
                       @RequestParam ID objectId) {
         if (bindingResult.hasErrors()) {
-            throw new BadRequestException(bindingResult.getAllErrors().get(0).getDefaultMessage());
+            String message = bindingResult.getAllErrors().get(0).getDefaultMessage();
+            logger.info(message);
+            throw new BadRequestException(message);
         }
         logger.info(String.format("Request to update a object record with id: %s.", objectId));
         UUID userId = authorizationConfig.permissionCheck(token, getUpdateRole());

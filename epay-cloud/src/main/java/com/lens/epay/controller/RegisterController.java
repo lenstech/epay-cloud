@@ -5,7 +5,6 @@ import com.lens.epay.enums.Role;
 import com.lens.epay.exception.BadRequestException;
 import com.lens.epay.model.dto.user.RegisterCustomerDto;
 import com.lens.epay.model.dto.user.RegisterFirmUserDto;
-import com.lens.epay.model.resource.user.CompleteUserResource;
 import com.lens.epay.model.resource.user.LoginResource;
 import com.lens.epay.service.RegisterService;
 import io.swagger.annotations.Api;
@@ -18,8 +17,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
-import static com.lens.epay.constant.HttpSuccessMessagesConstants.YOUR_MAIL_WAS_CONFIRMED;
 
 /**
  * Created by Emir Gökdemir
@@ -41,7 +38,9 @@ public class RegisterController {
     @PostMapping("/user")
     public ResponseEntity<LoginResource> registerFirmUser(@RequestHeader String token, @RequestBody @Valid RegisterFirmUserDto registerFirmUserDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new BadRequestException(bindingResult.getAllErrors().get(0).getDefaultMessage());
+            String message = bindingResult.getAllErrors().get(0).getDefaultMessage();
+            logger.info(message);
+            throw new BadRequestException(message);
         }
         authorizationConfig.permissionCheck(token, Role.FIRM_ADMIN);
         LoginResource user = registerService.saveFirmUser(registerFirmUserDto);
@@ -52,7 +51,9 @@ public class RegisterController {
     @PostMapping("/user/customer")
     public ResponseEntity<LoginResource> registerCustomer(@RequestBody @Valid RegisterCustomerDto registerCustomerDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new BadRequestException(bindingResult.getAllErrors().get(0).getDefaultMessage());
+            String message = bindingResult.getAllErrors().get(0).getDefaultMessage();
+            logger.info(message);
+            throw new BadRequestException(message);
         }
         return ResponseEntity.ok(registerService.saveCustomer(registerCustomerDto));
     }

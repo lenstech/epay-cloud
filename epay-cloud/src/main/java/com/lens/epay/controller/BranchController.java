@@ -11,6 +11,8 @@ import com.lens.epay.model.resource.organization.DepartmentResource;
 import com.lens.epay.service.BranchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +29,7 @@ import java.util.UUID;
 @Api(value = "Branch", tags = {"Branch Operations"})
 public class BranchController extends AbstractController<Branch, UUID, BranchDto, BranchResource> {
 
+    private final Logger logger = LoggerFactory.getLogger(BranchController.class);
     @Autowired
     private BranchService branchService;
     @Autowired
@@ -66,6 +69,7 @@ public class BranchController extends AbstractController<Branch, UUID, BranchDto
     @GetMapping("/get-departments")
     public ResponseEntity getDepartmentsOfBranch(@RequestHeader("Authorization") String token,
                                                  @RequestParam UUID branchId) {
+        logger.info(String.format("Requesting getDepartmentsOfBranch branchId: %s.", branchId));
         authorizationConfig.permissionCheck(token, Role.BASIC_USER);
         return ResponseEntity.ok(branchService.getDepartments(branchId));
     }

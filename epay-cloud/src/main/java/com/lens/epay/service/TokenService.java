@@ -23,19 +23,13 @@ import static com.lens.epay.constant.MailConstants.*;
 public class TokenService {
 
     @Autowired
-    private JavaMailSender javaMailSender;
-
-    @Autowired
-    private Environment environment;
-
-    @Autowired
     private JwtGenerator jwtGenerator;
 
     @Autowired
-    private UserRepository userRepository;
+    private MailUtil mailUtil;
 
     @Autowired
-    private MailUtil mailUtil;
+    private UserService userService;
 
     public void sendActivationTokenToMail(User user) {
         String confirmationToken = jwtGenerator.generateMailConfirmationToken(user.getId());
@@ -49,7 +43,7 @@ public class TokenService {
         if (email == null) {
             throw new BadRequestException(ErrorConstants.PROVIDE_VALID_MAIL);
         }
-        User user = userRepository.findByEmail(email);
+        User user = userService.findUserByEmail(email);
         String resetToken = jwtGenerator.generateResetPasswordToken(user.getId());
         mailUtil.sendTokenMail(user.getEmail(), resetToken, RESET_PASSWORD_HEADER,
                 RESET_PASSWORD_BODY + "\n"

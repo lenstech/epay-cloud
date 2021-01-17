@@ -5,6 +5,8 @@ import com.lens.epay.enums.Role;
 import com.lens.epay.service.ProductPhotoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -27,19 +29,19 @@ import static com.lens.epay.constant.HttpSuccessMessagesConstants.SUCCESSFULLY_D
 @Api(value = "Product Photo", tags = {"Product Photo"})
 public class ProductPhotoController {
 
+    private final Logger logger = LoggerFactory.getLogger(ProductPhotoController.class);
     @Autowired
     private ProductPhotoService service;
-
     @Autowired
     private AuthorizationConfig authorizationConfig;
-
 
     @PostMapping("/upload")
     @ApiOperation("Upload photo of product by productId")
     public ResponseEntity<String> uploadProductPhoto(@RequestParam("file") MultipartFile file,
                                                      @RequestParam UUID productId,
                                                      @RequestHeader("Authorization") String token) {
-        authorizationConfig.permissionCheck(token, Role.BASIC_USER);
+        UUID userId = authorizationConfig.permissionCheck(token, Role.BASIC_USER);
+        logger.info(String.format("Requesting uploadProductPhoto userId: %s.", userId));
         return ResponseEntity.ok(service.uploadProductPhoto(file, productId));
     }
 
@@ -53,12 +55,11 @@ public class ProductPhotoController {
 
     @DeleteMapping
     @ApiOperation("Delete photo of product by productId")
-    public ResponseEntity<String> deleteProductPhoto(@RequestParam("productId") UUID productId) {
-        try {
-            service.deletePhotoByProductId(productId);
-        } catch (Exception e) {
-            return ResponseEntity.ok(DELETION_DID_NOT_OCCURED);
-        }
+    public ResponseEntity<String> deleteProductPhoto(@RequestParam("productId") UUID productId,
+                                                     @RequestHeader(value = "Authorization") String token) {
+        UUID userId = authorizationConfig.permissionCheck(token, Role.BASIC_USER);
+        logger.info(String.format("Requesting deleteNewsPhoto with newsId: %s userId: %s ", productId, userId));
+        service.deletePhotoByProductId(productId);
         return ResponseEntity.ok(SUCCESSFULLY_DELETED);
     }
 }

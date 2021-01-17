@@ -43,7 +43,7 @@ public class OrderDto {
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
 
-    @CreditCardNumber
+    @CreditCardNumber(message = "Kredi kartı numarasını doğru formatta giriniz.")
     private String creditCardNumber;
 
     private String creditCardHolderName;

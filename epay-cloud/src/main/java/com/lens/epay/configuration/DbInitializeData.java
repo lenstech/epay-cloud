@@ -16,7 +16,7 @@ import java.util.List;
  * on 17 Nis 2020
  */
 @Component
-@Profile({"dev", "test"})
+//@Profile({"dev", "test"})
 public class DbInitializeData {
     @Autowired
     private UserRepository userRepository;
@@ -64,17 +64,6 @@ public class DbInitializeData {
             admin.setConfirmed(true);
             initialUsers.add(admin);
         }
-        if (!userRepository.existsByEmail("basic1@lenstech.vision")) {
-            User basicUser = new User();
-            basicUser.setEmail("basic1@lenstech.vision");
-            basicUser.setPassword("$2a$10$mLpoOQQ1mf9217XGIBoW4.QOoMPSenH0hm8MU8Hwx2V6ycCA6DJIa");
-            basicUser.setName("default");
-            basicUser.setSurname("basic");
-            basicUser.setPhoneNumber("05064066031");
-            basicUser.setRole(Role.BASIC_USER);
-            basicUser.setConfirmed(true);
-            initialUsers.add(basicUser);
-        }
         if (!userRepository.existsByEmail("customer@lenstech.vision")) {
             User customer = new User();
             customer.setEmail("customer@lenstech.vision");
@@ -111,45 +100,45 @@ public class DbInitializeData {
             defaultFirm.setEmail("firm@lenstech.vision");
             firmRepository.save(defaultFirm);
         }
-        if (!branchRepository.existsByName("default branch")) {
-            Branch defaultBranch = new Branch();
-            defaultBranch.setName("default branch");
-            defaultBranch.setCity("İstanbul");
-            defaultBranch.setAddress("Boğaziçi Teknopark");
-            defaultBranch.setFirm(firmRepository.findByName("default firm"));
-            branchRepository.save(defaultBranch);
-        }
-        if (!departmentRepository.existsByName("default department")) {
-            Department defaultDepartment = new Department();
-            defaultDepartment.setName("default department");
-            defaultDepartment.setBranch(branchRepository.findByName("default branch"));
-            defaultDepartment.setDescription("default description");
-            departmentRepository.save(defaultDepartment);
-        }
-        Category defaultCategory = new Category();
-        if (!categoryRepository.existsByName("default category")) {
-            defaultCategory.setName("default category");
-            defaultCategory.setDescription(" default category description");
-            categoryRepository.save(defaultCategory);
-        } else {
-            defaultCategory = categoryRepository.findByName("default category");
-        }
-        Brand defaultBrand = new Brand();
-        if (!brandRepository.existsByName("default brand")) {
-            defaultBrand.setCountry("Turkey");
-            defaultBrand.setName("default brand");
-            brandRepository.save(defaultBrand);
-        }
-        if (!productRepository.existsByName("default product")) {
-            Product defaultProduct = new Product();
-            defaultProduct.setStocked(true);
-            defaultProduct.setBrand(defaultBrand);
-            defaultProduct.setDescription("default description");
-            defaultProduct.setName("default product");
-            defaultProduct.setPrice(100F);
-            defaultProduct.setDiscountedPrice(90F);
-            defaultProduct.setCategory(defaultCategory);
-            productRepository.save(defaultProduct);
-        }
+//        if (!branchRepository.existsByName("default branch")) {
+//            Branch defaultBranch = new Branch();
+//            defaultBranch.setName("default branch");
+//            defaultBranch.setCity("İstanbul");
+//            defaultBranch.setAddress("Boğaziçi Teknopark");
+//            defaultBranch.setFirm(firmRepository.findByName("default firm"));
+//            branchRepository.save(defaultBranch);
+//        }
+//        if (!departmentRepository.existsByName("default department")) {
+//            Department defaultDepartment = new Department();
+//            defaultDepartment.setName("default department");
+//            defaultDepartment.setBranch(branchRepository.findByName("default branch"));
+//            defaultDepartment.setDescription("default description");
+//            departmentRepository.save(defaultDepartment);
+//        }
+//        Category defaultCategory = new Category();
+//        if (!categoryRepository.existsByName("default category")) {
+//            defaultCategory.setName("default category");
+//            defaultCategory.setDescription(" default category description");
+//            categoryRepository.save(defaultCategory);
+//        } else {
+//            defaultCategory = categoryRepository.findByName("default category");
+//        }
+//        Brand defaultBrand = new Brand();
+//        if (!brandRepository.existsByName("default brand")) {
+//            defaultBrand.setCountry("Turkey");
+//            defaultBrand.setName("default brand");
+//            brandRepository.save(defaultBrand);
+//        }
+//        if (!productRepository.existsByName("default product")) {
+//            Product defaultProduct = new Product();
+//            defaultProduct.setStocked(true);
+//            defaultProduct.setBrand(defaultBrand);
+//            defaultProduct.setDescription("default description");
+//            defaultProduct.setName("default product");
+//            defaultProduct.setPrice(100F);
+//            defaultProduct.setDiscountedPrice(90F);
+//            defaultProduct.setCategory(defaultCategory);
+//            productRepository.save(defaultProduct);
+//        }
     }
 }

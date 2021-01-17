@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -23,6 +24,7 @@ public class AddressDto {
 
     private String country = "Türkiye";
 
+    @NotNull(message = "Lütfen şehrinizi giriniz.")
     private String city;
 
     private String district;
@@ -51,10 +53,8 @@ public class AddressDto {
 
     private String firmName;
 
-    @Size(min = 11, max = 11)
     private String identityNo;
 
-    @Size(min = 10, max = 10)
     private String taxNo;
 
     private String taxAdministration;

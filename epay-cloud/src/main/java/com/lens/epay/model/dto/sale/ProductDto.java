@@ -22,6 +22,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ProductDto {
 
+    @NotNull(message = "Lütfen ürün ismini giriniz.")
     private String name;
 
     private String description;
@@ -29,7 +30,7 @@ public class ProductDto {
     @Enumerated(EnumType.STRING)
     private Unit unit = Unit.PIECE;
 
-    @NotNull
+    @NotNull(message = "Fiyat boş bırakılamaz.")
     private Float price;
 
     private Float discountedPrice;

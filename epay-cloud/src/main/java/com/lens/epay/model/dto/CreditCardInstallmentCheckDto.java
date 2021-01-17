@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -18,8 +19,10 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class CreditCardInstallmentCheckDto {
 
+    @NotNull(message = "Kart numaranızı giriniz")
     private String cardBinNumber;
 
+    @NotNull(message = "Tutarı giriniz")
     private BigDecimal price;
 
 }

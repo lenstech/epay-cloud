@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 /**
@@ -17,12 +19,20 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterFirmUserDto {
-
+    @Email(message = "Lütfen email formatında giriniz")
+    @NotNull(message = "Email boş olamaz")
     private String email;
 
+    @NotNull(message = "Lütfen isminizi giriniz.")
     private String name;
 
+    @NotNull(message = "Lütfen soyisminizi giriniz.")
     private String surname;
+
+//    private UUID firmId;
+
+    @NotNull(message = "Lütfen şifrenizi giriniz.")
+    private String password;
 
     private Role role = Role.BASIC_USER;
 
@@ -31,8 +41,6 @@ public class RegisterFirmUserDto {
     private String userFirmId;
 
     private String title;
-
-    private String password;
 
     private String phoneNumber;
 }

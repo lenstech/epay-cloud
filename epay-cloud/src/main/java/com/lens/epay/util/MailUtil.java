@@ -29,7 +29,7 @@ public class MailUtil {
         try {
             mimeMessage.setRecipient(Message.RecipientType.BCC, new InternetAddress(email));
             mimeMessage.setText(String.format(text, activationToken), "UTF-8");
-            mimeMessage.setSubject(subject);
+            mimeMessage.setSubject(subject, "UTF-8");
         } catch (MessagingException messagingException) {
             throw new BadRequestException(MAIL_SEND_FAILED);
         }

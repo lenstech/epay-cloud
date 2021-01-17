@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by Emir Gökdemir
  * on 17 Nis 2020
@@ -16,6 +18,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CategoryDto {
 
+    @NotNull(message = "Name cannot be null")
     private String name;
 
     private String description;

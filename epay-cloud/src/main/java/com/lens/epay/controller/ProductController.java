@@ -10,6 +10,8 @@ import com.lens.epay.model.resource.product.ProductResource;
 import com.lens.epay.service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +30,9 @@ import java.util.UUID;
 @Api(value = "Product", tags = {"Product Operations"})
 public class ProductController extends AbstractController<Product, UUID, ProductDto, ProductResource> {
 
+    private final Logger logger = LoggerFactory.getLogger(ProductController.class);
     @Autowired
     private ProductService productService;
-
     @Autowired
     private AuthorizationConfig authorizationConfig;
 
@@ -94,6 +96,7 @@ public class ProductController extends AbstractController<Product, UUID, Product
     @PutMapping("/change-stock-status")
     public ResponseEntity<ProductResource> changeStockStatus(@RequestHeader("Authorization") String token, @RequestParam UUID productId, @RequestParam Boolean stockStatus) {
         UUID userId = authorizationConfig.permissionCheck(token, Role.FIRM_ADMIN);
+        logger.info(String.format("Requesting changeStockStatus userId: %s.", userId));
         return ResponseEntity.ok(productService.changeStockStatus(productId, stockStatus));
     }
 }

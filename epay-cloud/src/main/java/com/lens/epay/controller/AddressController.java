@@ -4,6 +4,7 @@ import com.lens.epay.common.AbstractController;
 import com.lens.epay.common.AbstractService;
 import com.lens.epay.configuration.AuthorizationConfig;
 import com.lens.epay.enums.Role;
+import com.lens.epay.exception.BadRequestException;
 import com.lens.epay.model.dto.AddressDto;
 import com.lens.epay.model.entity.Address;
 import com.lens.epay.model.resource.AddressResource;
@@ -11,6 +12,8 @@ import com.lens.epay.security.JwtResolver;
 import com.lens.epay.service.AddressService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -29,6 +32,8 @@ import java.util.UUID;
 @RequestMapping("/address")
 @Api(value = "Address", tags = {"Address Operations"})
 public class AddressController extends AbstractController<Address, UUID, AddressDto, AddressResource> {
+
+    private final Logger logger = LoggerFactory.getLogger(AddressController.class);
 
     @Autowired
     private AddressService service;
@@ -78,6 +83,12 @@ public class AddressController extends AbstractController<Address, UUID, Address
     public ResponseEntity<AddressResource> saveAddressByAdmin(@RequestHeader("Authorization") String token,
                                                               @RequestBody @Valid AddressDto addressDto, BindingResult bindingResult,
                                                               @RequestParam UUID userId) {
+        logger.info(String.format("Requesting saveAddressByAdmin userId: %s.", userId));
+        if (bindingResult.hasErrors()) {
+            String message = bindingResult.getAllErrors().get(0).getDefaultMessage();
+            logger.info(message);
+            throw new BadRequestException(message);
+        }
         authorizationConfig.permissionCheck(token, Role.FIRM_ADMIN);
         return ResponseEntity.ok(service.saveAddressByAdmin(addressDto, userId));
     }
@@ -88,9 +99,13 @@ public class AddressController extends AbstractController<Address, UUID, Address
                                                                 @RequestParam UUID objectId,
                                                                 @RequestBody @Valid AddressDto addressDto, BindingResult bindingResult,
                                                                 @RequestParam UUID userId) {
+        logger.info(String.format("Requesting updateAddressByAdmin userId: %s.", userId));
+        if (bindingResult.hasErrors()) {
+            String message = bindingResult.getAllErrors().get(0).getDefaultMessage();
+            logger.info(message);
+            throw new BadRequestException(message);
+        }
         authorizationConfig.permissionCheck(token, Role.FIRM_ADMIN);
         return ResponseEntity.ok(service.updateAddressByAdmin(objectId, addressDto, userId));
     }
-
-
 }
