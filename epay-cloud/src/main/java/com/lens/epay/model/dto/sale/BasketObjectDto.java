@@ -19,8 +19,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class BasketObjectDto {
 
-    @NotNull(message = "ProductId cannot be null")
+    @NotNull(message = "Ürün no boş olmamalı")
     private UUID productId;
 
+    @NotNull(message = "Ürün sayısı boş olmamalı")
     private Integer productQuantity;
 }

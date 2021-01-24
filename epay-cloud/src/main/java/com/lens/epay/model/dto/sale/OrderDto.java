@@ -11,6 +11,7 @@ import org.springframework.format.annotation.NumberFormat;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.UUID;
@@ -26,8 +27,10 @@ import java.util.UUID;
 @AllArgsConstructor
 public class OrderDto {
 
+    @NotNull(message = "Teslimat adresi boş olamaz.")
     private UUID deliveryAddressId;
 
+    @NotNull(message = "Fatura adresi bol olamaz.")
     private UUID invoiceAddressId;
 
     @NumberFormat(style = NumberFormat.Style.CURRENCY)
@@ -46,16 +49,21 @@ public class OrderDto {
     @CreditCardNumber(message = "Kredi kartı numarasını doğru formatta giriniz.")
     private String creditCardNumber;
 
+    @NotNull(message = "Kredi kartı sahibi ismi boş olmamalı.")
     private String creditCardHolderName;
 
     @Size(max = 2)
+    @NotNull(message = "Kredi kartı son kullanım yılı ismi boş olmamalı.")
     private String expireYear;
+
     @Size(max = 2)
+    @NotNull(message = "Kredi kartı son kullanım ayı ismi boş olmamalı.")
     private String expireMonth;
 
     @Size(max = 3)
     private String cvc;
 
+    @NotNull(message = "Sepet Listesi boş olmamalı.")
     private List<BasketObjectDto> basketObjectDtoList;
 
     private String orderNote;

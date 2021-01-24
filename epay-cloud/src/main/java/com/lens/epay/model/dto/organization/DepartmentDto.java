@@ -19,6 +19,6 @@ public class DepartmentDto {
 
     private String description;
 
-    @NotNull(message = "BranchId cannot be blank")
+    @NotNull(message = "Şube id'si boş olamaz")
     private UUID BranchId;
 }

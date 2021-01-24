@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by Emir Gökdemir
@@ -15,6 +16,7 @@ import javax.validation.constraints.Email;
 @NoArgsConstructor
 public class FirmDto {
 
+    @NotNull(message = "Firma ismi boş olmamalı.")
     private String name;
 
     private String city;

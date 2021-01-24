@@ -24,6 +24,6 @@ public class BranchDto {
 
     private String address;
 
-    @NotNull(message = "FirmId cannot be blank")
+    @NotNull(message = "Firma id'si boş olamaz")
     private UUID firmId;
 }

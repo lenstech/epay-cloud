@@ -109,7 +109,7 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
     public T fromIdToEntity(ID id) {
         Optional<T> entityOpt = getRepository().findById(id);
         if (!entityOpt.isPresent()) {
-            throw new NotFoundException(ID_IS_NOT_EXIST);
+            throw new NotFoundException(getClass().getSimpleName().replace("Service", " ") + ID_IS_NOT_EXIST);
         } else {
             return entityOpt.get();
         }

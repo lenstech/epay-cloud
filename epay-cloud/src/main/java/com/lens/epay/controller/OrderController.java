@@ -82,7 +82,7 @@ public class OrderController extends AbstractController<Order, UUID, OrderDto, O
     @Override
     @ApiOperation(value = "Send order request by using this endpoint, it can be done by authorization")
     @PostMapping
-    public OrderResource save(String token, @Valid OrderDto orderDto, BindingResult bindingResult, HttpServletRequest request) {
+    public OrderResource save(@RequestHeader("Authorization") String token, @Valid @RequestBody OrderDto orderDto, BindingResult bindingResult, HttpServletRequest request) {
         orderDto.setIpAddress(request.getRemoteAddr());
         return super.save(token, orderDto, bindingResult, request);
     }
@@ -90,7 +90,7 @@ public class OrderController extends AbstractController<Order, UUID, OrderDto, O
     @Override
     @ApiOperation(value = "Update order, it can be done by authorization")
     @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public OrderResource update(String token, @Valid OrderDto orderDto, BindingResult bindingResult, UUID objectId) {
+    public OrderResource update(@RequestHeader("Authorization") String token, @Valid @RequestBody OrderDto orderDto, BindingResult bindingResult, @RequestParam UUID objectId) {
         return super.update(token, orderDto, bindingResult, objectId);
     }
 
