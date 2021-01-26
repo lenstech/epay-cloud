@@ -1,10 +1,10 @@
 package com.lens.epay.configuration;
 
 import com.lens.epay.enums.Role;
-import com.lens.epay.model.entity.*;
+import com.lens.epay.model.entity.Firm;
+import com.lens.epay.model.entity.User;
 import com.lens.epay.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -90,14 +90,14 @@ public class DbInitializeData {
         if (!initialUsers.isEmpty()) {
             userRepository.saveAll(initialUsers);
         }
-        if (!firmRepository.existsByName("default firm")) {
+        if (!firmRepository.existsByName("SÜTÇE Çiğ İnek Sütü A.Ş.")) {
             Firm defaultFirm = new Firm();
-            defaultFirm.setName("default firm");
+            defaultFirm.setName("SÜTÇE Çiğ İnek Sütü A.Ş.");
             defaultFirm.setCity("Erzurum");
             //TODO: Taha'dan alınıp ayarlanacak.
-            defaultFirm.setAddress(" Adres ");
-            defaultFirm.setPhoneNo("telefon");
-            defaultFirm.setEmail("firm@lenstech.vision");
+            defaultFirm.setAddress("Adnan Menderes mah. Şehit Burak Karakuş sok.No:3/B Palandöken/Erzurum");
+            defaultFirm.setPhoneNo("+90 545 579 25 25");
+            defaultFirm.setEmail("destek@sutcemarket.com");
             firmRepository.save(defaultFirm);
         }
 //        if (!branchRepository.existsByName("default branch")) {

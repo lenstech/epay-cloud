@@ -48,6 +48,18 @@ public class AgreementController {
         return ResponseEntity.ok(service.getSalesAgreement(resolver.getIdFromToken(token), orderDto));
     }
 
+    @ApiOperation(value = "Get Privacy Agreement for registration", response = String.class)
+    @PostMapping("/privacy-agreement")
+    public ResponseEntity<String> getPrivacyAgreement() {
+        return ResponseEntity.ok(service.getPrivacyAgreement());
+    }
+
+    @ApiOperation(value = "Get Return Agreement for all customers", response = String.class)
+    @PostMapping("/return-agreement")
+    public ResponseEntity<String> getReturnConditions() {
+        return ResponseEntity.ok(service.getReturnConditions());
+    }
+
     @ApiOperation(value = "Get Preinformative Agreement of an order", response = String.class)
     @PostMapping("/preinformative-agreement")
     public ResponseEntity<String> getPreinformativeAgreement(@RequestHeader("Authorization") String token,

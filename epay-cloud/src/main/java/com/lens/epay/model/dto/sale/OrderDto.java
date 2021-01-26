@@ -52,7 +52,7 @@ public class OrderDto {
     @NotNull(message = "Kredi kartı sahibi ismi boş olmamalı.")
     private String creditCardHolderName;
 
-    @Size(max = 2)
+    @Size(max = 4)
     @NotNull(message = "Kredi kartı son kullanım yılı ismi boş olmamalı.")
     private String expireYear;
 

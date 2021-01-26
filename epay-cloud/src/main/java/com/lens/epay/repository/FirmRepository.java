@@ -10,5 +10,5 @@ public interface FirmRepository extends EpayRepository<Firm, UUID> {
 
     Boolean existsByName(String name);
 
-    Firm findByName(String name);
+    Firm findFirstByName(String name);
 }
