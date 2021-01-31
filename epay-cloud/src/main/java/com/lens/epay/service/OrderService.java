@@ -20,10 +20,8 @@ import com.lens.epay.repository.OrderRepository;
 import com.lens.epay.repository.UserRepository;
 import com.lens.epay.repository.specifications.OrderSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,8 +33,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.lens.epay.constant.ErrorConstants.*;
-import static com.lens.epay.constant.GeneralConstants.DEFAULT_SORT_BY;
-import static com.lens.epay.constant.GeneralConstants.PAGE_SIZE;
 
 /**
  * Created by Emir Gökdemir
@@ -482,7 +478,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
 
     //SELLER
     public Page<OrderResource> getOrderReport(int pageNumber,
-                                              Boolean desc,
+                                              boolean desc,
                                               String sortBy,
                                               Long startDateEpochMilliSecond,
                                               Long endDateEpochMilliSecond,
@@ -491,10 +487,6 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
                                               String cargoFirm,
                                               String remittanceBank,
                                               Boolean paid) {
-        PageRequest pageable;
-        if (desc == null) {
-            desc = true;
-        }
 
         OrderSpecification spec = new OrderSpecification();
         if (startDateEpochMilliSecond != null) {
@@ -520,20 +512,8 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
         if (paid != null) {
             spec.add(new SearchCriteria("paid", true, SearchOperator.EQUAL));
         }
-
-        try {
-            if (desc) {
-                pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.by(sortBy).descending());
-            } else {
-                pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.by(sortBy).ascending());
-            }
-            return repository.findAll(spec, pageable)
-                    .map(getConverter()::toResource);
-        } catch (Exception e) {
-            pageable = PageRequest.of(pageNumber, PAGE_SIZE);
-            return repository.findAll(spec, pageable)
-                    .map(getConverter()::toResource);
-        }
+        PageRequest pageable = getPageable(pageNumber, sortBy, desc);
+        return repository.findAll(spec, pageable).map(mapper::toResource);
     }
 
 
@@ -542,7 +522,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
      * -------------------------------------------------------------------------------------------------------------------------------------------------------
      */
     public Page<OrderResource> getSelfOrders(UUID userId, int pageNo) {
-        PageRequest pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.Direction.DESC, DEFAULT_SORT_BY);
+        PageRequest pageable = getPageable(pageNo);
         return getRepository().findOrdersByUserId(pageable, userId).map(getConverter()::toResource);
     }
 }

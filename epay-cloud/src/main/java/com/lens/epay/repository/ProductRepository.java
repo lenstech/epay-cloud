@@ -14,9 +14,15 @@ public interface ProductRepository extends EpayRepository<Product, UUID>, JpaSpe
 
     Page<Product> findProductsByCategoryId(Pageable pageable, UUID catrgoryId);
 
-    Page<Product> findProductsByStockedTrue(Pageable pageable);
+    Page<Product> findProductsByStockedTrueAndActiveTrue(Pageable pageable);
 
-    List<Product> findProductsByStockedTrue();
+    List<Product> findProductsByStockedTrueAndActiveTrue();
+
+    List<Product> findAllByActiveTrueAndIdIn(List<UUID> ids);
+
+    Page<Product> findAllByActiveTrue(Pageable pageable);
+
+    List<Product> findAllByActiveTrue();
 
     boolean existsByName(String name);
 }

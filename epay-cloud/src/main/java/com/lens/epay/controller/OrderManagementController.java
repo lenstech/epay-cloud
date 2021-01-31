@@ -6,7 +6,6 @@ import com.lens.epay.enums.PaymentType;
 import com.lens.epay.enums.Role;
 import com.lens.epay.model.resource.OrderResource;
 import com.lens.epay.service.OrderService;
-import com.lens.epay.service.PaymentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -173,7 +172,7 @@ public class OrderManagementController {
     @GetMapping("/report")
     @ApiOperation("Report of orders")
     public ResponseEntity<Page<OrderResource>> orderReport(@RequestParam int pageNumber,
-                                                           @RequestParam(required = false) Boolean desc,
+                                                           @RequestParam(required = false, defaultValue = "true") boolean desc,
                                                            @RequestParam(required = false) String sortBy,
                                                            @RequestParam(required = false) Long startDateEpochMilliSecond,
                                                            @RequestParam(required = false) Long endDateEpochMilliSecond,

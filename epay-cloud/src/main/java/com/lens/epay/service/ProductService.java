@@ -21,13 +21,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
-import static com.lens.epay.constant.ErrorConstants.ID_IS_NOT_EXIST;
-import static com.lens.epay.constant.ErrorConstants.PRODUCT_CANNOT_BE_DELETED_WHEN_HAS_ORDER;
-import static com.lens.epay.constant.GeneralConstants.PAGE_SIZE;
+import static com.lens.epay.constant.ErrorConstants.*;
 
 /**
  * Created by Emir Gökdemir
@@ -58,54 +57,66 @@ public class ProductService extends AbstractService<Product, UUID, ProductDto, P
         return mapper;
     }
 
+    @Override
+    public List<ProductResource> getMultiple(List<UUID> ids) {
+        List<Product> entities;
+        try {
+            entities = repository.findAllByActiveTrueAndIdIn(ids);
+        } catch (NullPointerException e) {
+            throw new NotFoundException(ID_IS_NOT_EXIST);
+        }
+        return mapper.toResources(entities);
+    }
+
+    @Override
+    public List<ProductResource> getAll(UUID userId) {
+        return mapper.toResources(repository.findAllByActiveTrue());
+    }
+
+    @Override
+    public Page<ProductResource> getAllWithPage(int pageNumber, String sortBy, Sort.Direction direction, UUID userId) {
+        return repository.findAllByActiveTrue(getPageable(pageNumber, sortBy, direction)).map(mapper::toResource);
+    }
+
     public Page<ProductResource> search(String word, int pageNumber) {
-
-        PageRequest pageable;
-
         ProductSpecification spec = new ProductSpecification();
         if (word != null) {
             spec.add(new SearchCriteria("category", word, SearchOperator.MATCH_IN_CATEGORY));
             spec.add(new SearchCriteria("name", word, SearchOperator.MATCH));
             spec.add(new SearchCriteria("description", word, SearchOperator.MATCH));
         }
-
-        pageable = PageRequest.of(pageNumber, PAGE_SIZE);
+        PageRequest pageable = getPageable(pageNumber);
         return repository.findAll(spec, pageable).map(getConverter()::toResource);
     }
 
     public List<ProductResource> getAllStocked() {
-        return mapper.toResources(getRepository().findProductsByStockedTrue());
+        return mapper.toResources(getRepository().findProductsByStockedTrueAndActiveTrue());
     }
 
-    public Page<ProductResource> getAllWithPageStocked(int pageNumber, String sortBy, Boolean desc) {
-        PageRequest pageable;
-        if (desc == null) {
-            desc = true;
-        }
-        try {
-            if (desc) {
-                pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.DESC, sortBy);
-            } else {
-                pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.Direction.ASC, sortBy);
-            }
-            return getRepository().findProductsByStockedTrue(pageable).map(getConverter()::toResource);
-        } catch (Exception e) {
-            pageable = PageRequest.of(pageNumber, PAGE_SIZE);
-            return getRepository().findProductsByStockedTrue(pageable).map(getConverter()::toResource);
-        }
+    public Page<ProductResource> getAllWithPageStocked(int pageNumber, String sortBy, boolean desc) {
+        PageRequest pageable = getPageable(pageNumber, sortBy, desc);
+        return repository.findProductsByStockedTrueAndActiveTrue(pageable).map(mapper::toResource);
     }
 
     public Page<ProductResource> findProductByCategory(UUID categoryId, int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE);
+        Pageable pageable = getPageable(pageNo);
         return repository.findProductsByCategoryId(pageable, categoryId).map(getConverter()::toResource);
     }
 
     @Override
     protected void deleteOperations(UUID productId, UUID userId) {
         productPhotoRepository.deleteProductPhotoByProductId(productId);
-        if (basketRepository.countBasketObjectsByProductId(productId) > 0) {
-            throw new BadRequestException(PRODUCT_CANNOT_BE_DELETED_WHEN_HAS_ORDER);
+    }
+
+    @Override
+    @Transactional
+    public void delete(UUID productId, UUID userId) {
+        if (basketRepository.countBasketObjectsByProductId(productId) <= 0) {
+            super.delete(productId, userId);
         }
+        Product product = fromIdToEntity(productId);
+        product.setActive(false);
+        repository.save(product);
     }
 
     public ProductResource changeStockStatus(UUID productId, Boolean stocked) {

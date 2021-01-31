@@ -30,7 +30,7 @@ public class OrderDto {
     @NotNull(message = "Teslimat adresi boş olamaz.")
     private UUID deliveryAddressId;
 
-    @NotNull(message = "Fatura adresi bol olamaz.")
+    @NotNull(message = "Fatura adresi boş olamaz.")
     private UUID invoiceAddressId;
 
     @NumberFormat(style = NumberFormat.Style.CURRENCY)

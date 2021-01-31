@@ -76,7 +76,7 @@ public class ProductController extends AbstractController<Product, UUID, Product
     @GetMapping("/all/stocked/{pageNo}")
     public ResponseEntity<Page<ProductResource>> getAllWithPageStocked(@PathVariable int pageNo,
                                                                        @RequestParam(required = false) String sortBy,
-                                                                       @RequestParam(required = false) Boolean desc) {
+                                                                       @RequestParam(required = false, defaultValue = "true") boolean desc) {
         return ResponseEntity.ok(productService.getAllWithPageStocked(pageNo, sortBy, desc));
     }
 

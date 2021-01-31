@@ -16,14 +16,11 @@ import com.lens.epay.repository.FirmRepository;
 import com.lens.epay.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 import java.util.UUID;
-
-import static com.lens.epay.constant.GeneralConstants.PAGE_SIZE;
 
 /**
  * Created by Emir Gökdemir
@@ -65,7 +62,7 @@ public class FirmService extends AbstractService<Firm, UUID, FirmDto, FirmResour
     }
 
     public Page<MinimalUserResource> findUsersByFirmId(UUID firmId, int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE);
+        Pageable pageable = getPageable(pageNo);
         return userRepository.findUsersByDepartmentBranchFirmId(pageable, firmId).map(minimalUserMapper::toResource);
     }
 

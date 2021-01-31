@@ -56,20 +56,7 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
     }
 
     public Page<RES> getAllWithPage(int pageNumber, String sortBy, Sort.Direction direction, UUID userId) {
-        PageRequest pageable;
-        if (sortBy == null) {
-            pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.by(GeneralConstants.DEFAULT_SORT_BY).descending());
-        } else {
-            if (direction == null) {
-                direction = Sort.Direction.DESC;
-            }
-            try {
-                pageable = PageRequest.of(pageNumber, PAGE_SIZE, direction, sortBy);
-            } catch (PropertyReferenceException exception) {
-                pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.by(GeneralConstants.DEFAULT_SORT_BY).descending());
-            }
-        }
-        return getRepository().findAll(pageable).map(getConverter()::toResource);
+        return getRepository().findAll(getPageable(pageNumber, sortBy, direction)).map(getConverter()::toResource);
     }
 
     @Modifying
@@ -124,6 +111,37 @@ public abstract class AbstractService<T extends AbstractEntity, ID extends Seria
     }
 
     protected void deleteOperations(ID id, UUID userId) {
+    }
+
+    public PageRequest getPageable(int pageNumber) {
+        return PageRequest.of(pageNumber, PAGE_SIZE, Sort.by(Sort.Direction.DESC, GeneralConstants.DEFAULT_SORT_BY));
+    }
+
+    public PageRequest getPageable(int pageNumber, Sort.Direction direction) {
+        return PageRequest.of(pageNumber, PAGE_SIZE, Sort.by(direction, GeneralConstants.DEFAULT_SORT_BY));
+    }
+
+    public PageRequest getPageable(int pageNumber, String sortBy, Sort.Direction direction) {
+        if (sortBy == null) {
+            return getPageable(pageNumber);
+        } else {
+            if (direction == null) {
+                direction = Sort.Direction.DESC;
+            }
+            try {
+                return PageRequest.of(pageNumber, PAGE_SIZE, direction, sortBy);
+            } catch (PropertyReferenceException exception) {
+                return PageRequest.of(pageNumber, PAGE_SIZE, Sort.by(GeneralConstants.DEFAULT_SORT_BY).descending());
+            }
+        }
+    }
+
+    public PageRequest getPageable(int pageNumber, String sortBy, Boolean desc) {
+        if (desc == null || desc) {
+            return getPageable(pageNumber, sortBy, Sort.Direction.DESC);
+        } else {
+            return getPageable(pageNumber, sortBy, Sort.Direction.ASC);
+        }
     }
 }
 
