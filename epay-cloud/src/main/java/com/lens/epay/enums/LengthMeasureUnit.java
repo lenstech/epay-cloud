@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum LengthMeasureUnit {
     METER("m"), CENTIMETER("cm"), MILLIMETER("mm"), INCH("inch");
 
-    private String abbreviation;
+    private final String abbreviation;
 
     LengthMeasureUnit(String abbreviation) {
         this.abbreviation = abbreviation;

@@ -9,7 +9,7 @@ public enum Role {
     FIRM_ADMIN(5),
     ADMIN(6);  //the developer mode
 
-    private int value;
+    private final int value;
 
     Role(int value) {
         this.value = value;

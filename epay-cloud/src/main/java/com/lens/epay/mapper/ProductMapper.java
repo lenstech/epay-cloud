@@ -19,6 +19,6 @@ public interface ProductMapper extends Converter<ProductDto, Product, ProductRes
     @Override
     @Mapping(source = "categoryId", target = "category", qualifiedByName = "fromIdToEntity")
     @Mapping(source = "brandId", target = "brand", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
-            nullValuePropertyMappingStrategy =  NullValuePropertyMappingStrategy.SET_TO_NULL, qualifiedByName = "fromIdToEntity")
+            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.SET_TO_NULL, qualifiedByName = "fromIdToEntity")
     Product toEntity(ProductDto productDto);
 }

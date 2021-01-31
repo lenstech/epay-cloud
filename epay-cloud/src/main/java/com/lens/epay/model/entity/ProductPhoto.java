@@ -28,10 +28,10 @@ public class ProductPhoto extends AbstractEntity<UUID> {
     @Lob
     private byte[] file;
 
-    public ProductPhoto(){
+    public ProductPhoto() {
     }
 
-    public ProductPhoto(Product product){
+    public ProductPhoto(Product product) {
         this.product = product;
     }
 

@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.NumberFormat;
 
-import java.util.UUID;
-
 /**
  * Created by Emir Gökdemir
  * on 17 Nis 2020

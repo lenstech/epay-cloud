@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
-import static com.lens.epay.constant.HttpSuccessMessagesConstants.DELETION_DID_NOT_OCCURED;
 import static com.lens.epay.constant.HttpSuccessMessagesConstants.SUCCESSFULLY_DELETED;
 
 /**

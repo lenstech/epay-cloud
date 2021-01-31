@@ -222,7 +222,7 @@ public class AgreementService {
 
         return "GİZLİLİK VE GÜVENLİK POLİTİKASI\n" +
                 " \n" +
-                "Mağazamızda verilen tüm servisler ve "+ "www.sutcemarket.com" +" adresinde kayıtlı ürünler "+ firm.getName() +" firmamıza aittir ve firmamız tarafından işletilir. \n" +
+                "Mağazamızda verilen tüm servisler ve " + "www.sutcemarket.com" + " adresinde kayıtlı ürünler " + firm.getName() + " firmamıza aittir ve firmamız tarafından işletilir. \n" +
                 "\n" +
                 "Firmamız, çeşitli amaçlarla kişisel veriler toplayabilir. Aşağıda, toplanan kişisel verilerin nasıl ve ne şekilde toplandığı, bu verilerin nasıl ve ne şekilde korunduğu belirtilmiştir. \n" +
                 "\n" +
@@ -274,12 +274,12 @@ public class AgreementService {
                 "\n" +
                 "Firmamız, işbu \"Gizlilik Politikası\" hükümlerini dilediği zaman sitede yayınlamak veya kullanıcılara elektronik posta göndermek veya sitesinde yayınlamak suretiyle değiştirebilir. Gizlilik Politikası hükümleri değiştiği takdirde, yayınlandığı tarihte yürürlük kazanır.\n" +
                 "\n" +
-                "Gizlilik politikamız ile ilgili her türlü soru ve önerileriniz için "+ firm.getEmail()+" adresine email gönderebilirsiniz. Firmamız’a ait aşağıdaki iletişim bilgilerinden ulaşabilirsiniz.\n" +
+                "Gizlilik politikamız ile ilgili her türlü soru ve önerileriniz için " + firm.getEmail() + " adresine email gönderebilirsiniz. Firmamız’a ait aşağıdaki iletişim bilgilerinden ulaşabilirsiniz.\n" +
                 "\n" +
-                "Firma Ünvanı: "+ firm.getName()+"\n"+
-                "Adres: "+ firm.getAddress()+"\n"+
-                "Eposta: "+firm.getEmail()+" \n" +
-                "Tel: " + firm.getEmail()+"\n" ;
+                "Firma Ünvanı: " + firm.getName() + "\n" +
+                "Adres: " + firm.getAddress() + "\n" +
+                "Eposta: " + firm.getEmail() + " \n" +
+                "Tel: " + firm.getEmail() + "\n";
     }
 
     public String getReturnConditions() {
@@ -288,17 +288,17 @@ public class AgreementService {
 
         return "I. Vazgeçme\n" +
                 "\n" +
-                "\tAlmış olduğunuz ürünü ambalajını açmadan, kullanmadan, bozulmasına imkân vermeden teslim tarihinden itibaren (7) gün içinde iade edebilirsiniz. Ürünü iade etmeden önce iade nedeninizi belirterek fatura numaranız ve sipariş numaranızı içeren bir email ile " +firm.getEmail() + " adresine gönderiniz. Şirketimiz gönderdiğiniz e-mail veya faksı alır almaz sizinle temasa geçecek, ürünü nasıl iade edeceğiniz size bildirilecektir. Ürünle beraber adınıza kesilen faturada geri gönderilmelidir. İade edilen ürün yerine bir başka ürün veya ürünün bedeli kredi kartınıza iade edilecektir. İade nedeniyle ödenecek taşıma masrafları tarafınızdan karşılanacaktır. " +
+                "\tAlmış olduğunuz ürünü ambalajını açmadan, kullanmadan, bozulmasına imkân vermeden teslim tarihinden itibaren (7) gün içinde iade edebilirsiniz. Ürünü iade etmeden önce iade nedeninizi belirterek fatura numaranız ve sipariş numaranızı içeren bir email ile " + firm.getEmail() + " adresine gönderiniz. Şirketimiz gönderdiğiniz e-mail veya faksı alır almaz sizinle temasa geçecek, ürünü nasıl iade edeceğiniz size bildirilecektir. Ürünle beraber adınıza kesilen faturada geri gönderilmelidir. İade edilen ürün yerine bir başka ürün veya ürünün bedeli kredi kartınıza iade edilecektir. İade nedeniyle ödenecek taşıma masrafları tarafınızdan karşılanacaktır. " +
                 "\n" +
                 "\n" +
                 "II. Taşıma Sırasında Hasar Görmüş Ürünler" +
                 "\n" +
-                "\t Taşıma sırasında zarar görmüş ürünler teslim alınmamalı ve taşıma şirketine hasar ile ilgili bir tutanak tutturulmalıdır. Ürüne zarar vermeyecek şekilde kutuda, ambalajda olabilecek küçük eziklerden dolayı ürün iade edilmemelidir. Fakat tarafınızdan teslim alındıktan sonra taşıma firması görevini yerine getirdiği kabul edilmiş sayılacaktır. Kabul edilmeyen ürünün hasar tutanağı tarafınızdan mağazamıza ulaştırıldıktan sonra, Mağazamız en kısa süre içinde ürünün yenisini size en sağlıklı şekilde ulaştıracaktır."+
+                "\t Taşıma sırasında zarar görmüş ürünler teslim alınmamalı ve taşıma şirketine hasar ile ilgili bir tutanak tutturulmalıdır. Ürüne zarar vermeyecek şekilde kutuda, ambalajda olabilecek küçük eziklerden dolayı ürün iade edilmemelidir. Fakat tarafınızdan teslim alındıktan sonra taşıma firması görevini yerine getirdiği kabul edilmiş sayılacaktır. Kabul edilmeyen ürünün hasar tutanağı tarafınızdan mağazamıza ulaştırıldıktan sonra, Mağazamız en kısa süre içinde ürünün yenisini size en sağlıklı şekilde ulaştıracaktır." +
                 "\n" +
                 "\n" +
                 "III. Hatalı Ürünler" +
                 "\n" +
-                "\tTeslimat sırasında fark edilemeyip uygulamada meydana çıkan hatalı ürünleri hatalarını belirterek fatura ve sipariş numaralarınızı içeren e-maili: " +firm.getEmail() + " adresine gönderiniz. İade gerekçeniz uygun görülürse faturayı iade edilen ürün ile birlikte mağazamıza gönderdikten sonra hatalı ürün yenisi ile değiştirilecektir;";
+                "\tTeslimat sırasında fark edilemeyip uygulamada meydana çıkan hatalı ürünleri hatalarını belirterek fatura ve sipariş numaralarınızı içeren e-maili: " + firm.getEmail() + " adresine gönderiniz. İade gerekçeniz uygun görülürse faturayı iade edilen ürün ile birlikte mağazamıza gönderdikten sonra hatalı ürün yenisi ile değiştirilecektir;";
     }
 
 

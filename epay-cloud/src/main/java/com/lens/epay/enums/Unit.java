@@ -12,7 +12,7 @@ public enum Unit {
     KILOGRAM("kilogram"),
     GRAM("gram");
 
-    private String turkish;
+    private final String turkish;
 
     Unit(String turkish) {
         this.turkish = turkish;

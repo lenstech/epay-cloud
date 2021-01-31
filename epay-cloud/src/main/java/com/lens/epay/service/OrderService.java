@@ -85,7 +85,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
         } else if (Math.abs(sum - order.getTotalProductPrice()) > 0.50) {
             throw new BadRequestException(TOTAL_PRICE_IS_NOT_CORRECT);
         }
-        if (order.getTotalProductPrice()>=160){
+        if (order.getTotalProductPrice() >= 160) {
             order.setDeliveryFee(0F);
         } else {
             order.setDeliveryFee(14F);

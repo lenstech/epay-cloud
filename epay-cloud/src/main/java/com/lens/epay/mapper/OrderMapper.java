@@ -23,6 +23,6 @@ public interface OrderMapper extends Converter<OrderDto, Order, OrderResource> {
     @Mapping(source = "deliveryAddressId", target = "deliveryAddress", qualifiedByName = "fromIdToEntity")
     @Mapping(source = "invoiceAddressId", target = "invoiceAddress", qualifiedByName = "fromIdToEntity")
     @Mapping(source = "basketObjectDtoList", target = "basketObjects")
-    void toEntityForUpdate(OrderDto orderDto, @MappingTarget  Order order);
+    void toEntityForUpdate(OrderDto orderDto, @MappingTarget Order order);
 
 }

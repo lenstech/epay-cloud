@@ -3,7 +3,6 @@ package com.lens.epay.service;
 import com.lens.epay.common.AbstractService;
 import com.lens.epay.common.Converter;
 import com.lens.epay.enums.SearchOperator;
-import com.lens.epay.exception.BadRequestException;
 import com.lens.epay.exception.NotFoundException;
 import com.lens.epay.mapper.ProductMapper;
 import com.lens.epay.model.dto.sale.ProductDto;
@@ -26,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
-import static com.lens.epay.constant.ErrorConstants.*;
+import static com.lens.epay.constant.ErrorConstants.ID_IS_NOT_EXIST;
 
 /**
  * Created by Emir Gökdemir
