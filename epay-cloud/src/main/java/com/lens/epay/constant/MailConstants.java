@@ -19,4 +19,15 @@ public class MailConstants {
     public static final String RESET_PASSWORD_URL = "hesap-sifre-yenile?activationToken=%s";
     public static final String CLIENT_URL = "https://sutcemarket.com/";
 
+    //ORDER
+    public static final String CUSTOMER_ORDER_HEADER = "Siparişiniz alındı.";
+    public static final String CUSTOMER_ORDER_CONTENT = "Merhaba siparişiniz alındı. \n" +
+            "Siparişlerinize profilinizden ulaşabilirsiniz, \n\n" +
+            "Sağlıklı günler dileriz :)";
+    public static final String SELLER_ORDER_HEADER = "Sipariş geldi.";
+    public static final String SELLER_ORDER_CONTENT = "Yeni bir sipariş alındı. \n" +
+            "Alıcı: %s \n" +
+            "Tutar: %s \n" +
+            "Detaylar için uygulamadan kontrol ediniz.";
+
 }

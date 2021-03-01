@@ -4,21 +4,23 @@ import com.iyzipay.model.Cancel;
 import com.iyzipay.model.Payment;
 import com.lens.epay.common.AbstractService;
 import com.lens.epay.common.Converter;
+import com.lens.epay.constant.ErrorConstants;
 import com.lens.epay.enums.OrderStatus;
 import com.lens.epay.enums.PaymentType;
 import com.lens.epay.enums.SearchOperator;
 import com.lens.epay.exception.BadRequestException;
 import com.lens.epay.exception.NotFoundException;
-import com.lens.epay.mapper.CreditCardTransactionMapper;
 import com.lens.epay.mapper.OrderMapper;
 import com.lens.epay.model.dto.sale.OrderDto;
 import com.lens.epay.model.entity.*;
 import com.lens.epay.model.other.SearchCriteria;
 import com.lens.epay.model.resource.OrderResource;
-import com.lens.epay.repository.BasketRepository;
 import com.lens.epay.repository.OrderRepository;
 import com.lens.epay.repository.UserRepository;
 import com.lens.epay.repository.specifications.OrderSpecification;
+import com.lens.epay.util.MailUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,12 +29,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
 import static com.lens.epay.constant.ErrorConstants.*;
+import static com.lens.epay.constant.HttpSuccessMessagesConstants.MAIL_SEND_YOUR_SUCCESSFULLY;
 
 /**
  * Created by Emir Gökdemir
@@ -43,6 +47,8 @@ import static com.lens.epay.constant.ErrorConstants.*;
 @Transactional
 public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderResource> {
 
+    private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
+
     @Autowired
     private PaymentService paymentService;
     @Autowired
@@ -52,9 +58,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
     @Autowired
     private OrderMapper mapper;
     @Autowired
-    private CreditCardTransactionMapper transactionMapper;
-    @Autowired
-    private BasketRepository basketRepository;
+    private MailUtil mailUtil;
 
     @Override
     public OrderRepository getRepository() {
@@ -70,6 +74,11 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
     @Override
     public OrderResource save(OrderDto orderDto, UUID userId) {
         Order order = getConverter().toEntity(orderDto);
+        LocalDateTime date = LocalDateTime.now();
+        if (Integer.parseInt(orderDto.getExpireYear()) < date.getYear() ||
+                (Integer.parseInt(orderDto.getExpireYear()) == date.getYear() && Integer.parseInt(orderDto.getExpireMonth()) < date.getMonthValue())) {
+            throw new BadRequestException(ErrorConstants.CARD_EXPIRED);
+        }
         float sum = 0F;
         for (BasketObject object : order.getBasketObjects()) {
             Product product = object.getProduct();
@@ -99,11 +108,23 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
         if (orderDto.getPaymentType() == PaymentType.CREDIT_CARD) {
             CreditCardTransaction transaction = new CreditCardTransaction();
             Payment payment = paymentService.payByCard(orderDto, user, order);
-            if (payment.getStatus().equals("success")) {
+            if ("success".equals(payment.getStatus())) {
                 order.setPaid(true);
                 transaction.setIyziCommissionFee(payment.getIyziCommissionFee().floatValue());
                 transaction.setIyziCommissionRateAmount(payment.getMerchantCommissionRateAmount().floatValue());
                 transaction.setIpAddress(orderDto.getIpAddress());
+                try {
+                    mailUtil.sendOrderInfoMailToCustomer(user.getEmail());
+                    logger.info("Customer " + MAIL_SEND_YOUR_SUCCESSFULLY + " to: " + user.getEmail());
+                } catch (Exception e) {
+                    logger.info("Customer " + MAIL_SEND_FAILED);
+                }
+                try {
+                    mailUtil.sendOrderInfoMailToSeller(user.getName() + " " + user.getSurname(), payment.getPaidPrice());
+                    logger.info("Seller " + MAIL_SEND_YOUR_SUCCESSFULLY);
+                } catch (Exception e) {
+                    logger.info("Seller " + MAIL_SEND_FAILED);
+                }
             } else if (payment.getFraudStatus() != null && payment.getFraudStatus() == 0) {
                 order.setPaid(false);
                 transaction.setErrrorMessage(payment.getErrorMessage());

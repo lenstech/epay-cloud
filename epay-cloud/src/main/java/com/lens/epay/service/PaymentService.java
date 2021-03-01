@@ -12,6 +12,8 @@ import com.lens.epay.model.dto.CreditCardInstallmentCheckDto;
 import com.lens.epay.model.dto.sale.OrderDto;
 import com.lens.epay.model.entity.*;
 import com.lens.epay.repository.AddressRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -30,8 +32,7 @@ import static com.lens.epay.constant.ErrorConstants.ADDRESS_NOT_EXIST;
 @Service
 public class PaymentService {
 
-    @Autowired
-    private AddressRepository addressRepository;
+    private static final Logger logger = LoggerFactory.getLogger(PaymentService.class);
 
     @Value("${payment.iyzico.apikey}")
     private String apiKey;
@@ -66,6 +67,7 @@ public class PaymentService {
     }
 
     public Payment payByCard(OrderDto orderDto, User user, Order order) {
+        logger.info("payByCard method is called with userId:" + order.getUser().getId());
         CreatePaymentRequest request = new CreatePaymentRequest();
         request.setLocale(Locale.TR.getValue());
         request.setConversationId(order.getId().toString());
@@ -126,7 +128,10 @@ public class PaymentService {
         }
         request.setBasketItems(basketItems);
         Options options = new Options();
-        return Payment.create(request, setOptions(options));
+        Payment response = Payment.create(request, setOptions(options));
+        logger.info("payByCardResponse: " + response.toString());
+
+        return response;
     }
 
     private BasketItem productToBasketItem(Product product) {
