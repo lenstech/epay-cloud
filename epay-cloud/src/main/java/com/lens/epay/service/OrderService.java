@@ -117,7 +117,7 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
                     mailUtil.sendOrderInfoMailToCustomer(user.getEmail());
                     logger.info("Customer " + MAIL_SEND_YOUR_SUCCESSFULLY + " to: " + user.getEmail());
                 } catch (Exception e) {
-                    logger.info("Customer " + MAIL_SEND_FAILED);
+                    logger.info("Customer " + MAIL_SEND_FAILED + " to: " + user.getEmail());
                 }
                 try {
                     mailUtil.sendOrderInfoMailToSeller(user.getName() + " " + user.getSurname(), payment.getPaidPrice());
