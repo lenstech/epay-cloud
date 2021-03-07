@@ -26,9 +26,6 @@ public class MailUtil {
     @Autowired
     private JavaMailSender mailSender;
 
-    @Value("${order.info.reciever}")
-    private String orderReceiver;
-
     public void sendTokenMail(String email, String activationToken, String subject, String text) {
         sendMail(email, subject, String.format(text, activationToken));
     }
@@ -49,8 +46,8 @@ public class MailUtil {
         sendMail(email, MailConstants.CUSTOMER_ORDER_HEADER, MailConstants.CUSTOMER_ORDER_CONTENT);
     }
 
-    public void sendOrderInfoMailToSeller(String customerName, BigDecimal cost) {
-        sendMail(orderReceiver, MailConstants.SELLER_ORDER_HEADER,
+    public void sendOrderInfoMailToSeller(String email, String customerName, BigDecimal cost) {
+        sendMail(email, MailConstants.SELLER_ORDER_HEADER,
                 String.format(MailConstants.SELLER_ORDER_CONTENT, customerName, "₺ " + cost));
     }
 }

@@ -22,6 +22,7 @@ import com.lens.epay.util.MailUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -59,6 +60,9 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
     private OrderMapper mapper;
     @Autowired
     private MailUtil mailUtil;
+
+    @Value("${order.info.reciever}")
+    private String orderReceiver;
 
     @Override
     public OrderRepository getRepository() {
@@ -120,8 +124,8 @@ public class OrderService extends AbstractService<Order, UUID, OrderDto, OrderRe
                     logger.info("Customer " + MAIL_SEND_FAILED + " to: " + user.getEmail());
                 }
                 try {
-                    mailUtil.sendOrderInfoMailToSeller(user.getName() + " " + user.getSurname(), payment.getPaidPrice());
-                    logger.info("Seller " + MAIL_SEND_YOUR_SUCCESSFULLY);
+                    mailUtil.sendOrderInfoMailToSeller(orderReceiver, user.getName() + " " + user.getSurname(), payment.getPaidPrice());
+                    logger.info("Seller " + MAIL_SEND_YOUR_SUCCESSFULLY + " to: " + orderReceiver);
                 } catch (Exception e) {
                     logger.info("Seller " + MAIL_SEND_FAILED);
                 }

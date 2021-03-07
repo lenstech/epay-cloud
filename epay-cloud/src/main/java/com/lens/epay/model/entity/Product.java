@@ -48,5 +48,5 @@ public class Product extends AbstractEntity<UUID> {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    private boolean active;
+    private boolean active = true;
 }

@@ -33,4 +33,6 @@ public class ProductResource extends AbstractResource {
     private Boolean stocked;
 
     private BrandResource brand;
+
+    private boolean active = true;
 }

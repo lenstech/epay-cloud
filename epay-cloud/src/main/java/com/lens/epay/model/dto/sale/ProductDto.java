@@ -41,4 +41,6 @@ public class ProductDto {
     private UUID brandId;
 
     private Boolean stocked;
+
+    private boolean active = true;
 }
