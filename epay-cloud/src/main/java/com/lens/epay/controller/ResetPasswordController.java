@@ -57,7 +57,7 @@ public class ResetPasswordController {
                                                        @RequestHeader("Authorization") String token) {
         logger.info(String.format("Requesting resetPasswordByAdmin with adminId: %s  and emailOfUser: %s", jwtResolver.getIdFromToken(token), email));
         authorizationConfig.permissionCheck(token, Role.BRANCH_ADMIN);
-        resetPasswordService.changePasswordByAdmin(email, newPassword, token);
+        resetPasswordService.changePasswordByAdmin(email.trim().toLowerCase(), newPassword, token);
         return ResponseEntity.ok(PASSWORD_WAS_CHANGED);
     }
 

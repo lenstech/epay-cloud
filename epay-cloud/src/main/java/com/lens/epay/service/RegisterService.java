@@ -14,11 +14,13 @@ import com.lens.epay.repository.DepartmentRepository;
 import com.lens.epay.repository.UserRepository;
 import com.lens.epay.security.JwtGenerator;
 import com.lens.epay.security.JwtResolver;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Locale;
 import java.util.UUID;
 
 import static com.lens.epay.constant.ErrorConstants.DEPARTMENT_IS_NOT_EXIST;
@@ -53,8 +55,12 @@ public class RegisterService {
 
     @Transactional
     public LoginResource saveFirmUser(RegisterFirmUserDto registerFirmUserDto) {
+        if (StringUtils.isBlank(registerFirmUserDto.getEmail())) {
+            throw new BadRequestException(ErrorConstants.MAIL_NOT_EXIST);
+        }
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         User user = mapper.toEntity(registerFirmUserDto);
+        user.setEmail(user.getEmail().trim().toLowerCase());
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new BadRequestException(MAIL_ALREADY_EXISTS);
         }
@@ -74,8 +80,12 @@ public class RegisterService {
 
     @Transactional
     public LoginResource saveCustomer(RegisterCustomerDto customerDto) {
+        if (StringUtils.isBlank(customerDto.getEmail())) {
+            throw new BadRequestException(ErrorConstants.MAIL_NOT_EXIST);
+        }
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         User user = mapper.customerDtoToUser(customerDto);
+        user.setEmail(user.getEmail().trim().toLowerCase());
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new BadRequestException(MAIL_ALREADY_EXISTS);
         }
